@@ -1,145 +1,163 @@
-# Olvid Bot Python Client
+# **Olvid Bot Python Client**
 
-# Introduction
-This repository is part of the Olvid bots framework. If you are lost you might start here: [Quickstart](https://github.com/olvid-io/Olvid-Bot-Quickstart)
+## Introduction
+Welcome to the Olvid Python Client repository, part of the Olvid bots framework. If you're new here, consider starting with our [Quickstart guide](https://github.com/olvid-io/Olvid-Bot-Quickstart).
 
-Note that the usage of this framework is part of Olvid's paying features. You can use this repository to deploy and test framework possibilities, but if you want to use it without limitations, please contact the Olvid team at bot@olvid.io.
+**Note**: The use of this framework is a paying feature. You can use this repository to deploy and test the framework's possibilities, but if you want to use it without limitations, please contact the Olvid team at [bot@olvid.io](mailto:bot@olvid.io).
 
-# Install
-You can install this module using pip. Using pypi repository:
+## Installation
+
+You can install this module using pip:
+
 ```bash
-pip3 install olvid-bot 
+pip3 install olvid-bot
 ```
+
 Or from source:
+
 ```bash
 git clone https://github.com/olvid-io/Olvid-Bot-Python-Client
 cd Olvid-Bot-Python-Client
 pip3 install .
 ```
 
-# Python Client
-### Terminology
-- Daemon: a standalone and fully manageable Olvid application exposing gRPC services to control it.
-- Bot/Client: Any program that interacts with a daemon instance on behalf of a user.
-- CLI (Command-Line Interface): A text-based interface to setup and manually interact with a daemon instance. (included in this module)
-- Identity: An Olvid profile hosted in a daemon.
-- Client Key: A unique identifier used to authenticate with the Olvid API. A client key is associated with an identity and only gives client rights to manage this identity.
-- API Key: A key given by Olvid team to let you use this framework without limitations. This key is set up once.
+## Overview
 
-### Introduction
-This module implements a gRPC client and aims to add features to make it as straightforward as possible, while still providing complete access to all features for achieving the most advanced tasks.
+This Python module implements a robust gRPC client, designed to simplify interactions while providing complete access to every RPC.
+This allows you to achieve advanced tasks with ease.
+To see the complete gRPC and protobuf description of the Daemon API, please refer to the [protobuf repository](https://github.com/olvid-io/Olvid-Bot-Protobuf).
 
-The module embed a CLI (Command Line Interface) to let you manually interact with Daemon.
-See [README-cli](./README-cli.md).
+The module also includes a built-in **CLI (Command-Line Interface)**, enabling manual interaction with the Daemon for efficient management and testing.
+For more information on using the CLI, refer to [README-cli](./README-cli.md).
 
-### Organization
-#### Daemon API
-In the Daemon API, each gRPC service (within the API) can be associated with two key aspects: its type and its entity.
+## Terminology
 
-There are three types of services:
-- Command: Methods in such a service allow for retrieving data, modifying it, executing actions, and more.
-- Admin: Similar to a command service, but accessible only with an admin client_key that has administrative privileges.
-- Notification: Enables registration for a specific notification type and receives a message whenever the corresponding event occurs.
+* **Daemon**: a self-contained, fully manageable Olvid application that exposes gRPC services for control and interaction.
+* **Bot/Client**: any program that interacts with a daemon instance on behalf of a user, facilitating communication and task execution.
+* **CLI (Command-Line Interface)**: a text-based interface for setting up and manually interacting with a daemon instance, included in this module for easy access and management.
+* **Identity**: an Olvid profile hosted within a daemon, representing a unique user entity.
+* **Client Key**: a unique identifier used to authenticate with the Olvid API, associated with an identity and granting client rights to manage that identity.
+* **API Key**: a special key provided by the Olvid team, enabling unrestricted use of the framework; set up once for convenient access.
 
-An entity is a logical element within Olvid. Examples of entities include Identity, Message, Discussion, and more.
-You can link most of these entities to elements in your Olvid application: an identity is the profile you created when you started using Olvid and a discussion regroup messages you exchanged with a contact or within a group. 
+## Code
+### OlvidClient
+#### Authentication
+To authenticate with the daemon, OlvidClient requires a client key. You can provide this key by:
 
-Following the model of services defined by their type and entity, we can find services like MessageCommandService and MessageNotificationService. 
-These services implement methods such as messageSend to send a message and messageReceived to receive notifications for each new incoming message.
+* Setting the `OLVID_CLIENT_KEY` environment variable
+* Writing it to a `.client_key` file
+* Passing it as a `client_key` constructor parameter (not recommended)
 
-We also have services like IdentityAdminService and IdentityCommandService.
-With the first one you can create or delete identities, provided you have admin permissions, while the latter gives you access to your current identity and to edition methods (e.g., adding a photo, edit you name, ...).
+Most of the time the client key is generated with `identity new` CLI command.
+You can retrieve it or manage your client key using `key` command group in CLI.
 
-Here is the repository with the full [daemon API specifications](https://github.com/olvid-io/Olvid-Bot-Protobuf)
+#### Daemon address
+By default, the client connects to `"localhost:50051"`. You can modify this behavior by:
 
-#### OlvidClient
-[OlvidClient](./olvid/core/OlvidClient.py) implements every gRPC command methods defined in daemon API.
-You can find methods using the same name as in gRPC but using snake case.
-Request and Response encapsulation layer is fully invisible, you won't need to use Request and Response messages.
-For example for message_send method you can use:
-`client.message_send(discussion_id, body)` and it will return a `datatypes.Message` item.
-you don't use MessageSendRequest and MessageSendResponse.
+* Setting `DAEMON_HOSTNAME` and/or `DAEMON_PORT` environment variables
+* Using the `server_target` parameter with the full server address (including hostname/IP and port)
 
-OlvidClient also implements a Listener mechanism to listen to notification implemented in grpc Notification services.
-Use this code to add a listener to message_received notification:
-`client.add_listener(listeners.MessageReceivedListener(handler=lambda message: print(message)))`
-Again you won't need to use encapsulation messages SubscribeToMessageSendNotification and MessageReceivedNotification.
+An [OlvidAdminClient](./olvid/core/OlvidAdminClient.py) uses a similar mechanism, but requires an admin client key. It utilizes the `OLVID_ADMIN_CLIENT_KEY` environment variable and the `.admin_client_key` file to find a key.
+
+#### Command API
+
+The [OlvidClient](./olvid/core/OlvidClient.py) class provides a convenient interface to interact with the daemon API, implementing every command services RPC.
+You can find method associated to a RPC in an OlvidClient instance as methods using snake case naming conventions.
+You will also find correlations between method parameters and RPC request messages, and method return values and RPC response messages.
+
+Here is an example RPC description:
+```protobuf
+message MessageGetRequest {
+  datatypes.v1.MessageId message_id = 1;
+}
+message MessageGetResponse {
+  datatypes.v1.Message message = 1;
+}
+service MessageCommandService {
+  rpc MessageGet(command.v1.MessageGetRequest) returns (command.v1.MessageGetResponse) {}
+}
+```
+
+In OlvidClient you will find this method prototype
+```python
+async def message_get(self, message_id: datatypes.MessageId) -> datatypes.Message
+```
+As you can see you there is one mandatory parameter for `message_id` and it returns a `Message` object
+
+#### Listeners
+OlvidClient also features a Listener mechanism to handle notifications implemented in the gRPC Notification services.
+There is an generic class named [GenericNotificationListener](./olvid/listeners/GenericNotificationListener.py) describing Listeners principle.
+
+There is an implementation of this class for each kind of notification in [ListenersImplementation](./olvid/listeners/ListenersImplementation.py)
+
+To add a basic listener and execute a method every time a message arrives you can add a MessageReceivedListener.
+
+This code will run forever and print every new message.
+```python
+import asyncio
+from olvid import OlvidClient, listeners
+
+async def main():
+    client = OlvidClient()
+    client.add_listener(listeners.MessageReceivedListener(handler=lambda message: print(message)))
+    await client.wait_for_listeners_end()
+
+asyncio.run(main())
+```
 
 ### OlvidBot
-[OlvidBot](./olvid/core/OlvidBot.py): extends OlvidClient to add notification handlers.
+#### Notification handlers
+The [OlvidBot](./olvid/core/OlvidBot.py) class extends OlvidClient, adding notification handlers for a more comprehensive experience.
+As it builds upon OlvidClient, it inherits the same constraints, such as requiring a valid client_key to connect to a daemon (see [Authentication](#authentication)).
+But it also brings all the method to call Daemon commands.
 
-As OlvidBot extends OlvidClient it has the same constraints, for example it needs to find a valid client_key to
-connect to a daemon (see [Authentication](#authentication)).
+OlvidBot introduces methods prefixed with `on_`, one for each gRPC notification method.
+When you instantiate an OlvidBot subclass, overridden methods will automatically be subscribed as notification listeners.
 
-OlvidBot implements a set of method named on_something. There is one method for each gRPC notification method.
-On instantiation overwritten methods will automatically be subscribed as notification listener.
-For example:
-```
-class Bot(OlvidBot)
+This code will run forever and print every new message content.
+```python
+import asyncio
+from olvid import OlvidBot, datatypes
+
+class Bot(OlvidBot):
     async def on_message_received(self, message: datatypes.Message):
-        print(message)
-```
-Every time Bot class is instantiated it will add a listener to message_received notification with the method as handler.
+        print(message.body)
 
-OlvidBot can also add [Command](./olvid/listeners/Command.py) objects with add_command method. Command are specific listeners.
-They subclass listeners.MessageReceivedListener, and they are created with a regexp filter that will filter notifications.
-Only messages that match the regexp will raise a notification.
-Commands can be added using OlvidBot.command decorator:
-For example:
+async def main():
+    bot = Bot()
+    await bot.wait_for_listeners_end()
+
+asyncio.run(main())
 ```
-class Bot(OlvidBot)
-    OlvidBot.command(regexp_filter="^!help")
+#### Command listeners
+OlvidBot also supports adding [Command](./olvid/listeners/Command.py) objects using the `add_command` method.
+Commands are specific `listeners.MessageReceivedListener` sub-classes. 
+They are created with a regexp filter to selectively trigger notifications.
+
+You can add commands using the `OlvidBot.command` decorator:
+
+```python
+from olvid import OlvidBot, datatypes
+
+class Bot(OlvidBot):
+    @OlvidBot.command(regexp_filter="^!help")
     async def on_message_received(self, message: datatypes.Message):
         await message.reply("Help message")
+
+async def main():
+    bot = Bot()
+    await bot.wait_for_listeners_end()
 ```
 
-### Authentication
-OlvidClient needs a client key to authenticate on daemon, you can pass it using:
-- by setting OLVID_CLIENT_KEY env variable
-- by writing it in a .client_key file
-- by passing it as a client_key constructor parameter (to avoid)
+Or you can also dynamically define and add a command to a bot instance.
+```python
+from olvid import OlvidBot, datatypes, listeners
 
-By default, client connects to "localhost:50051" you can change this behavior:
-- set DAEMON_HOSTNAME and/or DAEMON_PORT env variable
-- use server_target parameter. It must be the full server address including hostname/ip and port
-
-An [OlvidAdminClient](./olvid/core/OlvidAdminClient.py) use the same mechanism but because it needs an admin client key
-it use the OLVID_ADMIN_CLIENT_KEY env variable and the .admin_client_key file to find a key to use.
-
-#### Concepts
-- **Listener**: a listener is a class that implements a method that will be called when a notification is received. [GenericNotificationListener.py](./olvid/listeners/GenericNotificationListener.py).
-You can add listeners to any OlvidClient subclass.
-We do not recommend that you use GenericNotificationListener directly. Instead, you should use one of the provided
-listeners in the ListenersImplementation file.
-You can access them like this:
-```
-from olvid import listeners
-listeners.MessageReceivedListener(handler=lambda m: a)
-```
-Like this you won't need to specify the notification you want to listen to.
-Also, you won't need to use protobuf Notification messages, message are already un-wrapped and handler ill receive notification content.
-For example MessageReceivedListener.handler will receive a datatypes.Message item, not a MessageReceivedNotification
-as a GenericNotificationListener will receive if listening to MessageReceivedNotification.
-
-- **Command**: a (Command)[./olvid/core/Command.py] is a specific MessageReceivedListener associated with a regexp that will determine if it's called or not.
-The most convenient way to add a command is to use the `OlvidBot.command` decorator, like this command are automatically
-added to an OlvidBot instance.
-Examples of possible way to add commands to a bot:
-
-```
-class Bot(OlvidBot):
-    # use decorator in you bot class declaration
-    @OlvidBot.command(regexp_filter="^!help")
-    async def help_cmd(self, message: datatypes.Message):
-        await message.reply("help message")
-
-bot = OlvidBot()
-
-# use decorator to to an existing bot instance
-@bot.command(regexp_filter="!second")
-async def second_command(message: datatypes.Message):
-    print("Second command")
-
-# use add_command method
-bot.add_command(Command(regexp_filter="^!cmd", handler=lambda message: print(message)))
+async def main():
+    bot = OlvidBot()
+    bot.add_command(listeners.Command(
+        regexp_filter="!help",
+        handler=lambda m: print("Help as been requested")
+    ))
+    await bot.wait_for_listeners_end()
 ```
