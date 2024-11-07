@@ -5,12 +5,11 @@ from grpc.aio import AioRpcError
 
 from .logger import tools_logger
 from ..core.OlvidClient import OlvidClient
-from ..core.OlvidBot import OlvidBot
 from .. import datatypes
 from ..listeners.ListenersImplementation import MessageReceivedListener, MessageSentListener, AttachmentUploadedListener, MessageUploadedListener
 
 
-class SelfCleaningBot(OlvidBot):
+class SelfCleaningBot(OlvidClient):
 	# with no parameters we clean in and out messages
 	# if you specify is_message_for_cleaning parameter we disable in and out clean,
 	# we only use is_message_for_cleaning method (so be sure to cover every case).
@@ -25,8 +24,8 @@ class SelfCleaningBot(OlvidBot):
 		self.is_message_for_cleaning: Callable[[datatypes.Message], Union[Coroutine[Any, Any, bool]]] = self._is_message_for_cleaning_wrapper(is_message_for_cleaning) if is_message_for_cleaning else None
 		if self.is_message_for_cleaning and (clean_inbound_messages is not None or clean_outbound_messages is not None):
 			raise ValueError("Cannot set is_message_for_cleaning and clean_inbound_messages or clean_outbound_messages")
-		self.clean_inbound_messages: bool = clean_inbound_messages if clean_inbound_messages else True if is_message_for_cleaning is None else False
-		self.clean_outbound_messages: bool = clean_outbound_messages if clean_outbound_messages else True if is_message_for_cleaning is None else False
+		self.clean_inbound_messages: bool = clean_inbound_messages if clean_inbound_messages is not None else True
+		self.clean_outbound_messages: bool = clean_outbound_messages if clean_outbound_messages is not None else True
 
 		self.add_listener(listener=MessageReceivedListener(handler=self.message_received_handler))
 		self.add_listener(listener=MessageSentListener(handler=self.message_sent_handler))
@@ -71,7 +70,7 @@ class SelfCleaningBot(OlvidBot):
 			try:
 				await self.message_delete(message_id=message.id)
 			except Exception:
-				tools_logger.exception(f"{self.name}: on_message_received: unexpected exception")
+				tools_logger.exception(f"{self.__class__.__name__}: on_message_received: unexpected exception")
 
 	# delete outbound messages when they arrive or when all attachments have been uploaded
 	async def message_sent_handler(self, message: datatypes.Message):
@@ -90,7 +89,7 @@ class SelfCleaningBot(OlvidBot):
 			await self.message_delete(message_id=message.id)
 			self._pending_outbound_messages_by_id.pop(message.id.id)
 		except Exception:
-			tools_logger.exception(f"{self.name}: on_message_uploaded: unexpected exception")
+			tools_logger.exception(f"{self.__class__.__name__}: on_message_uploaded: unexpected exception")
 
 	async def attachment_uploaded_handler(self, attachment: datatypes.Attachment):
 		try:
@@ -104,7 +103,7 @@ class SelfCleaningBot(OlvidBot):
 				await self.message_delete(message_id=message.id)
 				self._pending_outbound_messages_by_id.pop(message.id.id)
 		except Exception:
-			tools_logger.exception(f"{self.name}: on_attachment_uploaded: unexpected exception")
+			tools_logger.exception(f"{self.__class__.__name__}: on_attachment_uploaded: unexpected exception")
 
 	@staticmethod
 	def _is_message_for_cleaning_wrapper(is_message_for_cleaning: Callable[[datatypes.Message], Union[bool, Coroutine[Any, Any, bool]]]) -> Callable[[datatypes.Message], Union[Coroutine[Any, Any, bool]]]:

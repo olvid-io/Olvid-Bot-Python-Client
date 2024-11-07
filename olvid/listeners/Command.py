@@ -15,18 +15,18 @@ class Command(MessageReceivedListener):
 	"""
 	Command: a specific MessageReceivedListener associated with a regexp that will determine if it's called or not.
 
-	The most convenient way to add a command is to use the `OlvidBot.command` decorator, like this command are automatically
-	added to an OlvidBot instance.
+	The most convenient way to add a command is to use the `OlvidClient.command` decorator, like this command are automatically
+	added to an OlvidClient instance.
 	Examples of possible way to add commands to a bot:
 
 	```
-	class Bot(OlvidBot):
+	class Bot(OlvidClient):
 		# use decorator in you bot class declaration
-		@OlvidBot.command(regexp_filter="^!help")
+		@OlvidClient.command(regexp_filter="^!help")
 		async def help_cmd(self, message: datatypes.Message):
 			await message.reply("help message")
 
-	bot = OlvidBot()
+	bot = OlvidClient()
 
 	# use decorator to to an existing bot instance
 	@bot.command(regexp_filter="!second")
@@ -172,7 +172,7 @@ class ClassCommandDecorator(CommandDecorator):
 		# dict2: regexp_filter -> (class_method_name, usage, name)
 		self._command_elements_by_name_by_class_name: dict[str, dict[str, (str, str, str, bool)]] = {}
 
-	# add command to the global OlvidBot command holder
+	# add command to the global OlvidClient command holder
 	def _add_command(self, function: callable, regexp_filter: str, usage: str = None, name: str = None, ignore_case: bool = None):
 		class_name = function.__qualname__.removesuffix(f".{function.__name__}")
 

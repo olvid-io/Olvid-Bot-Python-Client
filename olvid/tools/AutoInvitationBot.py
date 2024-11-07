@@ -2,11 +2,10 @@ from grpc.aio import AioRpcError
 
 from .logger import tools_logger
 from ..core.OlvidClient import OlvidClient
-from ..core.OlvidBot import OlvidBot
 from .. import datatypes
 
 
-class AutoInvitationBot(OlvidBot):
+class AutoInvitationBot(OlvidClient):
 	def __init__(self, parent_client: OlvidClient = None):
 		super().__init__(parent_client=parent_client)
 
@@ -16,9 +15,9 @@ class AutoInvitationBot(OlvidBot):
 				async for invitation in self.invitation_list():
 					await self.accept_invitation(invitation)
 			except AioRpcError as rpc_error:
-				tools_logger.error(f"{self.name}: accept invitation on start task: {rpc_error.code()}: {rpc_error.details()}")
+				tools_logger.error(f"{self.__class__.__name__}: accept invitation on start task: {rpc_error.code()}: {rpc_error.details()}")
 			except Exception:
-				tools_logger.exception(f"{self.name}: accept invitation on start task: unexpected error")
+				tools_logger.exception(f"{self.__class__.__name__}: accept invitation on start task: unexpected error")
 
 		self.add_background_task(coroutine=accept_invitations_task(), name=f"{self.__class__.__name__}-accept_invitations_task")
 

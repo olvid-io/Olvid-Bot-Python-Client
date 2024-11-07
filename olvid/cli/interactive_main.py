@@ -1,13 +1,14 @@
 import asyncio
 import sys
+import threading
 
 import asyncclick as click
-import grpc.aio
 
 from .interactive_tree import interactive_tree
 from .tools.ClientSingleton import ClientSingleton
 from .tools.cli_tools import print_error_message
 from .tools.exceptions import CancelCommandError
+from ..core import errors
 
 
 def tokenize_command_line(cmd_line: str) -> list[str]:
@@ -43,6 +44,35 @@ def tokenize_command_line(cmd_line: str) -> list[str]:
 	return tokens
 
 
+class InputThread(threading.Thread):
+	def __init__(self, loop: asyncio.AbstractEventLoop):
+		super().__init__()
+		self.loop: asyncio.AbstractEventLoop = loop
+		# event set when main wants InputThread to start input
+		self.read_event: threading.Event = threading.Event()
+		# Allow the thread to exit when the main program finishes
+		self.daemon = True
+		self.stop: bool = False
+		self.queue = asyncio.Queue()
+
+	async def read_main(self):
+		while not self.stop:
+			try:
+				self.read_event.wait()
+				self.read_event.clear()
+				self.loop.call_soon_threadsafe(self.queue.put_nowait, input(f"{ClientSingleton.get_current_identity_id()} > "))
+			except EOFError:
+				self.stop = True
+				self.loop.call_soon_threadsafe(self.queue.put_nowait, None)
+				break
+			except KeyboardInterrupt:
+				self.loop.call_soon_threadsafe(self.queue.put_nowait, None)
+
+	def run(self):
+		asyncio.set_event_loop(asyncio.new_event_loop())
+		asyncio.get_event_loop().run_until_complete(self.read_main())
+
+
 async def interactive_main():
 	# this import is important to enable the command line edition in interactive mode
 	import readline
@@ -64,14 +94,25 @@ async def interactive_main():
 	try:
 		if not ClientSingleton.get_current_identity_id():
 			await ClientSingleton.auto_select_identity()
-	except grpc.aio.AioRpcError as e:
+	except errors.UnavailableError:
+		print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().server_target}")
+		return
+	except errors.AioRpcError as e:
 		print_error_message(e.details())
 		return
 
 	try:
-		while True:
+		input_thread = InputThread(asyncio.get_event_loop())
+		input_thread.start()
+
+		while not input_thread.stop:
 			try:
-				line = await asyncio.to_thread(input, f"{ClientSingleton.get_current_identity_id()} > ")
+				input_thread.read_event.set()
+				line = await input_thread.queue.get()
+				if line is None:
+					continue
+				# line = await asyncio.to_thread(input, f"{ClientSingleton.get_current_identity_id()} > ")
+				# print("post input")
 				tokens: list[str] = tokenize_command_line(line)
 
 				# shortcut for current identity
@@ -101,9 +142,11 @@ async def interactive_main():
 					print(e.ctx.get_help())
 			# clean line on ctrl + c
 			except (KeyboardInterrupt, asyncio.CancelledError) as e:
-				continue
+				break
 			# handle ctrl + d
 			except EOFError:
+				break
+			except ValueError:
 				break
 	finally:
 		# save history

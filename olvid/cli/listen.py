@@ -1,7 +1,7 @@
 from typing import Callable
 
-import grpc
-from olvid import OlvidAdminClient, OlvidClient, datatypes, listeners
+from olvid import OlvidAdminClient, OlvidClient, datatypes, listeners, errors
+from olvid.cli.tools.cli_tools import print_error_message
 
 
 async def listen(identity_id: int = 0, quiet: bool = False, notifications_to_listen: str = ""):
@@ -14,7 +14,7 @@ async def listen(identity_id: int = 0, quiet: bool = False, notifications_to_lis
 				clients.append(OlvidAdminClient(identity_id=identity.id))
 		else:
 			clients.append(OlvidAdminClient(identity_id=identity_id))
-	except grpc.aio.AioRpcError as e:
+	except errors.AioRpcError as e:
 		print(e.details())
 		return
 
@@ -22,7 +22,12 @@ async def listen(identity_id: int = 0, quiet: bool = False, notifications_to_lis
 	if not notifications_to_listen:
 		notifications: list[listeners.NOTIFICATIONS] = [notification for notification in listeners.NOTIFICATIONS]
 	else:
-		notifications: list[listeners.NOTIFICATIONS] = [getattr(listeners.NOTIFICATIONS, notif_name) for notif_name in notifications_to_listen.split(",")]
+		notifications: list[listeners.NOTIFICATIONS] = []
+		for notif_name in notifications_to_listen.split(","):
+			try:
+				notifications.append(getattr(listeners.NOTIFICATIONS, notif_name))
+			except AttributeError:
+				print_error_message(f"Invalid notification name: {notif_name}")
 
 	# add listeners
 	for client in clients:

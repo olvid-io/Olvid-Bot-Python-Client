@@ -3,13 +3,13 @@ import sys
 import traceback
 
 import asyncclick as click
-import grpc.aio
 
 from .cli.tools.ClientSingleton import ClientSingleton
 from .cli.interactive_tree import interactive_tree
 from .cli.root_tree import root_tree
-
 from .cli.tools.cli_tools import print_error_message
+
+from .core import errors
 
 # import logging
 # logging.basicConfig(level=logging.INFO, format="[%(levelname)5s]: %(message)s", filename="cli.log")
@@ -24,7 +24,7 @@ async def async_main():
 	except ValueError as e:
 		click.echo(click.style(e, fg="red"))
 		exit(1)
-	except grpc.aio.AioRpcError as e:
+	except errors.AioRpcError as e:
 		click.echo(click.style(e.details(), fg="red"))
 		exit(1)
 
@@ -52,10 +52,11 @@ async def async_main():
 
 
 def main():
-	# This is supposed to improve performances, and it fix and exception when running cli in docker (not sure why)
-	import uvloop
-	asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-	asyncio.run(async_main())
+	try:
+		asyncio.set_event_loop(asyncio.new_event_loop())
+		asyncio.get_event_loop().run_until_complete(async_main())
+	except KeyboardInterrupt:
+		pass
 
 
 if __name__ == "__main__":

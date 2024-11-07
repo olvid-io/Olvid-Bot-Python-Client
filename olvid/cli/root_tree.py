@@ -10,8 +10,13 @@ from .tools.click_wrappers import WrapperGroup
 @click.option("-i", "--identity", "identity", default=-1, type=click.INT, help="Id of the identity you want to use")
 @click.option("-e", "--foreach", "for_each", is_flag=True, help="Run this command for each identity (ignored if -i is set)")
 @click.option("-k", "--key", "client_key", default="", type=click.STRING, help="Impersonate a client key on start")
+@click.option("-v", "--version", "version", is_flag=True, help="Show program version and exit")
 @click.argument("arguments", required=False, nargs=-1, type=click.UNPROCESSED)
-async def root_tree(arguments: list[str], identity: int = 0, client_key: str = "", for_each: bool = False):
+async def root_tree(arguments: list[str], identity: int = 0, client_key: str = "", for_each: bool = False, version: bool = False):
+	if version:
+		from olvid import __version__
+		print(__version__)
+		return
 	# global options to interactive and non-interactive
 	if identity != -1:
 		ClientSingleton.set_current_identity_id(identity_id=identity)
@@ -45,6 +50,9 @@ async def root_tree(arguments: list[str], identity: int = 0, client_key: str = "
 		click.echo(click.style(e.format_message(), fg="red"))
 		if e.ctx is not None:
 			print(e.ctx.get_help())
+	# raised in some conditions for invalid commands (for example when you call a command group: `cli identity`)
+	except click.exceptions.Exit:
+		pass
 	except Exception as e:
 		click.echo(click.style(f"Unexpected exception: {e}", fg="red"))
 		raise e

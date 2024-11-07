@@ -4,7 +4,7 @@ from google.protobuf.json_format import Parse, ParseError
 from olvid import datatypes
 from ..interactive_tree import interactive_tree
 from ..tools.ClientSingleton import ClientSingleton
-from ..tools.cli_tools import filter_fields_and_print_normal_message, print_error_message
+from ..tools.cli_tools import filter_fields, print_error_message
 from ..tools.click_wrappers import WrapperGroup
 
 # default permissions
@@ -54,7 +54,7 @@ async def group_get(get_all: bool, group_ids: list[int], fields: str, filter_: s
 	group_as_strings: list[str] = []
 	for group in groups:
 		if fields:
-			group_as_strings.append(filter_fields_and_print_normal_message(group, fields))
+			group_as_strings.append(filter_fields(group, fields))
 		else:
 			group_as_strings.append(await group_to_string(group))
 

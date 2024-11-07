@@ -3,21 +3,20 @@ import typing
 import typing as t
 
 import asyncclick as click
-import grpc
 from asyncclick import Context
 
 from .cli_tools import print_error_message
-
+from .ClientSingleton import ClientSingleton
+from ...core import errors
 
 class WrappedCommand(click.Command):
 	async def invoke(self, ctx: click.Context):
 		try:
 			await super(WrappedCommand, self).invoke(ctx)
-		except grpc.aio.AioRpcError as e:
-			if e.code() == grpc.StatusCode.UNAVAILABLE:
-				print_error_message("Server unavailable")
-			else:
-				click.echo(click.style(f"{e.code().name}: {e.details()}", fg="red"))
+		except errors.UnavailableError:
+			print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().server_target}")
+		except errors.AioRpcError as e:
+			click.echo(click.style(f"{e.code().name}: {e.details()}", fg="red"))
 		except click.exceptions.ClickException as e:
 			# pass exceptions to upper level (to get correct return value)
 			raise e

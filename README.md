@@ -105,21 +105,16 @@ async def main():
 asyncio.run(main())
 ```
 
-### OlvidBot
 #### Notification handlers
-The [OlvidBot](./olvid/core/OlvidBot.py) class extends OlvidClient, adding notification handlers for a more comprehensive experience.
-As it builds upon OlvidClient, it inherits the same constraints, such as requiring a valid client_key to connect to a daemon (see [Authentication](#authentication)).
-But it also brings all the method to call Daemon commands.
-
-OlvidBot introduces methods prefixed with `on_`, one for each gRPC notification method.
-When you instantiate an OlvidBot subclass, overridden methods will automatically be subscribed as notification listeners.
+OlvidClient have methods prefixed with `on_`, one for each gRPC notification method.
+When you instantiate an OlvidClient subclass, overridden methods will automatically be subscribed as notification listeners.
 
 This code will run forever and print every new message content.
 ```python
 import asyncio
-from olvid import OlvidBot, datatypes
+from olvid import OlvidClient, datatypes
 
-class Bot(OlvidBot):
+class Bot(OlvidClient):
     async def on_message_received(self, message: datatypes.Message):
         print(message.body)
 
@@ -130,18 +125,18 @@ async def main():
 asyncio.run(main())
 ```
 #### Command listeners
-OlvidBot also supports adding [Command](./olvid/listeners/Command.py) objects using the `add_command` method.
+OlvidClient also supports adding [Command](./olvid/listeners/Command.py) objects using the `add_command` method.
 Commands are specific `listeners.MessageReceivedListener` sub-classes. 
 They are created with a regexp filter to selectively trigger notifications.
 
-You can add commands using the `OlvidBot.command` decorator:
+You can add commands using the `OlvidClient.command` decorator:
 
 ```python
-from olvid import OlvidBot, datatypes
+from olvid import OlvidClient, datatypes
 
-class Bot(OlvidBot):
-    @OlvidBot.command(regexp_filter="^!help")
-    async def on_message_received(self, message: datatypes.Message):
+class Bot(OlvidClient):
+    @OlvidClient.command(regexp_filter="^!help")
+    async def help_cmd(self, message: datatypes.Message):
         await message.reply("Help message")
 
 async def main():
@@ -151,10 +146,10 @@ async def main():
 
 Or you can also dynamically define and add a command to a bot instance.
 ```python
-from olvid import OlvidBot, datatypes, listeners
+from olvid import OlvidClient, listeners
 
 async def main():
-    bot = OlvidBot()
+    bot = OlvidClient()
     bot.add_command(listeners.Command(
         regexp_filter="!help",
         handler=lambda m: print("Help as been requested")

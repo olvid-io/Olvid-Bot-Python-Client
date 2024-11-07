@@ -37,19 +37,16 @@ async def message_get(message_ids: tuple[str], fields: str, discussion: int = 0,
 			return
 
 	# all messages for identity
-	messages = []
 	if message_ids:
 		for message_id in message_ids:
-			messages.append(await ClientSingleton.get_client().message_get(string_to_message_id(message_id)))
+			filter_fields_and_print_normal_message(await ClientSingleton.get_client().message_get(string_to_message_id(message_id)), fields)
 	elif discussion:
 		message_filter.discussion_id = discussion
 		async for message in ClientSingleton.get_client().message_list(filter=message_filter, unread=unread):
-			messages.append(message)
+			filter_fields_and_print_normal_message(message, fields)
 	else:
 		async for message in ClientSingleton.get_client().message_list(filter=message_filter, unread=unread):
-			messages.append(message)
-	for message in messages:
-		filter_fields_and_print_normal_message(message, fields)
+			filter_fields_and_print_normal_message(message, fields)
 
 
 #####
@@ -164,6 +161,28 @@ async def message_send(message_id: str, new_body: tuple[str]):
 async def message_send_reaction(message_id: str, reaction: str):
 	await ClientSingleton.get_client().message_react(string_to_message_id(message_id), reaction)
 	print_command_result("Reaction sent")
+
+
+#####
+# message location
+#####
+@message_tree.command("location", help="send a location message")
+@click.option("-p", "--preview", "preview_file", type=click.Path(exists=True, readable=True, file_okay=True, dir_okay=False, resolve_path=True))
+@click.argument("discussion_id", nargs=1, type=click.INT)
+@click.argument("latitude", nargs=1, type=click.FLOAT)
+@click.argument("longitude", nargs=1, type=click.FLOAT)
+@click.argument("address", nargs=1, type=str, required=False)
+async def message_send_location(discussion_id: int, latitude: float, longitude: float, address: str = "", preview_file: str = None):
+	if preview_file is not None:
+		with open(preview_file, "rb") as fd:
+			preview_payload: bytes = fd.read()
+		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
+			discussion_id=discussion_id, latitude=latitude, longitude=longitude,
+			address=address, preview_filename=preview_file, preview_payload=preview_payload)
+	else:
+		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
+			discussion_id=discussion_id, latitude=latitude, longitude=longitude, address=address)
+	print_normal_message(message, message.id)
 
 
 #####

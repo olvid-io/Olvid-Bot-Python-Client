@@ -13,10 +13,10 @@ def _recursive_get_attr(item: object, attributes: list[str]):
 		return item
 	return _recursive_get_attr(getattr(item, attributes[0]), attributes[1:])
 
-
-def filter_fields_and_print_normal_message(item: object, fields: str):
+# return normal and script version
+def _filter_fields(item: object, fields: str) -> tuple[str, str]:
 	if not fields:
-		print_normal_message(item, item)
+		return item, item
 	else:
 		try:
 			field_names = fields.split(",")
@@ -37,12 +37,18 @@ def filter_fields_and_print_normal_message(item: object, fields: str):
 					normal_str += f"{field_name}: {attr},"
 				normal_str = normal_str.strip().removesuffix(",")
 				script_str = script_str.strip().removesuffix(",")
-			print_normal_message(normal_str, script_str)
+			return normal_str, script_str
 		except AttributeError as e:
 			print_error_message(f"Invalid fields filter: {fields}")
 			print_error_message(e)
 			raise CancelCommandError()
 
+
+def filter_fields(item: object, fields: str) -> str:
+	return _filter_fields(item, fields)[0]
+
+def filter_fields_and_print_normal_message(item: object, fields: str):
+	print_normal_message(*_filter_fields(item, fields))
 
 # print a red message on stderr
 def print_error_message(message: Any):

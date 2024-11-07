@@ -1978,6 +1978,11 @@ class MessageCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.FromString,
                 _registered_method=True)
+        self.MessageSendLocation = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageSendLocation',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.FromString,
+                _registered_method=True)
         self.MessageReact = channel.unary_unary(
                 '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
@@ -2035,6 +2040,12 @@ class MessageCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def MessageSendLocation(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def MessageReact(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -2085,6 +2096,11 @@ def add_MessageCommandServiceServicer_to_server(servicer, server):
                     servicer.MessageSendWithAttachments,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.SerializeToString,
+            ),
+            'MessageSendLocation': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageSendLocation,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.SerializeToString,
             ),
             'MessageReact': grpc.unary_unary_rpc_method_handler(
                     servicer.MessageReact,
@@ -2265,6 +2281,33 @@ class MessageCommandService(object):
             '/olvid.daemon.services.v1.MessageCommandService/MessageSendWithAttachments',
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageSendLocation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageSendLocation',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.FromString,
             options,
             channel_credentials,
             insecure,

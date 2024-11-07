@@ -1,12 +1,12 @@
 import datetime
 from typing import Optional
 
-from ..core.OlvidBot import OlvidBot
+from ..core.OlvidClient import OlvidClient
 from ..listeners.ListenersImplementation import MessageReceivedListener, MessageSentListener
 from .. import datatypes
 
 
-class DiscussionRetentionPolicyBot(OlvidBot):
+class DiscussionRetentionPolicyBot(OlvidClient):
 	def __init__(self, retention_delay_s: int = None, discussion_retention_number: int = None, global_retention_number: int = None):
 		super().__init__()
 

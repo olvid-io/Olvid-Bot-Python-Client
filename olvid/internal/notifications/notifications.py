@@ -6,9 +6,10 @@ from __future__ import annotations  # this block is necessary for compilation
 from typing import TYPE_CHECKING  # this block is necessary for compilation
 if TYPE_CHECKING:  # this block is necessary for compilation
 	from ...core.OlvidClient import OlvidClient  # this block is necessary for compilation
-import grpc
+from grpc.aio import Channel
 from typing import Coroutine, Any, AsyncIterator
 from ...protobuf import olvid
+from ...core import errors
 
 from ...datatypes import *
 
@@ -38,8 +39,11 @@ class SubscribeToAttachmentReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentReceivedNotification], client: OlvidClient = None) -> "SubscribeToAttachmentReceivedNotification":
-		native_message = await promise
-		return SubscribeToAttachmentReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToAttachmentReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -105,8 +109,11 @@ class AttachmentReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentReceivedNotification], client: OlvidClient = None) -> "AttachmentReceivedNotification":
-		native_message = await promise
-		return AttachmentReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return AttachmentReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -176,8 +183,11 @@ class SubscribeToAttachmentUploadedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentUploadedNotification], client: OlvidClient = None) -> "SubscribeToAttachmentUploadedNotification":
-		native_message = await promise
-		return SubscribeToAttachmentUploadedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToAttachmentUploadedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -243,8 +253,11 @@ class AttachmentUploadedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentUploadedNotification], client: OlvidClient = None) -> "AttachmentUploadedNotification":
-		native_message = await promise
-		return AttachmentUploadedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return AttachmentUploadedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -314,8 +327,11 @@ class SubscribeToContactNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactNewNotification], client: OlvidClient = None) -> "SubscribeToContactNewNotification":
-		native_message = await promise
-		return SubscribeToContactNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToContactNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -381,8 +397,11 @@ class ContactNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.ContactNewNotification], client: OlvidClient = None) -> "ContactNewNotification":
-		native_message = await promise
-		return ContactNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ContactNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -452,8 +471,11 @@ class SubscribeToContactDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDeletedNotification], client: OlvidClient = None) -> "SubscribeToContactDeletedNotification":
-		native_message = await promise
-		return SubscribeToContactDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToContactDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -519,8 +541,11 @@ class ContactDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.ContactDeletedNotification], client: OlvidClient = None) -> "ContactDeletedNotification":
-		native_message = await promise
-		return ContactDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ContactDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -590,8 +615,11 @@ class SubscribeToContactDetailsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDetailsUpdatedNotification], client: OlvidClient = None) -> "SubscribeToContactDetailsUpdatedNotification":
-		native_message = await promise
-		return SubscribeToContactDetailsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToContactDetailsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -659,8 +687,11 @@ class ContactDetailsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.ContactDetailsUpdatedNotification], client: OlvidClient = None) -> "ContactDetailsUpdatedNotification":
-		native_message = await promise
-		return ContactDetailsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ContactDetailsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -736,8 +767,11 @@ class SubscribeToDiscussionNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionNewNotification], client: OlvidClient = None) -> "SubscribeToDiscussionNewNotification":
-		native_message = await promise
-		return SubscribeToDiscussionNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToDiscussionNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -803,8 +837,11 @@ class DiscussionNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionNewNotification], client: OlvidClient = None) -> "DiscussionNewNotification":
-		native_message = await promise
-		return DiscussionNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return DiscussionNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -874,8 +911,11 @@ class SubscribeToDiscussionLockedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionLockedNotification], client: OlvidClient = None) -> "SubscribeToDiscussionLockedNotification":
-		native_message = await promise
-		return SubscribeToDiscussionLockedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToDiscussionLockedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -941,8 +981,11 @@ class DiscussionLockedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionLockedNotification], client: OlvidClient = None) -> "DiscussionLockedNotification":
-		native_message = await promise
-		return DiscussionLockedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return DiscussionLockedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1012,8 +1055,11 @@ class SubscribeToDiscussionTitleUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionTitleUpdatedNotification], client: OlvidClient = None) -> "SubscribeToDiscussionTitleUpdatedNotification":
-		native_message = await promise
-		return SubscribeToDiscussionTitleUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToDiscussionTitleUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1081,8 +1127,11 @@ class DiscussionTitleUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionTitleUpdatedNotification], client: OlvidClient = None) -> "DiscussionTitleUpdatedNotification":
-		native_message = await promise
-		return DiscussionTitleUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return DiscussionTitleUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1155,8 +1204,11 @@ class SubscribeToDiscussionSettingsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionSettingsUpdatedNotification], client: OlvidClient = None) -> "SubscribeToDiscussionSettingsUpdatedNotification":
-		native_message = await promise
-		return SubscribeToDiscussionSettingsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToDiscussionSettingsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1224,8 +1276,11 @@ class DiscussionSettingsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionSettingsUpdatedNotification], client: OlvidClient = None) -> "DiscussionSettingsUpdatedNotification":
-		native_message = await promise
-		return DiscussionSettingsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return DiscussionSettingsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1301,8 +1356,11 @@ class SubscribeToGroupNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNewNotification], client: OlvidClient = None) -> "SubscribeToGroupNewNotification":
-		native_message = await promise
-		return SubscribeToGroupNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1368,8 +1426,11 @@ class GroupNewNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupNewNotification], client: OlvidClient = None) -> "GroupNewNotification":
-		native_message = await promise
-		return GroupNewNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupNewNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1439,8 +1500,11 @@ class SubscribeToGroupDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDeletedNotification], client: OlvidClient = None) -> "SubscribeToGroupDeletedNotification":
-		native_message = await promise
-		return SubscribeToGroupDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1506,8 +1570,11 @@ class GroupDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupDeletedNotification], client: OlvidClient = None) -> "GroupDeletedNotification":
-		native_message = await promise
-		return GroupDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1577,8 +1644,11 @@ class SubscribeToGroupNameUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNameUpdatedNotification], client: OlvidClient = None) -> "SubscribeToGroupNameUpdatedNotification":
-		native_message = await promise
-		return SubscribeToGroupNameUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupNameUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1646,8 +1716,11 @@ class GroupNameUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupNameUpdatedNotification], client: OlvidClient = None) -> "GroupNameUpdatedNotification":
-		native_message = await promise
-		return GroupNameUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupNameUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1720,8 +1793,11 @@ class SubscribeToGroupDescriptionUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDescriptionUpdatedNotification], client: OlvidClient = None) -> "SubscribeToGroupDescriptionUpdatedNotification":
-		native_message = await promise
-		return SubscribeToGroupDescriptionUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupDescriptionUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1789,8 +1865,11 @@ class GroupDescriptionUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupDescriptionUpdatedNotification], client: OlvidClient = None) -> "GroupDescriptionUpdatedNotification":
-		native_message = await promise
-		return GroupDescriptionUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupDescriptionUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1863,8 +1942,11 @@ class SubscribeToGroupPendingMemberAddedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberAddedNotification], client: OlvidClient = None) -> "SubscribeToGroupPendingMemberAddedNotification":
-		native_message = await promise
-		return SubscribeToGroupPendingMemberAddedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupPendingMemberAddedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1932,8 +2014,11 @@ class GroupPendingMemberAddedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberAddedNotification], client: OlvidClient = None) -> "GroupPendingMemberAddedNotification":
-		native_message = await promise
-		return GroupPendingMemberAddedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupPendingMemberAddedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2009,8 +2094,11 @@ class SubscribeToGroupPendingMemberRemovedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberRemovedNotification], client: OlvidClient = None) -> "SubscribeToGroupPendingMemberRemovedNotification":
-		native_message = await promise
-		return SubscribeToGroupPendingMemberRemovedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupPendingMemberRemovedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2078,8 +2166,11 @@ class GroupPendingMemberRemovedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberRemovedNotification], client: OlvidClient = None) -> "GroupPendingMemberRemovedNotification":
-		native_message = await promise
-		return GroupPendingMemberRemovedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupPendingMemberRemovedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2155,8 +2246,11 @@ class SubscribeToGroupMemberJoinedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberJoinedNotification], client: OlvidClient = None) -> "SubscribeToGroupMemberJoinedNotification":
-		native_message = await promise
-		return SubscribeToGroupMemberJoinedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupMemberJoinedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2224,8 +2318,11 @@ class GroupMemberJoinedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberJoinedNotification], client: OlvidClient = None) -> "GroupMemberJoinedNotification":
-		native_message = await promise
-		return GroupMemberJoinedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupMemberJoinedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2301,8 +2398,11 @@ class SubscribeToGroupMemberLeftNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberLeftNotification], client: OlvidClient = None) -> "SubscribeToGroupMemberLeftNotification":
-		native_message = await promise
-		return SubscribeToGroupMemberLeftNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupMemberLeftNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2370,8 +2470,11 @@ class GroupMemberLeftNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberLeftNotification], client: OlvidClient = None) -> "GroupMemberLeftNotification":
-		native_message = await promise
-		return GroupMemberLeftNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupMemberLeftNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2447,8 +2550,11 @@ class SubscribeToGroupOwnPermissionsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupOwnPermissionsUpdatedNotification], client: OlvidClient = None) -> "SubscribeToGroupOwnPermissionsUpdatedNotification":
-		native_message = await promise
-		return SubscribeToGroupOwnPermissionsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupOwnPermissionsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2518,8 +2624,11 @@ class GroupOwnPermissionsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupOwnPermissionsUpdatedNotification], client: OlvidClient = None) -> "GroupOwnPermissionsUpdatedNotification":
-		native_message = await promise
-		return GroupOwnPermissionsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupOwnPermissionsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2601,8 +2710,11 @@ class SubscribeToGroupMemberPermissionsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification], client: OlvidClient = None) -> "SubscribeToGroupMemberPermissionsUpdatedNotification":
-		native_message = await promise
-		return SubscribeToGroupMemberPermissionsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupMemberPermissionsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2672,8 +2784,11 @@ class GroupMemberPermissionsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberPermissionsUpdatedNotification], client: OlvidClient = None) -> "GroupMemberPermissionsUpdatedNotification":
-		native_message = await promise
-		return GroupMemberPermissionsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupMemberPermissionsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2755,8 +2870,11 @@ class SubscribeToGroupUpdateInProgressNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateInProgressNotification], client: OlvidClient = None) -> "SubscribeToGroupUpdateInProgressNotification":
-		native_message = await promise
-		return SubscribeToGroupUpdateInProgressNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupUpdateInProgressNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2822,8 +2940,11 @@ class GroupUpdateInProgressNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateInProgressNotification], client: OlvidClient = None) -> "GroupUpdateInProgressNotification":
-		native_message = await promise
-		return GroupUpdateInProgressNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupUpdateInProgressNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2890,8 +3011,11 @@ class SubscribeToGroupUpdateFinishedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateFinishedNotification], client: OlvidClient = None) -> "SubscribeToGroupUpdateFinishedNotification":
-		native_message = await promise
-		return SubscribeToGroupUpdateFinishedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToGroupUpdateFinishedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -2957,8 +3081,11 @@ class GroupUpdateFinishedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateFinishedNotification], client: OlvidClient = None) -> "GroupUpdateFinishedNotification":
-		native_message = await promise
-		return GroupUpdateFinishedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return GroupUpdateFinishedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3025,8 +3152,11 @@ class SubscribeToIdentityCreatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.SubscribeToIdentityCreatedNotification], client: OlvidClient = None) -> "SubscribeToIdentityCreatedNotification":
-		native_message = await promise
-		return SubscribeToIdentityCreatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToIdentityCreatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3092,8 +3222,11 @@ class IdentityCreatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.IdentityCreatedNotification], client: OlvidClient = None) -> "IdentityCreatedNotification":
-		native_message = await promise
-		return IdentityCreatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityCreatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3163,8 +3296,11 @@ class SubscribeToIdentityDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.SubscribeToIdentityDeletedNotification], client: OlvidClient = None) -> "SubscribeToIdentityDeletedNotification":
-		native_message = await promise
-		return SubscribeToIdentityDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToIdentityDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3230,8 +3366,11 @@ class IdentityDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.IdentityDeletedNotification], client: OlvidClient = None) -> "IdentityDeletedNotification":
-		native_message = await promise
-		return IdentityDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3301,8 +3440,11 @@ class SubscribeToIdentityUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.SubscribeToIdentityUpdatedNotification], client: OlvidClient = None) -> "SubscribeToIdentityUpdatedNotification":
-		native_message = await promise
-		return SubscribeToIdentityUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToIdentityUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3370,8 +3512,11 @@ class IdentityDetailsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.identity_notifications_pb2.IdentityDetailsUpdatedNotification], client: OlvidClient = None) -> "IdentityDetailsUpdatedNotification":
-		native_message = await promise
-		return IdentityDetailsUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityDetailsUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3447,8 +3592,11 @@ class SubscribeToInvitationReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationReceivedNotification], client: OlvidClient = None) -> "SubscribeToInvitationReceivedNotification":
-		native_message = await promise
-		return SubscribeToInvitationReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToInvitationReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3514,8 +3662,11 @@ class InvitationReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationReceivedNotification], client: OlvidClient = None) -> "InvitationReceivedNotification":
-		native_message = await promise
-		return InvitationReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return InvitationReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3585,8 +3736,11 @@ class SubscribeToInvitationSentNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationSentNotification], client: OlvidClient = None) -> "SubscribeToInvitationSentNotification":
-		native_message = await promise
-		return SubscribeToInvitationSentNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToInvitationSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3652,8 +3806,11 @@ class InvitationSentNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationSentNotification], client: OlvidClient = None) -> "InvitationSentNotification":
-		native_message = await promise
-		return InvitationSentNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return InvitationSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3723,8 +3880,11 @@ class SubscribeToInvitationDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationDeletedNotification], client: OlvidClient = None) -> "SubscribeToInvitationDeletedNotification":
-		native_message = await promise
-		return SubscribeToInvitationDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToInvitationDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3790,8 +3950,11 @@ class InvitationDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationDeletedNotification], client: OlvidClient = None) -> "InvitationDeletedNotification":
-		native_message = await promise
-		return InvitationDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return InvitationDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3861,8 +4024,11 @@ class SubscribeToInvitationUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationUpdatedNotification], client: OlvidClient = None) -> "SubscribeToInvitationUpdatedNotification":
-		native_message = await promise
-		return SubscribeToInvitationUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToInvitationUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -3930,8 +4096,11 @@ class InvitationUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationUpdatedNotification], client: OlvidClient = None) -> "InvitationUpdatedNotification":
-		native_message = await promise
-		return InvitationUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return InvitationUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4004,8 +4173,11 @@ class SubscribeToMessageReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReceivedNotification], client: OlvidClient = None) -> "SubscribeToMessageReceivedNotification":
-		native_message = await promise
-		return SubscribeToMessageReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4071,8 +4243,11 @@ class MessageReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageReceivedNotification], client: OlvidClient = None) -> "MessageReceivedNotification":
-		native_message = await promise
-		return MessageReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4142,8 +4317,11 @@ class SubscribeToMessageSentNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageSentNotification], client: OlvidClient = None) -> "SubscribeToMessageSentNotification":
-		native_message = await promise
-		return SubscribeToMessageSentNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4209,8 +4387,11 @@ class MessageSentNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageSentNotification], client: OlvidClient = None) -> "MessageSentNotification":
-		native_message = await promise
-		return MessageSentNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4280,8 +4461,11 @@ class SubscribeToMessageDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeletedNotification], client: OlvidClient = None) -> "SubscribeToMessageDeletedNotification":
-		native_message = await promise
-		return SubscribeToMessageDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4347,8 +4531,11 @@ class MessageDeletedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageDeletedNotification], client: OlvidClient = None) -> "MessageDeletedNotification":
-		native_message = await promise
-		return MessageDeletedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageDeletedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4418,8 +4605,11 @@ class SubscribeToMessageBodyUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageBodyUpdatedNotification], client: OlvidClient = None) -> "SubscribeToMessageBodyUpdatedNotification":
-		native_message = await promise
-		return SubscribeToMessageBodyUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageBodyUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4487,8 +4677,11 @@ class MessageBodyUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageBodyUpdatedNotification], client: OlvidClient = None) -> "MessageBodyUpdatedNotification":
-		native_message = await promise
-		return MessageBodyUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageBodyUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4561,8 +4754,11 @@ class SubscribeToMessageUploadedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageUploadedNotification], client: OlvidClient = None) -> "SubscribeToMessageUploadedNotification":
-		native_message = await promise
-		return SubscribeToMessageUploadedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageUploadedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4628,8 +4824,11 @@ class MessageUploadedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageUploadedNotification], client: OlvidClient = None) -> "MessageUploadedNotification":
-		native_message = await promise
-		return MessageUploadedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageUploadedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4699,8 +4898,11 @@ class SubscribeToMessageDeliveredNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeliveredNotification], client: OlvidClient = None) -> "SubscribeToMessageDeliveredNotification":
-		native_message = await promise
-		return SubscribeToMessageDeliveredNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageDeliveredNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4766,8 +4968,11 @@ class MessageDeliveredNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageDeliveredNotification], client: OlvidClient = None) -> "MessageDeliveredNotification":
-		native_message = await promise
-		return MessageDeliveredNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageDeliveredNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4837,8 +5042,11 @@ class SubscribeToMessageReadNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReadNotification], client: OlvidClient = None) -> "SubscribeToMessageReadNotification":
-		native_message = await promise
-		return SubscribeToMessageReadNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageReadNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4904,8 +5112,11 @@ class MessageReadNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageReadNotification], client: OlvidClient = None) -> "MessageReadNotification":
-		native_message = await promise
-		return MessageReadNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageReadNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -4975,8 +5186,11 @@ class SubscribeToMessageLocationReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationReceivedNotification], client: OlvidClient = None) -> "SubscribeToMessageLocationReceivedNotification":
-		native_message = await promise
-		return SubscribeToMessageLocationReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageLocationReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5042,8 +5256,11 @@ class MessageLocationReceivedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationReceivedNotification], client: OlvidClient = None) -> "MessageLocationReceivedNotification":
-		native_message = await promise
-		return MessageLocationReceivedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageLocationReceivedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5113,8 +5330,11 @@ class SubscribeToMessageLocationSharingStartNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingStartNotification], client: OlvidClient = None) -> "SubscribeToMessageLocationSharingStartNotification":
-		native_message = await promise
-		return SubscribeToMessageLocationSharingStartNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageLocationSharingStartNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5180,8 +5400,11 @@ class MessageLocationSharingStartNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingStartNotification], client: OlvidClient = None) -> "MessageLocationSharingStartNotification":
-		native_message = await promise
-		return MessageLocationSharingStartNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageLocationSharingStartNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5251,8 +5474,11 @@ class SubscribeToMessageLocationSharingUpdateNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingUpdateNotification], client: OlvidClient = None) -> "SubscribeToMessageLocationSharingUpdateNotification":
-		native_message = await promise
-		return SubscribeToMessageLocationSharingUpdateNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageLocationSharingUpdateNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5320,8 +5546,11 @@ class MessageLocationSharingUpdateNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingUpdateNotification], client: OlvidClient = None) -> "MessageLocationSharingUpdateNotification":
-		native_message = await promise
-		return MessageLocationSharingUpdateNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageLocationSharingUpdateNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5397,8 +5626,11 @@ class SubscribeToMessageLocationSharingEndNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingEndNotification], client: OlvidClient = None) -> "SubscribeToMessageLocationSharingEndNotification":
-		native_message = await promise
-		return SubscribeToMessageLocationSharingEndNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageLocationSharingEndNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5464,8 +5696,11 @@ class MessageLocationSharingEndNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingEndNotification], client: OlvidClient = None) -> "MessageLocationSharingEndNotification":
-		native_message = await promise
-		return MessageLocationSharingEndNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageLocationSharingEndNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5535,8 +5770,11 @@ class SubscribeToMessageReactionAddedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionAddedNotification], client: OlvidClient = None) -> "SubscribeToMessageReactionAddedNotification":
-		native_message = await promise
-		return SubscribeToMessageReactionAddedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageReactionAddedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5604,8 +5842,11 @@ class MessageReactionAddedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionAddedNotification], client: OlvidClient = None) -> "MessageReactionAddedNotification":
-		native_message = await promise
-		return MessageReactionAddedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageReactionAddedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5681,8 +5922,11 @@ class SubscribeToMessageReactionUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionUpdatedNotification], client: OlvidClient = None) -> "SubscribeToMessageReactionUpdatedNotification":
-		native_message = await promise
-		return SubscribeToMessageReactionUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageReactionUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5752,8 +5996,11 @@ class MessageReactionUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionUpdatedNotification], client: OlvidClient = None) -> "MessageReactionUpdatedNotification":
-		native_message = await promise
-		return MessageReactionUpdatedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageReactionUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5835,8 +6082,11 @@ class SubscribeToMessageReactionRemovedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionRemovedNotification], client: OlvidClient = None) -> "SubscribeToMessageReactionRemovedNotification":
-		native_message = await promise
-		return SubscribeToMessageReactionRemovedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return SubscribeToMessageReactionRemovedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5904,8 +6154,11 @@ class MessageReactionRemovedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionRemovedNotification], client: OlvidClient = None) -> "MessageReactionRemovedNotification":
-		native_message = await promise
-		return MessageReactionRemovedNotification._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return MessageReactionRemovedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -5957,387 +6210,621 @@ class MessageReactionRemovedNotification:
 
 
 class InvitationNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.InvitationNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.InvitationNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def invitation_received(self, subscribe_to_invitation_received_notification: SubscribeToInvitationReceivedNotification) -> AsyncIterator[InvitationReceivedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationReceivedNotification]) -> AsyncIterator[InvitationReceivedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield InvitationReceivedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_invitation_received_notification
-		return response_iterator(self.__stub.InvitationReceived(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationReceivedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationReceivedNotification]) -> AsyncIterator[InvitationReceivedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield InvitationReceivedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_invitation_received_notification
+			return response_iterator(self.__stub.InvitationReceived(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationReceivedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def invitation_sent(self, subscribe_to_invitation_sent_notification: SubscribeToInvitationSentNotification) -> AsyncIterator[InvitationSentNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationSentNotification]) -> AsyncIterator[InvitationSentNotification]:
-			async for native_message in iterator.__aiter__():
-				yield InvitationSentNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_invitation_sent_notification
-		return response_iterator(self.__stub.InvitationSent(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationSentNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationSentNotification]) -> AsyncIterator[InvitationSentNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield InvitationSentNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_invitation_sent_notification
+			return response_iterator(self.__stub.InvitationSent(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationSentNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def invitation_deleted(self, subscribe_to_invitation_deleted_notification: SubscribeToInvitationDeletedNotification) -> AsyncIterator[InvitationDeletedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationDeletedNotification]) -> AsyncIterator[InvitationDeletedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield InvitationDeletedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_invitation_deleted_notification
-		return response_iterator(self.__stub.InvitationDeleted(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationDeletedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationDeletedNotification]) -> AsyncIterator[InvitationDeletedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield InvitationDeletedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_invitation_deleted_notification
+			return response_iterator(self.__stub.InvitationDeleted(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationDeletedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def invitation_updated(self, subscribe_to_invitation_updated_notification: SubscribeToInvitationUpdatedNotification) -> AsyncIterator[InvitationUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationUpdatedNotification]) -> AsyncIterator[InvitationUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield InvitationUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_invitation_updated_notification
-		return response_iterator(self.__stub.InvitationUpdated(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.invitation_notifications_pb2.InvitationUpdatedNotification]) -> AsyncIterator[InvitationUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield InvitationUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_invitation_updated_notification
+			return response_iterator(self.__stub.InvitationUpdated(olvid.daemon.notification.v1.invitation_notifications_pb2.SubscribeToInvitationUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class ContactNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.ContactNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.ContactNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def contact_new(self, subscribe_to_contact_new_notification: SubscribeToContactNewNotification) -> AsyncIterator[ContactNewNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactNewNotification]) -> AsyncIterator[ContactNewNotification]:
-			async for native_message in iterator.__aiter__():
-				yield ContactNewNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_contact_new_notification
-		return response_iterator(self.__stub.ContactNew(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactNewNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactNewNotification]) -> AsyncIterator[ContactNewNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield ContactNewNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_contact_new_notification
+			return response_iterator(self.__stub.ContactNew(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactNewNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def contact_deleted(self, subscribe_to_contact_deleted_notification: SubscribeToContactDeletedNotification) -> AsyncIterator[ContactDeletedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactDeletedNotification]) -> AsyncIterator[ContactDeletedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield ContactDeletedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_contact_deleted_notification
-		return response_iterator(self.__stub.ContactDeleted(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDeletedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactDeletedNotification]) -> AsyncIterator[ContactDeletedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield ContactDeletedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_contact_deleted_notification
+			return response_iterator(self.__stub.ContactDeleted(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDeletedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def contact_details_updated(self, subscribe_to_contact_details_updated_notification: SubscribeToContactDetailsUpdatedNotification) -> AsyncIterator[ContactDetailsUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactDetailsUpdatedNotification]) -> AsyncIterator[ContactDetailsUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield ContactDetailsUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_contact_details_updated_notification
-		return response_iterator(self.__stub.ContactDetailsUpdated(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDetailsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactDetailsUpdatedNotification]) -> AsyncIterator[ContactDetailsUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield ContactDetailsUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_contact_details_updated_notification
+			return response_iterator(self.__stub.ContactDetailsUpdated(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactDetailsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class GroupNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.GroupNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.GroupNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_new(self, subscribe_to_group_new_notification: SubscribeToGroupNewNotification) -> AsyncIterator[GroupNewNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupNewNotification]) -> AsyncIterator[GroupNewNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupNewNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_new_notification
-		return response_iterator(self.__stub.GroupNew(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNewNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupNewNotification]) -> AsyncIterator[GroupNewNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupNewNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_new_notification
+			return response_iterator(self.__stub.GroupNew(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNewNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_deleted(self, subscribe_to_group_deleted_notification: SubscribeToGroupDeletedNotification) -> AsyncIterator[GroupDeletedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupDeletedNotification]) -> AsyncIterator[GroupDeletedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupDeletedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_deleted_notification
-		return response_iterator(self.__stub.GroupDeleted(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDeletedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupDeletedNotification]) -> AsyncIterator[GroupDeletedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupDeletedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_deleted_notification
+			return response_iterator(self.__stub.GroupDeleted(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDeletedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_name_updated(self, subscribe_to_group_name_updated_notification: SubscribeToGroupNameUpdatedNotification) -> AsyncIterator[GroupNameUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupNameUpdatedNotification]) -> AsyncIterator[GroupNameUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupNameUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_name_updated_notification
-		return response_iterator(self.__stub.GroupNameUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNameUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupNameUpdatedNotification]) -> AsyncIterator[GroupNameUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupNameUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_name_updated_notification
+			return response_iterator(self.__stub.GroupNameUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNameUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_description_updated(self, subscribe_to_group_description_updated_notification: SubscribeToGroupDescriptionUpdatedNotification) -> AsyncIterator[GroupDescriptionUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupDescriptionUpdatedNotification]) -> AsyncIterator[GroupDescriptionUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupDescriptionUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_description_updated_notification
-		return response_iterator(self.__stub.GroupDescriptionUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDescriptionUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupDescriptionUpdatedNotification]) -> AsyncIterator[GroupDescriptionUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupDescriptionUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_description_updated_notification
+			return response_iterator(self.__stub.GroupDescriptionUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupDescriptionUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_pending_member_added(self, subscribe_to_group_pending_member_added_notification: SubscribeToGroupPendingMemberAddedNotification) -> AsyncIterator[GroupPendingMemberAddedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberAddedNotification]) -> AsyncIterator[GroupPendingMemberAddedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupPendingMemberAddedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_pending_member_added_notification
-		return response_iterator(self.__stub.GroupPendingMemberAdded(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberAddedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberAddedNotification]) -> AsyncIterator[GroupPendingMemberAddedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupPendingMemberAddedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_pending_member_added_notification
+			return response_iterator(self.__stub.GroupPendingMemberAdded(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberAddedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_pending_member_removed(self, subscribe_to_group_pending_member_removed_notification: SubscribeToGroupPendingMemberRemovedNotification) -> AsyncIterator[GroupPendingMemberRemovedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberRemovedNotification]) -> AsyncIterator[GroupPendingMemberRemovedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupPendingMemberRemovedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_pending_member_removed_notification
-		return response_iterator(self.__stub.GroupPendingMemberRemoved(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberRemovedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupPendingMemberRemovedNotification]) -> AsyncIterator[GroupPendingMemberRemovedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupPendingMemberRemovedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_pending_member_removed_notification
+			return response_iterator(self.__stub.GroupPendingMemberRemoved(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPendingMemberRemovedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_member_joined(self, subscribe_to_group_member_joined_notification: SubscribeToGroupMemberJoinedNotification) -> AsyncIterator[GroupMemberJoinedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberJoinedNotification]) -> AsyncIterator[GroupMemberJoinedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupMemberJoinedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_member_joined_notification
-		return response_iterator(self.__stub.GroupMemberJoined(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberJoinedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberJoinedNotification]) -> AsyncIterator[GroupMemberJoinedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupMemberJoinedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_member_joined_notification
+			return response_iterator(self.__stub.GroupMemberJoined(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberJoinedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_member_left(self, subscribe_to_group_member_left_notification: SubscribeToGroupMemberLeftNotification) -> AsyncIterator[GroupMemberLeftNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberLeftNotification]) -> AsyncIterator[GroupMemberLeftNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupMemberLeftNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_member_left_notification
-		return response_iterator(self.__stub.GroupMemberLeft(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberLeftNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberLeftNotification]) -> AsyncIterator[GroupMemberLeftNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupMemberLeftNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_member_left_notification
+			return response_iterator(self.__stub.GroupMemberLeft(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberLeftNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_own_permissions_updated(self, subscribe_to_group_own_permissions_updated_notification: SubscribeToGroupOwnPermissionsUpdatedNotification) -> AsyncIterator[GroupOwnPermissionsUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupOwnPermissionsUpdatedNotification]) -> AsyncIterator[GroupOwnPermissionsUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupOwnPermissionsUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_own_permissions_updated_notification
-		return response_iterator(self.__stub.GroupOwnPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupOwnPermissionsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupOwnPermissionsUpdatedNotification]) -> AsyncIterator[GroupOwnPermissionsUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupOwnPermissionsUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_own_permissions_updated_notification
+			return response_iterator(self.__stub.GroupOwnPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupOwnPermissionsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_member_permissions_updated(self, subscribe_to_group_member_permissions_updated_notification: SubscribeToGroupMemberPermissionsUpdatedNotification) -> AsyncIterator[GroupMemberPermissionsUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberPermissionsUpdatedNotification]) -> AsyncIterator[GroupMemberPermissionsUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupMemberPermissionsUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_member_permissions_updated_notification
-		return response_iterator(self.__stub.GroupMemberPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupMemberPermissionsUpdatedNotification]) -> AsyncIterator[GroupMemberPermissionsUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupMemberPermissionsUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_member_permissions_updated_notification
+			return response_iterator(self.__stub.GroupMemberPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_update_in_progress(self, subscribe_to_group_update_in_progress_notification: SubscribeToGroupUpdateInProgressNotification) -> AsyncIterator[GroupUpdateInProgressNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateInProgressNotification]) -> AsyncIterator[GroupUpdateInProgressNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupUpdateInProgressNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_update_in_progress_notification
-		return response_iterator(self.__stub.GroupUpdateInProgress(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateInProgressNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateInProgressNotification]) -> AsyncIterator[GroupUpdateInProgressNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupUpdateInProgressNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_update_in_progress_notification
+			return response_iterator(self.__stub.GroupUpdateInProgress(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateInProgressNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def group_update_finished(self, subscribe_to_group_update_finished_notification: SubscribeToGroupUpdateFinishedNotification) -> AsyncIterator[GroupUpdateFinishedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateFinishedNotification]) -> AsyncIterator[GroupUpdateFinishedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield GroupUpdateFinishedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_group_update_finished_notification
-		return response_iterator(self.__stub.GroupUpdateFinished(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateFinishedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupUpdateFinishedNotification]) -> AsyncIterator[GroupUpdateFinishedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupUpdateFinishedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_update_finished_notification
+			return response_iterator(self.__stub.GroupUpdateFinished(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupUpdateFinishedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class DiscussionNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.DiscussionNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.DiscussionNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def discussion_new(self, subscribe_to_discussion_new_notification: SubscribeToDiscussionNewNotification) -> AsyncIterator[DiscussionNewNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionNewNotification]) -> AsyncIterator[DiscussionNewNotification]:
-			async for native_message in iterator.__aiter__():
-				yield DiscussionNewNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_discussion_new_notification
-		return response_iterator(self.__stub.DiscussionNew(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionNewNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionNewNotification]) -> AsyncIterator[DiscussionNewNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield DiscussionNewNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_discussion_new_notification
+			return response_iterator(self.__stub.DiscussionNew(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionNewNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def discussion_locked(self, subscribe_to_discussion_locked_notification: SubscribeToDiscussionLockedNotification) -> AsyncIterator[DiscussionLockedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionLockedNotification]) -> AsyncIterator[DiscussionLockedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield DiscussionLockedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_discussion_locked_notification
-		return response_iterator(self.__stub.DiscussionLocked(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionLockedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionLockedNotification]) -> AsyncIterator[DiscussionLockedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield DiscussionLockedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_discussion_locked_notification
+			return response_iterator(self.__stub.DiscussionLocked(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionLockedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def discussion_title_updated(self, subscribe_to_discussion_title_updated_notification: SubscribeToDiscussionTitleUpdatedNotification) -> AsyncIterator[DiscussionTitleUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionTitleUpdatedNotification]) -> AsyncIterator[DiscussionTitleUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield DiscussionTitleUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_discussion_title_updated_notification
-		return response_iterator(self.__stub.DiscussionTitleUpdated(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionTitleUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionTitleUpdatedNotification]) -> AsyncIterator[DiscussionTitleUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield DiscussionTitleUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_discussion_title_updated_notification
+			return response_iterator(self.__stub.DiscussionTitleUpdated(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionTitleUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def discussion_settings_updated(self, subscribe_to_discussion_settings_updated_notification: SubscribeToDiscussionSettingsUpdatedNotification) -> AsyncIterator[DiscussionSettingsUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionSettingsUpdatedNotification]) -> AsyncIterator[DiscussionSettingsUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield DiscussionSettingsUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_discussion_settings_updated_notification
-		return response_iterator(self.__stub.DiscussionSettingsUpdated(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionSettingsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.discussion_notifications_pb2.DiscussionSettingsUpdatedNotification]) -> AsyncIterator[DiscussionSettingsUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield DiscussionSettingsUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_discussion_settings_updated_notification
+			return response_iterator(self.__stub.DiscussionSettingsUpdated(olvid.daemon.notification.v1.discussion_notifications_pb2.SubscribeToDiscussionSettingsUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class MessageNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.MessageNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.MessageNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_received(self, subscribe_to_message_received_notification: SubscribeToMessageReceivedNotification) -> AsyncIterator[MessageReceivedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReceivedNotification]) -> AsyncIterator[MessageReceivedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageReceivedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_received_notification
-		return response_iterator(self.__stub.MessageReceived(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReceivedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReceivedNotification]) -> AsyncIterator[MessageReceivedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageReceivedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_received_notification
+			return response_iterator(self.__stub.MessageReceived(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReceivedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_sent(self, subscribe_to_message_sent_notification: SubscribeToMessageSentNotification) -> AsyncIterator[MessageSentNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageSentNotification]) -> AsyncIterator[MessageSentNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageSentNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_sent_notification
-		return response_iterator(self.__stub.MessageSent(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageSentNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageSentNotification]) -> AsyncIterator[MessageSentNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageSentNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_sent_notification
+			return response_iterator(self.__stub.MessageSent(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageSentNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_deleted(self, subscribe_to_message_deleted_notification: SubscribeToMessageDeletedNotification) -> AsyncIterator[MessageDeletedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageDeletedNotification]) -> AsyncIterator[MessageDeletedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageDeletedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_deleted_notification
-		return response_iterator(self.__stub.MessageDeleted(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeletedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageDeletedNotification]) -> AsyncIterator[MessageDeletedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageDeletedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_deleted_notification
+			return response_iterator(self.__stub.MessageDeleted(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeletedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_body_updated(self, subscribe_to_message_body_updated_notification: SubscribeToMessageBodyUpdatedNotification) -> AsyncIterator[MessageBodyUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageBodyUpdatedNotification]) -> AsyncIterator[MessageBodyUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageBodyUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_body_updated_notification
-		return response_iterator(self.__stub.MessageBodyUpdated(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageBodyUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageBodyUpdatedNotification]) -> AsyncIterator[MessageBodyUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageBodyUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_body_updated_notification
+			return response_iterator(self.__stub.MessageBodyUpdated(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageBodyUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_uploaded(self, subscribe_to_message_uploaded_notification: SubscribeToMessageUploadedNotification) -> AsyncIterator[MessageUploadedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageUploadedNotification]) -> AsyncIterator[MessageUploadedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageUploadedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_uploaded_notification
-		return response_iterator(self.__stub.MessageUploaded(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageUploadedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageUploadedNotification]) -> AsyncIterator[MessageUploadedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageUploadedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_uploaded_notification
+			return response_iterator(self.__stub.MessageUploaded(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageUploadedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_delivered(self, subscribe_to_message_delivered_notification: SubscribeToMessageDeliveredNotification) -> AsyncIterator[MessageDeliveredNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageDeliveredNotification]) -> AsyncIterator[MessageDeliveredNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageDeliveredNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_delivered_notification
-		return response_iterator(self.__stub.MessageDelivered(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeliveredNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageDeliveredNotification]) -> AsyncIterator[MessageDeliveredNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageDeliveredNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_delivered_notification
+			return response_iterator(self.__stub.MessageDelivered(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageDeliveredNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_read(self, subscribe_to_message_read_notification: SubscribeToMessageReadNotification) -> AsyncIterator[MessageReadNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReadNotification]) -> AsyncIterator[MessageReadNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageReadNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_read_notification
-		return response_iterator(self.__stub.MessageRead(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReadNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReadNotification]) -> AsyncIterator[MessageReadNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageReadNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_read_notification
+			return response_iterator(self.__stub.MessageRead(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReadNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_location_received(self, subscribe_to_message_location_received_notification: SubscribeToMessageLocationReceivedNotification) -> AsyncIterator[MessageLocationReceivedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationReceivedNotification]) -> AsyncIterator[MessageLocationReceivedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageLocationReceivedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_location_received_notification
-		return response_iterator(self.__stub.MessageLocationReceived(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationReceivedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationReceivedNotification]) -> AsyncIterator[MessageLocationReceivedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageLocationReceivedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_location_received_notification
+			return response_iterator(self.__stub.MessageLocationReceived(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationReceivedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_location_sharing_start(self, subscribe_to_message_location_sharing_start_notification: SubscribeToMessageLocationSharingStartNotification) -> AsyncIterator[MessageLocationSharingStartNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingStartNotification]) -> AsyncIterator[MessageLocationSharingStartNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageLocationSharingStartNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_location_sharing_start_notification
-		return response_iterator(self.__stub.MessageLocationSharingStart(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingStartNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingStartNotification]) -> AsyncIterator[MessageLocationSharingStartNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageLocationSharingStartNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_location_sharing_start_notification
+			return response_iterator(self.__stub.MessageLocationSharingStart(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingStartNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_location_sharing_update(self, subscribe_to_message_location_sharing_update_notification: SubscribeToMessageLocationSharingUpdateNotification) -> AsyncIterator[MessageLocationSharingUpdateNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingUpdateNotification]) -> AsyncIterator[MessageLocationSharingUpdateNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageLocationSharingUpdateNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_location_sharing_update_notification
-		return response_iterator(self.__stub.MessageLocationSharingUpdate(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingUpdateNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingUpdateNotification]) -> AsyncIterator[MessageLocationSharingUpdateNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageLocationSharingUpdateNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_location_sharing_update_notification
+			return response_iterator(self.__stub.MessageLocationSharingUpdate(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingUpdateNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_location_sharing_end(self, subscribe_to_message_location_sharing_end_notification: SubscribeToMessageLocationSharingEndNotification) -> AsyncIterator[MessageLocationSharingEndNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingEndNotification]) -> AsyncIterator[MessageLocationSharingEndNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageLocationSharingEndNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_location_sharing_end_notification
-		return response_iterator(self.__stub.MessageLocationSharingEnd(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingEndNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSharingEndNotification]) -> AsyncIterator[MessageLocationSharingEndNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageLocationSharingEndNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_location_sharing_end_notification
+			return response_iterator(self.__stub.MessageLocationSharingEnd(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSharingEndNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_reaction_added(self, subscribe_to_message_reaction_added_notification: SubscribeToMessageReactionAddedNotification) -> AsyncIterator[MessageReactionAddedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionAddedNotification]) -> AsyncIterator[MessageReactionAddedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageReactionAddedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_reaction_added_notification
-		return response_iterator(self.__stub.MessageReactionAdded(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionAddedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionAddedNotification]) -> AsyncIterator[MessageReactionAddedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageReactionAddedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_reaction_added_notification
+			return response_iterator(self.__stub.MessageReactionAdded(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionAddedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_reaction_updated(self, subscribe_to_message_reaction_updated_notification: SubscribeToMessageReactionUpdatedNotification) -> AsyncIterator[MessageReactionUpdatedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionUpdatedNotification]) -> AsyncIterator[MessageReactionUpdatedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageReactionUpdatedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_reaction_updated_notification
-		return response_iterator(self.__stub.MessageReactionUpdated(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionUpdatedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionUpdatedNotification]) -> AsyncIterator[MessageReactionUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageReactionUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_reaction_updated_notification
+			return response_iterator(self.__stub.MessageReactionUpdated(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def message_reaction_removed(self, subscribe_to_message_reaction_removed_notification: SubscribeToMessageReactionRemovedNotification) -> AsyncIterator[MessageReactionRemovedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionRemovedNotification]) -> AsyncIterator[MessageReactionRemovedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield MessageReactionRemovedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_message_reaction_removed_notification
-		return response_iterator(self.__stub.MessageReactionRemoved(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionRemovedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageReactionRemovedNotification]) -> AsyncIterator[MessageReactionRemovedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageReactionRemovedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_reaction_removed_notification
+			return response_iterator(self.__stub.MessageReactionRemoved(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageReactionRemovedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class AttachmentNotificationServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.notification_service_pb2_grpc.AttachmentNotificationServiceStub = olvid.daemon.services.v1.notification_service_pb2_grpc.AttachmentNotificationServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def attachment_received(self, subscribe_to_attachment_received_notification: SubscribeToAttachmentReceivedNotification) -> AsyncIterator[AttachmentReceivedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentReceivedNotification]) -> AsyncIterator[AttachmentReceivedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield AttachmentReceivedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_attachment_received_notification
-		return response_iterator(self.__stub.AttachmentReceived(olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentReceivedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentReceivedNotification]) -> AsyncIterator[AttachmentReceivedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield AttachmentReceivedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_attachment_received_notification
+			return response_iterator(self.__stub.AttachmentReceived(olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentReceivedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def attachment_uploaded(self, subscribe_to_attachment_uploaded_notification: SubscribeToAttachmentUploadedNotification) -> AsyncIterator[AttachmentUploadedNotification]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentUploadedNotification]) -> AsyncIterator[AttachmentUploadedNotification]:
-			async for native_message in iterator.__aiter__():
-				yield AttachmentUploadedNotification._from_native(native_message, client=self._client)
-		overlay_object = subscribe_to_attachment_uploaded_notification
-		return response_iterator(self.__stub.AttachmentUploaded(olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentUploadedNotification(), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.attachment_notifications_pb2.AttachmentUploadedNotification]) -> AsyncIterator[AttachmentUploadedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield AttachmentUploadedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_attachment_uploaded_notification
+			return response_iterator(self.__stub.AttachmentUploaded(olvid.daemon.notification.v1.attachment_notifications_pb2.SubscribeToAttachmentUploadedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e

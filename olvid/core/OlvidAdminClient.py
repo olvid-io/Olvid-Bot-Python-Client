@@ -1,6 +1,7 @@
 from typing import Optional, AsyncIterator
 
 from .OlvidClient import OlvidClient
+from .GrpcTlsConfiguration import GrpcTlsConfiguration
 from .. import datatypes
 from ..internal import admin
 
@@ -14,21 +15,23 @@ class OlvidAdminClient(OlvidClient):
 	As OlvidAdminClient extends OlvidClient it has the same constraints, for example it needs to find a valid client_key to
 	connect to a daemon (see OlvidClient for more information).
 	An admin client needs to use an admin_client_key (a key not associated to an identity, with an identity_id equal to 0).
-	It uses same mechanism as OlvidBot to look for an admin client key except that the key file is named *.admin_client_key*
-	and environment variable name is OLVID_ADMIN_CLIENT_KEY.
+	It uses same mechanism as OlvidClient to look for an admin client key except that the env variable  is named
+	*OLVID_ADMIN_CLIENT_KEY*.
 
-	As in OlvidClient OlvidAdminClient implements gRPC methods as python methods.
+	Like OlvidClient, an OlvidAdminClient implements gRPC methods as python methods.
 	You can find methods using the same name as in gRPC but using snake case.
+	OlvidAdminClient also implements admin services. These methods are prefixed with "admin_".
 
 	If an admin client wants to use normal command and notification api you will need to specify the identity you want to use.
 	Use the current_identity_id property to specify the identity you want to use. It will persist for any future api call.
 	"""
-	_KEY_ENV_VARIABLE_NAME = "OLVID_ADMIN_CLIENT_KEY"
+	_KEY_VARIABLE_NAME: str = "OLVID_ADMIN_CLIENT_KEY"
+	# TODO v2.0.0 remove legacy method
 	_KEY_FILE_PATH = ".admin_client_key"
 
-	def __init__(self, identity_id: int, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional['OlvidClient'] = None):
+	def __init__(self, identity_id: int, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional['OlvidClient'] = None, tls_configuration: GrpcTlsConfiguration = None):
 		try:
-			super().__init__(client_key, server_target, parent_client)
+			super().__init__(client_key=client_key, server_target=server_target, parent_client=parent_client, tls_configuration=tls_configuration)
 		except ValueError:
 			raise ValueError("Admin client key not found")
 

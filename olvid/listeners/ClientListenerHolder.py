@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import asyncio
-import grpc.aio
 
+from ..core.errors import AioRpcError
 from ..core.logger import core_logger, notification_logger
 
 if TYPE_CHECKING:
@@ -49,7 +49,6 @@ class ClientListenerHolder:
 	def add_listener(self, listener: GenericNotificationListener):
 		# check listener count is valid (if count == 0 on start it will stay active forever)
 		if listener.count == 0:
-			print(f"adding listener: {listener}")
 			return
 
 		# add listener to registered_listeners
@@ -119,7 +118,7 @@ class ClientListenerHolder:
 				self._dispatch_notification(listener_key, notification_message)
 		except asyncio.CancelledError:
 			raise
-		except grpc.aio.AioRpcError as e:
+		except AioRpcError as e:
 			if e.code() == e.code().UNAVAILABLE:
 				if e.details() == "Socket closed":
 					core_logger.error(f"{self.__class__.__name__}: {notification_type}: connection lost")

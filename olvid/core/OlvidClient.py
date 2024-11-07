@@ -14,29 +14,40 @@ import grpc
 import asyncio
 import signal
 import os
+import sys
 from asyncio import Task
+from dotenv import dotenv_values
 
+from . import errors
 from .logger import core_logger, command_logger, notification_logger
 from ..internal import commands, notifications
 from .. import datatypes
 from ..listeners.ClientListenerHolder import ClientListenerHolder
-from ..listeners.Command import Command
+from ..listeners.Command import Command, CommandHolder
+from ..listeners.GenericNotificationListener import GenericNotificationListener
+from ..listeners import ListenersImplementation as listeners
 from .StubHolder import StubHolder
-
+from .GrpcTlsConfiguration import GrpcTlsConfiguration, GrpcSimpleTlsConfiguration, GrpcMutualAuthTlsConfiguration
+from ..listeners.Notifications import NOTIFICATIONS
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
-class OlvidClient:
+class OlvidClient(CommandHolder):
 	"""
 	OlvidClient: basic class to interact with Olvid daemon.
 
-	OlvidClient needs a client key to authenticate on daemon, you can pass it using:
-	- by setting OLVID_CLIENT_KEY env variable
-	- by writing it in a .client_key file
-	- by passing it as a client_key constructor parameter (to avoid)
+	OlvidClient needs a client key to authenticate on daemon:
+	- you can set OLVID_CLIENT_KEY env variable
+	- you can use client_key constructor parameter (not recommended)
 
 	By default, client connects to "localhost:50051" you can change this behavior:
-	- set DAEMON_HOSTNAME and/or DAEMON_PORT env variable
-	- use server_target parameter. It must be the full server address including hostname/ip and port
+	- by setting OLVID_DAEMON_TARGET env variable
+	- by using server_target parameter
+
+	On creation OlvidClient will also check `.env` files and can load environment variable from there if there is
+	configuration variable were not set in environment.
+
+	See [GrpcTlsConfiguration.py](./GrpcTlsConfiguration.py) and GrpcTlsConfiguration class to see how to set up TLS
+	and secure exchanges with daemon.
 
 	OlvidClient implements every gRPC command methods defined in daemon API.
 	You can find methods using the same name as in gRPC but using snake case.
@@ -49,45 +60,86 @@ class OlvidClient:
 	Use this code to add a listener to message_received notification:
 	`client.add_listener(listeners.MessageReceivedListener(handler=lambda message: print(message)))`
 	Again you won't need to use encapsulation messages SubscribeToMessageSendNotification and MessageReceivedNotification.
+
+	If you create your own implementation of OlvidClient class you can override any method named `on_something`.
+	There is one method for each gRPC notification method.
+	Overwritten methods will add listeners for associated notification when you create a client instance.
+	For example:
+
+	class ChatBot(OlvidClient)
+		async def on_message_received(self, message: datatypes.Message):
+			await message.reply("Hello 👋")
+	client = ChatBot()
+
+	Every time ChatBot class is instantiated it will add a listener to message_received notification with the method as handler.
+
+	You can also add Command objects with add_command method. Command are specific listeners.
+	They subclass listeners.MessageReceivedListener, and they are created with a regexp filter that will filter notifications.
+	Only messages that match the regexp will raise a notification.
+	Commands can be added using OlvidClient.command decorator:
+	For example:
+
+	class Bot(OlvidClient)
+		@OlvidClient.command(regexp_filter="^!help")
+		async def on_message_received(self, message: datatypes.Message):
+			await message.reply("Help message")
 	"""
-	_CHUNK_LENGTH = 1_000_000
+	_KEY_VARIABLE_NAME: str = "OLVID_CLIENT_KEY"
+	# TODO v2.0.0 remove legacy method
+	_KEY_FILE_PATH = ".client_key"
 
-	_KEY_ENV_VARIABLE_NAME: str = "OLVID_CLIENT_KEY"
-	_KEY_FILE_PATH: str = ".client_key"
+	_TARGET_VARIABLE_NAME: str = "OLVID_DAEMON_TARGET"
+	_TARGET_DEFAULT_VALUE: str = "localhost:50051"
 
-	_HOSTNAME_DEFAULT_VALUE: str = "localhost"
-	_HOSTNAME_ENV_VARIABLE_NAME: str = "DAEMON_HOSTNAME"
-
-	_PORT_DEFAULT_VALUE: str = "50051"
-	_PORT_ENV_VARIABLE_NAME: str = "DAEMON_PORT"
+	_CHUNK_LENGTH_VARIABLE_NAME = "OLVID_CHUNK_LENGTH"
+	_CHUNK_LENGTH_DEFAULT_VALUE = "1_000_000"
 
 	# we store running clients to notify them if we receive a stop signal
 	_running_clients: list[Self] = []
 
-	def __init__(self, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional[Self] = None):
+	GrpcSimpleTlsConfiguration: type[GrpcSimpleTlsConfiguration] = GrpcSimpleTlsConfiguration
+	GrpcMutualAuthTlsConfiguration: type[GrpcMutualAuthTlsConfiguration] = GrpcMutualAuthTlsConfiguration
+
+	def __init__(self, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional[Self] = None, tls_configuration: GrpcTlsConfiguration = None):
 		self._stopped = False
+
+		config: dict[str, str] = {
+			**{  # default values
+				self._TARGET_VARIABLE_NAME: self._TARGET_DEFAULT_VALUE,
+				self._CHUNK_LENGTH_VARIABLE_NAME: self._CHUNK_LENGTH_DEFAULT_VALUE,
+			},
+			**dotenv_values(),  # .env file values
+			**os.environ  # env values
+		}
 
 		# determine the client key to use (argument > parent > env > file)
 		if client_key:
 			self._client_key: str = client_key
 		elif parent_client:
-			self._client_key = parent_client.client_key
-		elif os.environ.get(self._KEY_ENV_VARIABLE_NAME):
-			self._client_key = os.environ.get(self._KEY_ENV_VARIABLE_NAME).strip()
+			self._client_key: str = parent_client.client_key
+		# TODO v2.0.0 remove legacy method
 		elif os.path.isfile(self._KEY_FILE_PATH):
-			self._client_key = open(self._KEY_FILE_PATH).read().strip()
+			print(f"{self._KEY_FILE_PATH} files are marked as deprecated, use environment or .env file instead", file=sys.stderr)
+			self._client_key: str = open(self._KEY_FILE_PATH).read().strip()
+		elif config.get(self._KEY_VARIABLE_NAME):
+			self._client_key: str = config.get(self._KEY_VARIABLE_NAME)
 		else:
 			raise ValueError("Client key not found")
 
 		# determine target (argument > parent > env > default)
 		if server_target:
-			self._server_target = server_target
+			self._server_target: str = server_target
 		elif parent_client:
-			self._server_target = parent_client.server_target
+			self._server_target: str = parent_client.server_target
+		# TODO v2.0.0 remove legacy method
+		elif os.environ.get("DAEMON_HOSTNAME") or os.environ.get("DAEMON_PORT"):
+			print(f"DAEMON_HOSTNAME and DAEMON_PORT env variables are marked as deprecated, use {self._TARGET_VARIABLE_NAME} instead", file=sys.stderr)
+			self._server_target: str = os.getenv("DAEMON_HOSTNAME", "localhost").strip() + ":" + os.getenv("DAEMON_PORT", "50051")
 		else:
-			self._hostname = os.environ.get(self._HOSTNAME_ENV_VARIABLE_NAME).strip() if os.environ.get(self._HOSTNAME_ENV_VARIABLE_NAME) else self._HOSTNAME_DEFAULT_VALUE
-			self._port = os.environ.get(self._PORT_ENV_VARIABLE_NAME).strip() if os.environ.get(self._PORT_ENV_VARIABLE_NAME) else self._PORT_DEFAULT_VALUE
-			self._server_target = f"{self._hostname}:{self._port}"
+			self._server_target: str = config.get(self._TARGET_VARIABLE_NAME)
+
+		# determine chunk length
+		self._CHUNK_LENGTH: int = int(config.get(self._CHUNK_LENGTH_VARIABLE_NAME))
 
 		# store parent client
 		self._parent_client: Optional[Self] = parent_client
@@ -100,28 +152,57 @@ class OlvidClient:
 			# register as parent's children
 			self._parent_client._register_child(self)
 			# re-use parent channel
-			self._channel: grpc.Channel = self._parent_client._channel
+			self._channel: grpc.aio.Channel = self._parent_client._channel
+			core_logger.debug(f"{self.__class__.__name__}: re-used parent configuration")
+		# normal case
 		else:
-			self._channel: grpc.Channel = grpc.aio.insecure_channel(target=self._server_target)
-		self._registered_child: Optional[list[Self]] = []
+			# if tls configuration was not passed try to load one
+			if tls_configuration is not None:
+				channel_credential: Optional[grpc.ChannelCredentials] = tls_configuration.get_channel_credentials()
+				core_logger.debug(f"{self.__class__.__name__}: using {type(tls_configuration).__name__} parameter")
+			elif GrpcMutualAuthTlsConfiguration.load_implicit_configuration() is not None:
+				channel_credential: Optional[grpc.ChannelCredentials] = GrpcMutualAuthTlsConfiguration.load_implicit_configuration().get_channel_credentials()
+				core_logger.debug(f"{self.__class__.__name__}: using {GrpcMutualAuthTlsConfiguration.__name__}")
+			elif GrpcSimpleTlsConfiguration.load_implicit_configuration() is not None:
+				channel_credential: Optional[grpc.ChannelCredentials] = GrpcSimpleTlsConfiguration.load_implicit_configuration().get_channel_credentials()
+				core_logger.debug(f"{self.__class__.__name__}: using {GrpcSimpleTlsConfiguration.__name__}")
+			else:
+				channel_credential: Optional[grpc.ChannelCredentials] = None
+				core_logger.debug(f"{self.__class__.__name__}: tls disabled")
+
+			if channel_credential is None:
+				self._channel: grpc.aio.Channel = grpc.aio.insecure_channel(target=self._server_target)
+			else:
+				self._channel: grpc.aio.Channel = grpc.aio.secure_channel(target=self._server_target, credentials=channel_credential)
 
 		# create or re-use grpc stubs
 		self._stubs = StubHolder(client=self, channel=self._channel, parent=self._parent_client)
 
+		# store any future child client to bind their lifecycle to this one
+		self._registered_child: Optional[list[Self]] = []
 		# every client keep a list of own registered listeners because listener holder might contain other listeners from parent / son clients
 		self._listeners_set: set[GenericNotificationListener] = set()
 		# initialize listener holder: warning: this will set up an asyncio loop and cause issues with asyncio.run method that will create its own event loop
 		self._listener_holder = ClientListenerHolder(self) if self._parent_client is None else self._parent_client._listener_holder
 
 		# keep a set with pending tasks to keep a strong reference on it (each task might remove itself from the task set when finished)
-		self.__task_set = set()
+		self._task_set = set()
 
 		# register this client to stop it if a SIGTERM signal is received (signal sent when you docker container stops)
-		if len(self._running_clients) == 0:
-			# if this is the first running client, register the signal handler
-			for s in (signal.SIGTERM, ):
-				asyncio.get_event_loop().add_signal_handler(s, self.__stop_signal_handler)
-		self._running_clients.append(self)
+		if not self._parent_client:
+			if len(self._running_clients) == 0:
+				# if this is the first running client, register the signal handler
+				for s in (signal.SIGTERM, ):
+					asyncio.get_event_loop().add_signal_handler(s, self.__stop_signal_handler)
+			self._running_clients.append(self)
+
+		# add listeners from overwritten "on_..." methods
+		listeners_to_add = self._get_listeners_to_add()
+		for listener in listeners_to_add:
+			self.add_listener(listener)
+
+		# add commands
+		CommandHolder.__init__(self)
 
 	async def stop(self):
 		if self._stopped:
@@ -145,7 +226,8 @@ class OlvidClient:
 
 		self._listener_holder = None
 
-		self._running_clients.remove(self)
+		if not self._parent_client and self in self._running_clients:
+			self._running_clients.remove(self)
 
 		self._stopped = True
 
@@ -165,6 +247,24 @@ class OlvidClient:
 		# wait for listeners' end
 		while not self.are_listeners_finished():
 			await self._listener_holder.wait_for_listener_removed_event()
+
+	async def run_forever(self):
+		state = self._channel.get_state(try_to_connect=True)
+		while state not in [grpc.ChannelConnectivity.READY, grpc.ChannelConnectivity.TRANSIENT_FAILURE,
+							grpc.ChannelConnectivity.SHUTDOWN]:
+			await self._channel.wait_for_state_change(state)
+			state = self._channel.get_state()
+		if state in [grpc.ChannelConnectivity.TRANSIENT_FAILURE, grpc.ChannelConnectivity.SHUTDOWN]:
+			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Failed to connect to server: {self.server_target}")
+
+		await self.wait_for_listeners_end()
+		has_listeners = len(self._listeners_set) > 0
+		while self._channel.get_state() == grpc.ChannelConnectivity.READY:
+			has_listeners = len(self._listeners_set) > 0
+			await asyncio.sleep(1)
+		# if there were no listeners add a logging message, else ClientListenerHolder probably already logged an error
+		if not has_listeners:
+			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Lost server connection: {self.server_target}")
 
 	#####
 	# read only properties
@@ -189,10 +289,10 @@ class OlvidClient:
 	# this api keeps a reference on created task for you (necessary when running an async task)
 	def add_background_task(self, coroutine: Coroutine, name: str = "") -> Task:
 		task = asyncio.get_event_loop().create_task(coroutine, name=name if name else None)
-		self.__task_set.add(task)
+		self._task_set.add(task)
 
 		def end_callback(t):
-			self.__task_set.remove(t)
+			self._task_set.remove(t)
 		task.add_done_callback(end_callback)
 		return task
 
@@ -238,6 +338,44 @@ class OlvidClient:
 		core_logger.debug(f"{self.__class__.__name__}: removed all listeners")
 
 	#####
+	# CommandHolder interface implementation
+	#####
+	def add_command(self, command: Command):
+		self.add_listener(command)
+
+	def remove_command(self, command: Command):
+		self.remove_listener(command)
+
+	def is_message_body_a_valid_command(self, body: str) -> bool:
+		return any([isinstance(listener, Command) and listener.match_str(body) for listener in self._listeners_set])
+
+	####
+	# NotificationHandler method
+	####
+	def _get_listeners_to_add(self) -> list[GenericNotificationListener]:
+		listeners_list: list = list()
+		for notification in NOTIFICATIONS:
+			if not self._was_notification_listener_method_overwritten(notification):
+				continue
+			camel_case_notification_name = "".join(s.title() for s in notification.name.split("_"))
+			listener = getattr(listeners, f"{camel_case_notification_name}Listener")(handler=getattr(self, f"on_{notification.name.lower()}"))
+			listeners_list.append(listener)
+		return listeners_list
+
+	# check if a method was overwritten
+	def _was_notification_listener_method_overwritten(self, notification: NOTIFICATIONS) -> bool:
+		method_name = f"on_{notification.name.lower()}"
+		# check method exists
+		if not hasattr(self, method_name):
+			return False
+		# if listener method is different from original OlvidClient method, return it
+		if getattr(type(self), method_name) != getattr(OlvidClient, method_name, None):
+			return True
+		# listener was not overwritten
+		return False
+
+
+	#####
 	# GrpcMetadata property
 	####
 	@property
@@ -273,10 +411,10 @@ class OlvidClient:
 				yield commands.IdentitySetPhotoRequest(
 					metadata=commands.IdentitySetPhotoRequestMetadata(filename=os.path.basename(file_path),
 																file_size=os.path.getsize(file_path)))
-				buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+				buffer = fd.read(self._CHUNK_LENGTH)
 				while len(buffer) > 0:
 					yield commands.IdentitySetPhotoRequest(payload=buffer)
-					buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+					buffer = fd.read(self._CHUNK_LENGTH)
 		command_logger.info(f'{self.__class__.__name__}: command: IdentitySetPhoto')
 		return await self._stubs.identityCommandStub.identity_set_photo(identity_set_photo_iterator())
 
@@ -287,10 +425,10 @@ class OlvidClient:
 			yield commands.GroupSetPhotoRequest(
 				metadata=commands.GroupSetPhotoRequestMetadata(group_id=group_id, filename=os.path.basename(file_path),
 															file_size=os.path.getsize(file_path)))
-			buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+			buffer = fd.read(self._CHUNK_LENGTH)
 			while len(buffer) > 0:
 				yield commands.GroupSetPhotoRequest(payload=buffer)
-				buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+				buffer = fd.read(self._CHUNK_LENGTH)
 			fd.close()
 		command_logger.info(f'{self.__class__.__name__}: command: GroupSetPhoto')
 		return (await self._stubs.groupCommandStub.group_set_photo(group_set_photo_iterator())).group
@@ -312,10 +450,10 @@ class OlvidClient:
 			# send files content
 			for file_path in file_paths:
 				with open(file_path, "rb") as fd:
-					buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+					buffer = fd.read(self._CHUNK_LENGTH)
 					while len(buffer) > 0:
 						yield commands.MessageSendWithAttachmentsRequest(payload=buffer)
-						buffer = fd.read(OlvidClient._CHUNK_LENGTH)
+						buffer = fd.read(self._CHUNK_LENGTH)
 				# send file delimiter
 				yield commands.MessageSendWithAttachmentsRequest(file_delimiter=True)
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSendWithAttachmentsFiles')
@@ -591,6 +729,11 @@ class OlvidClient:
 	
 	# message_send_with_attachments: cannot generate request stream rpc code
 	
+	async def message_send_location(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: None = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: datatypes.MessageEphemerality = None) -> datatypes.Message:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageSendLocation')
+		response: commands.MessageSendLocationResponse = await self._stubs.messageCommandStub.message_send_location(commands.MessageSendLocationRequest(client=self, discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision, address=address, preview_filename=preview_filename, preview_payload=preview_payload, ephemerality=ephemerality))
+		return response.message
+	
 	async def message_react(self, message_id: datatypes.MessageId, reaction: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageReact')
 		await self._stubs.messageCommandStub.message_react(commands.MessageReactRequest(client=self, message_id=message_id, reaction=reaction))
@@ -841,5 +984,126 @@ class OlvidClient:
 	def _notif_attachment_uploaded(self) -> AsyncIterator[notifications.AttachmentUploadedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: AttachmentUploaded')
 		return self._stubs.attachmentNotificationStub.attachment_uploaded(notifications.SubscribeToAttachmentUploadedNotification(client=self))
-	
-	
+
+	# InvitationNotificationService
+	async def on_invitation_received(self, invitation: datatypes.Invitation):
+		pass
+
+	async def on_invitation_sent(self, invitation: datatypes.Invitation):
+		pass
+
+	async def on_invitation_deleted(self, invitation: datatypes.Invitation):
+		pass
+
+	async def on_invitation_updated(self, invitation: datatypes.Invitation, previous_invitation_status: datatypes.Invitation.Status):
+		pass
+
+	# ContactNotificationService
+	async def on_contact_new(self, contact: datatypes.Contact):
+		pass
+
+	async def on_contact_deleted(self, contact: datatypes.Contact):
+		pass
+
+	async def on_contact_details_updated(self, contact: datatypes.Contact, previous_details: datatypes.IdentityDetails):
+		pass
+
+	# GroupNotificationService
+	async def on_group_new(self, group: datatypes.Group):
+		pass
+
+	async def on_group_deleted(self, group: datatypes.Group):
+		pass
+
+	async def on_group_name_updated(self, group: datatypes.Group, previous_name: str):
+		pass
+
+	async def on_group_description_updated(self, group: datatypes.Group, previous_description: str):
+		pass
+
+	async def on_group_pending_member_added(self, group: datatypes.Group, pending_member: datatypes.PendingGroupMember):
+		pass
+
+	async def on_group_pending_member_removed(self, group: datatypes.Group, pending_member: datatypes.PendingGroupMember):
+		pass
+
+	async def on_group_member_joined(self, group: datatypes.Group, member: datatypes.GroupMember):
+		pass
+
+	async def on_group_member_left(self, group: datatypes.Group, member: datatypes.GroupMember):
+		pass
+
+	async def on_group_own_permissions_updated(self, group: datatypes.Group, permissions: datatypes.GroupMemberPermissions, previous_permissions: datatypes.GroupMemberPermissions):
+		pass
+
+	async def on_group_member_permissions_updated(self, group: datatypes.Group, member: datatypes.GroupMember, previous_permissions: datatypes.GroupMemberPermissions):
+		pass
+
+	async def on_group_update_in_progress(self, group_id: int):
+		pass
+
+	async def on_group_update_finished(self, group_id: int):
+		pass
+
+	# DiscussionNotificationService
+	async def on_discussion_new(self, discussion: datatypes.Discussion):
+		pass
+
+	async def on_discussion_locked(self, discussion: datatypes.Discussion):
+		pass
+
+	async def on_discussion_title_updated(self, discussion: datatypes.Discussion, previous_title: str):
+		pass
+
+	async def on_discussion_settings_updated(self, new_settings: datatypes.DiscussionSettings, previous_settings: datatypes.DiscussionSettings):
+		pass
+
+	# MessageNotificationService
+	async def on_message_received(self, message: datatypes.Message):
+		pass
+
+	async def on_message_sent(self, message: datatypes.Message):
+		pass
+
+	async def on_message_deleted(self, message: datatypes.Message):
+		pass
+
+	async def on_message_body_updated(self, message: datatypes.Message, previous_body: str):
+		pass
+
+	async def on_message_uploaded(self, message: datatypes.Message):
+		pass
+
+	async def on_message_delivered(self, message: datatypes.Message):
+		pass
+
+	async def on_message_read(self, message: datatypes.Message):
+		pass
+
+	async def on_message_location_received(self, message: datatypes.Message):
+		pass
+
+	async def on_message_location_sharing_start(self, message: datatypes.Message):
+		pass
+
+	async def on_message_location_sharing_update(self, message: datatypes.Message, previous_location: datatypes.MessageLocation):
+		pass
+
+	async def on_message_location_sharing_end(self, message: datatypes.Message):
+		pass
+
+	async def on_message_reaction_added(self, message: datatypes.Message, reaction: datatypes.MessageReaction):
+		pass
+
+	async def on_message_reaction_updated(self, message: datatypes.Message, reaction: datatypes.MessageReaction, previous_reaction: datatypes.MessageReaction):
+		pass
+
+	async def on_message_reaction_removed(self, message: datatypes.Message, reaction: datatypes.MessageReaction):
+		pass
+
+	# AttachmentNotificationService
+	async def on_attachment_received(self, attachment: datatypes.Attachment):
+		pass
+
+	async def on_attachment_uploaded(self, attachment: datatypes.Attachment):
+		pass

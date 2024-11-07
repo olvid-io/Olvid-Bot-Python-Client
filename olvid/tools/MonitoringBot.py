@@ -22,10 +22,9 @@ except ImportError:
 	tools_logger.debug("MonitoringBot: using urllib")
 
 from ..core.OlvidClient import OlvidClient
-from ..core.OlvidBot import OlvidBot
 
 
-class MonitoringBot(OlvidBot):
+class MonitoringBot(OlvidClient):
 	# mandatory
 	MONITORING_ENABLE_ENV_NAME = "MONITORING_ENABLE"
 	MONITORING_SERVER_ENV_NAME = "MONITORING_SERVER"
@@ -56,15 +55,15 @@ class MonitoringBot(OlvidBot):
 			return
 
 		if len(self._monitoring_configuration.sms_numbers) == 0 and len(self._monitoring_configuration.webhook_urls) == 0:
-			tools_logger.warning(f"{self.name}: We do not recommend using mail alerts on it's own cause you have to check your mail box to validate your subscription on every start")
+			tools_logger.warning(f"{self.__class__.__name__}: We do not recommend using mail alerts on it's own cause you have to check your mail box to validate your subscription on every start")
 
 		subscribers_count = len(self._monitoring_configuration.sms_numbers) if self._monitoring_configuration.sms_numbers else 0
 		subscribers_count += len(self._monitoring_configuration.mail_addresses) if self._monitoring_configuration.mail_addresses else 0
 		subscribers_count += len(self._monitoring_configuration.webhook_urls) if self._monitoring_configuration.webhook_urls else 0
-		tools_logger.info(f"{self.name}: enabled monitoring: {subscribers_count} alerts recipient set")
+		tools_logger.info(f"{self.__class__.__name__}: enabled monitoring: {subscribers_count} alerts recipient set")
 
 		# start monitoring
-		self.add_background_task(self._start_monitoring_process(), f"{self.name}-initial-start-monitoring-task")
+		self.add_background_task(self._start_monitoring_process(), f"{self.__class__.__name__}-initial-start-monitoring-task")
 
 	async def stop(self):
 		await super().stop()
@@ -162,7 +161,7 @@ class MonitoringBot(OlvidBot):
 				raise RuntimeError(f"Unable to subscribe to monitoring: {status}: {body}")
 			subscription_id: str = body
 		except Exception as e:
-			tools_logger.exception(f"{self.name}: exception during subscription process: {e} ({json_payload})")
+			tools_logger.exception(f"{self.__class__.__name__}: exception during subscription process: {e} ({json_payload})")
 			raise e
 
 		# send test notification if necessary
@@ -193,19 +192,19 @@ class MonitoringBot(OlvidBot):
 
 					# subscription expired on server, launch a new subscription process in background and end this task
 					if refresh_status == 404:
-						tools_logger.error(f"{self.name}: refresh: server returned a 404 error, restarting monitoring process")
+						tools_logger.error(f"{self.__class__.__name__}: refresh: server returned a 404 error, restarting monitoring process")
 						self.add_background_task(self._start_monitoring_process())
 						return
 
 					if refresh_status != 200:
 						raise Exception(f"Server returned an error: {refresh_status}")
 
-					tools_logger.debug(f"{self.name}: pinged monitoring server")
+					tools_logger.debug(f"{self.__class__.__name__}: pinged monitoring server")
 					await asyncio.sleep(self._monitoring_configuration.period)
 
 				except Exception:
 					# an error occurred try to refresh faster before subscription expiration
-					tools_logger.exception(f"{self.name}: an error occurred during refresh process ({subscription_id})")
+					tools_logger.exception(f"{self.__class__.__name__}: an error occurred during refresh process ({subscription_id})")
 					await asyncio.sleep(5)
 
 		# start task if running, else wait for client start (avoid asyncio loop issues)

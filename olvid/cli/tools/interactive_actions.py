@@ -3,12 +3,12 @@ from typing import Optional
 
 import readline
 import asyncclick as click
-import grpc.aio
 
 from .ClientSingleton import ClientSingleton
 from ...core.OlvidAdminClient import OlvidAdminClient
 from ...datatypes import datatypes
 from ...listeners import ListenersImplementation as listeners
+from ...core import errors
 from .cli_tools import print_warning_message
 
 def interactive_command(func):
@@ -78,7 +78,7 @@ async def contact_new(identity_id: int, prompt: str = None, fg_color: str = None
 		sas_code: str = prompt_with_context("Please enter sas code displayed on the other device", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
 		try:
 			await client.invitation_sas(invitation_id=invitation.id, sas=sas_code)
-		except grpc.aio.AioRpcError:
+		except errors.InvalidArgumentError:
 			print_with_context("Invalid sas code", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
 			continue
 
@@ -108,16 +108,20 @@ async def invitation_new(identity_id: int, invitation: datatypes.Invitation, pro
 	discussions: list[datatypes.Discussion] = []
 	discussion_new_client.add_listener(listeners.DiscussionNewListener(handler=lambda i: discussions.append(i), count=1))
 
+	# refresh invitation status
+	invitation = await client.invitation_get(invitation_id=invitation.id)
+
 	# wait for other identity to accept
-	print_with_context("Waiting for other device to accept invitation ...", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
-	invitation = await invitation.wait_for(listener_class=listeners.InvitationUpdatedListener, extra_checker=lambda i, s: i.status == datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE)
+	if invitation.status != datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE:
+		print_with_context("Waiting for other device to accept invitation ...", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
+		invitation = await invitation.wait_for(listener_class=listeners.InvitationUpdatedListener, extra_checker=lambda i, s: i.status == datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE)
 
 	# set other identity sas
 	while True:
 		sas_code: str = prompt_with_context("Please enter sas code displayed on the other device", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
 		try:
 			await client.invitation_sas(invitation_id=invitation.id, sas=sas_code)
-		except grpc.aio.AioRpcError:
+		except errors.AioRpcError:
 			print_with_context("Invalid sas code", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
 			continue
 

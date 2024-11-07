@@ -1,9 +1,9 @@
-import grpc.aio
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
 from ..tools.cli_tools import *
 from ..tools.click_wrappers import WrapperGroup
+from ...core import errors
 
 
 #####
@@ -89,7 +89,7 @@ async def key_impersonate(client_key: str):
 			await ClientSingleton.use_default_client()
 		try:
 			key = await ClientSingleton.get_client().admin_client_key_get(client_key=client_key)
-		except grpc.aio.AioRpcError:
+		except errors.NotFoundError:
 			print_error_message("Client key not found")
 			return
 		await ClientSingleton.impersonate_client_key(client_key=key)

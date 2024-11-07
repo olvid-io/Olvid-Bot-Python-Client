@@ -12,7 +12,6 @@ from .logger import tools_logger
 
 from .. import datatypes
 from ..core.OlvidClient import OlvidClient
-from ..core.OlvidBot import OlvidBot
 from ..listeners.Command import Command
 from ..listeners.ListenersImplementation import MessageReceivedListener, DiscussionNewListener
 
@@ -22,7 +21,7 @@ from ..listeners.ListenersImplementation import MessageReceivedListener, Discuss
 # It also add an help command and send help every time a user send a message in a one to one discussion.
 # All these behavior can be modified after creation using help_... and welcome_... methods.
 ####
-class ChatBot(OlvidBot):
+class ChatBot(OlvidClient):
 	WELCOME_MESSAGE_FACTORY: type = Callable[[datatypes.Discussion], Union[Optional[str], Coroutine[Any, Any, Optional[str]]]]
 	HELP_MESSAGE_FACTORY: type = Callable[[int], Union[Optional[str], Coroutine[Any, Any, Optional[str]]]]
 

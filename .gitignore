@@ -1,0 +1,19 @@
+.venv
+.idea
+__pycache__
+
+# configuration file
+.client_key
+.admin_client_key
+.env
+
+/dist
+/build
+/*.egg-info/
+
+# cli
+.cli_history
+cli.log
+
+# docs
+docs/_build

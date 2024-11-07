@@ -27,7 +27,7 @@ async def invitation_task(identity_1: datatypes.Identity, identity_2: datatypes.
 
 	# wait for invitation to arrive
 	invitation_store_2: list[datatypes.Invitation] = []
-	listener = listeners.InvitationReceivedListener(lambda i: invitation_store_2.append(i), checkers=[lambda i: i.display_name == identity_1.display_name], count=1)
+	listener = listeners.InvitationReceivedListener(lambda i: invitation_store_2.append(i), checkers=[lambda i: i.display_name == f"{identity_1.details.first_name} {identity_1.details.last_name}".strip()], count=1)
 	client_2.add_listener(listener)
 	await client_2.wait_for_listeners_end()
 	invitation_2: datatypes.Invitation = invitation_store_2[0]
@@ -72,26 +72,27 @@ async def auto_invite(identity_id: int, admin_client: OlvidAdminClient, full: bo
 	else:
 		total_count = len_identities - 1
 
-	tasks = []
 
 	# full mode
 	if full:
 		total_count = round(len_identities * ((len_identities - 1) / 2))
 		for i in range(len(identities)):
 			identity_1: datatypes.Identity = identities[i]
+			tasks = []
 			for j in range(i, len_identities):
 				identity_2: datatypes.Identity = identities[j]
 				if identity_1.id == identity_2.id:
 					continue
-
 				tasks.append(admin_client.add_background_task(invitation_task(identities[i], identities[j])))
+			print(f"Queued {len(tasks)} tasks")
+			await asyncio.gather(*tasks)
 	else:
 		current_identity: datatypes.Identity = await admin_client.admin_identity_admin_get(identity_id=identity_id)
+		tasks = []
 		for i in range(len(identities)):
 			identity_1: datatypes.Identity = identities[i]
 			if identity_1.id == current_identity.id:
 				continue
 			tasks.append(admin_client.add_background_task(invitation_task(current_identity, identities[i])))
-
-	print(f"Queued {len(tasks)} tasks")
-	await asyncio.gather(*tasks)
+		print(f"Queued {len(tasks)} tasks")
+		await asyncio.gather(*tasks)

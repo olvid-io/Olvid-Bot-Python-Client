@@ -5,6 +5,7 @@ from .core import OlvidClient
 from .core import OlvidBot
 # noinspection PyUnresolvedReferences
 from .core import OlvidAdminClient
+from .core import errors
 
 # import core elements
 # noinspection PyUnresolvedReferences

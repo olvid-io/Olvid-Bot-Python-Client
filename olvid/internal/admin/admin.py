@@ -6,10 +6,11 @@ from __future__ import annotations  # this block is necessary for compilation
 from typing import TYPE_CHECKING  # this block is necessary for compilation
 if TYPE_CHECKING:  # this block is necessary for compilation
 	from ...core.OlvidClient import OlvidClient  # this block is necessary for compilation
-import grpc
+from grpc.aio import Channel
 from typing import AsyncIterator, Coroutine, Any
 from ...protobuf import olvid
 from ...datatypes import *
+from ...core import errors
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
@@ -38,8 +39,11 @@ class ClientKeyListRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListRequest], client: OlvidClient = None) -> "ClientKeyListRequest":
-		native_message = await promise
-		return ClientKeyListRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyListRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -110,8 +114,11 @@ class ClientKeyListResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListResponse], client: OlvidClient = None) -> "ClientKeyListResponse":
-		native_message = await promise
-		return ClientKeyListResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyListResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -179,8 +186,11 @@ class ClientKeyGetRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyGetRequest], client: OlvidClient = None) -> "ClientKeyGetRequest":
-		native_message = await promise
-		return ClientKeyGetRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyGetRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -248,8 +258,11 @@ class ClientKeyGetResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyGetResponse], client: OlvidClient = None) -> "ClientKeyGetResponse":
-		native_message = await promise
-		return ClientKeyGetResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyGetResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -322,8 +335,11 @@ class ClientKeyNewRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyNewRequest], client: OlvidClient = None) -> "ClientKeyNewRequest":
-		native_message = await promise
-		return ClientKeyNewRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyNewRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -394,8 +410,11 @@ class ClientKeyNewResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyNewResponse], client: OlvidClient = None) -> "ClientKeyNewResponse":
-		native_message = await promise
-		return ClientKeyNewResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyNewResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -466,8 +485,11 @@ class ClientKeyDeleteRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyDeleteRequest], client: OlvidClient = None) -> "ClientKeyDeleteRequest":
-		native_message = await promise
-		return ClientKeyDeleteRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyDeleteRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -534,8 +556,11 @@ class ClientKeyDeleteResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyDeleteResponse], client: OlvidClient = None) -> "ClientKeyDeleteResponse":
-		native_message = await promise
-		return ClientKeyDeleteResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return ClientKeyDeleteResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -601,8 +626,11 @@ class IdentityListRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityListRequest], client: OlvidClient = None) -> "IdentityListRequest":
-		native_message = await promise
-		return IdentityListRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityListRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -673,8 +701,11 @@ class IdentityListResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityListResponse], client: OlvidClient = None) -> "IdentityListResponse":
-		native_message = await promise
-		return IdentityListResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityListResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -742,8 +773,11 @@ class IdentityAdminGetRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityAdminGetRequest], client: OlvidClient = None) -> "IdentityAdminGetRequest":
-		native_message = await promise
-		return IdentityAdminGetRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityAdminGetRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -811,8 +845,11 @@ class IdentityAdminGetResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityAdminGetResponse], client: OlvidClient = None) -> "IdentityAdminGetResponse":
-		native_message = await promise
-		return IdentityAdminGetResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityAdminGetResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -887,8 +924,11 @@ class IdentityNewRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityNewRequest], client: OlvidClient = None) -> "IdentityNewRequest":
-		native_message = await promise
-		return IdentityNewRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityNewRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -965,8 +1005,11 @@ class IdentityNewResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityNewResponse], client: OlvidClient = None) -> "IdentityNewResponse":
-		native_message = await promise
-		return IdentityNewResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityNewResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1037,8 +1080,11 @@ class IdentityDeleteRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityDeleteRequest], client: OlvidClient = None) -> "IdentityDeleteRequest":
-		native_message = await promise
-		return IdentityDeleteRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityDeleteRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1105,8 +1151,11 @@ class IdentityDeleteResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityDeleteResponse], client: OlvidClient = None) -> "IdentityDeleteResponse":
-		native_message = await promise
-		return IdentityDeleteResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityDeleteResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1172,8 +1221,11 @@ class IdentityKeycloakNewRequest:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityKeycloakNewRequest], client: OlvidClient = None) -> "IdentityKeycloakNewRequest":
-		native_message = await promise
-		return IdentityKeycloakNewRequest._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityKeycloakNewRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1241,8 +1293,11 @@ class IdentityKeycloakNewResponse:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.admin.v1.identity_admin_pb2.IdentityKeycloakNewResponse], client: OlvidClient = None) -> "IdentityKeycloakNewResponse":
-		native_message = await promise
-		return IdentityKeycloakNewResponse._from_native(native_message, client=client)
+		try:
+			native_message = await promise
+			return IdentityKeycloakNewResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember
 	@staticmethod
@@ -1288,65 +1343,98 @@ class IdentityKeycloakNewResponse:
 
 
 class ClientKeyAdminServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.admin_service_pb2_grpc.ClientKeyAdminServiceStub = olvid.daemon.services.v1.admin_service_pb2_grpc.ClientKeyAdminServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def client_key_list(self, client_key_list_request: ClientKeyListRequest) -> AsyncIterator[ClientKeyListResponse]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListResponse]) -> AsyncIterator[ClientKeyListResponse]:
-			async for native_message in iterator.__aiter__():
-				yield ClientKeyListResponse._from_native(native_message, client=self._client)
-		overlay_object = client_key_list_request
-		return response_iterator(self.__stub.ClientKeyList(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListRequest(filter=ClientKeyFilter._to_native(overlay_object.filter)), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListResponse]) -> AsyncIterator[ClientKeyListResponse]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield ClientKeyListResponse._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = client_key_list_request
+			return response_iterator(self.__stub.ClientKeyList(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyListRequest(filter=ClientKeyFilter._to_native(overlay_object.filter)), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def client_key_get(self, client_key_get_request: ClientKeyGetRequest) -> Coroutine[Any, Any, ClientKeyGetResponse]:
-		overlay_object = client_key_get_request
-		return ClientKeyGetResponse._from_native_promise(self.__stub.ClientKeyGet(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyGetRequest(client_key=overlay_object.client_key), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = client_key_get_request
+			return ClientKeyGetResponse._from_native_promise(self.__stub.ClientKeyGet(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyGetRequest(client_key=overlay_object.client_key), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def client_key_new(self, client_key_new_request: ClientKeyNewRequest) -> Coroutine[Any, Any, ClientKeyNewResponse]:
-		overlay_object = client_key_new_request
-		return ClientKeyNewResponse._from_native_promise(self.__stub.ClientKeyNew(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyNewRequest(name=overlay_object.name, identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = client_key_new_request
+			return ClientKeyNewResponse._from_native_promise(self.__stub.ClientKeyNew(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyNewRequest(name=overlay_object.name, identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def client_key_delete(self, client_key_delete_request: ClientKeyDeleteRequest) -> Coroutine[Any, Any, ClientKeyDeleteResponse]:
-		overlay_object = client_key_delete_request
-		return ClientKeyDeleteResponse._from_native_promise(self.__stub.ClientKeyDelete(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyDeleteRequest(client_key=overlay_object.client_key), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = client_key_delete_request
+			return ClientKeyDeleteResponse._from_native_promise(self.__stub.ClientKeyDelete(olvid.daemon.admin.v1.client_key_admin_pb2.ClientKeyDeleteRequest(client_key=overlay_object.client_key), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 
 class IdentityAdminServiceStub:
-	def __init__(self, client: OlvidClient, channel: grpc.Channel):
+	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.admin_service_pb2_grpc.IdentityAdminServiceStub = olvid.daemon.services.v1.admin_service_pb2_grpc.IdentityAdminServiceStub(channel=channel)
 		self._client: OlvidClient = client
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def identity_list(self, identity_list_request: IdentityListRequest) -> AsyncIterator[IdentityListResponse]:
-		# noinspection PyUnresolvedReferences,PyProtectedMember
-		async def response_iterator(iterator: AsyncIterator[olvid.daemon.admin.v1.identity_admin_pb2.IdentityListResponse]) -> AsyncIterator[IdentityListResponse]:
-			async for native_message in iterator.__aiter__():
-				yield IdentityListResponse._from_native(native_message, client=self._client)
-		overlay_object = identity_list_request
-		return response_iterator(self.__stub.IdentityList(olvid.daemon.admin.v1.identity_admin_pb2.IdentityListRequest(filter=IdentityFilter._to_native(overlay_object.filter)), metadata=self._client.grpc_metadata))
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.admin.v1.identity_admin_pb2.IdentityListResponse]) -> AsyncIterator[IdentityListResponse]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield IdentityListResponse._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = identity_list_request
+			return response_iterator(self.__stub.IdentityList(olvid.daemon.admin.v1.identity_admin_pb2.IdentityListRequest(filter=IdentityFilter._to_native(overlay_object.filter)), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def identity_admin_get(self, identity_admin_get_request: IdentityAdminGetRequest) -> Coroutine[Any, Any, IdentityAdminGetResponse]:
-		overlay_object = identity_admin_get_request
-		return IdentityAdminGetResponse._from_native_promise(self.__stub.IdentityAdminGet(olvid.daemon.admin.v1.identity_admin_pb2.IdentityAdminGetRequest(identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = identity_admin_get_request
+			return IdentityAdminGetResponse._from_native_promise(self.__stub.IdentityAdminGet(olvid.daemon.admin.v1.identity_admin_pb2.IdentityAdminGetRequest(identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def identity_delete(self, identity_delete_request: IdentityDeleteRequest) -> Coroutine[Any, Any, IdentityDeleteResponse]:
-		overlay_object = identity_delete_request
-		return IdentityDeleteResponse._from_native_promise(self.__stub.IdentityDelete(olvid.daemon.admin.v1.identity_admin_pb2.IdentityDeleteRequest(identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = identity_delete_request
+			return IdentityDeleteResponse._from_native_promise(self.__stub.IdentityDelete(olvid.daemon.admin.v1.identity_admin_pb2.IdentityDeleteRequest(identity_id=overlay_object.identity_id), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def identity_new(self, identity_new_request: IdentityNewRequest) -> Coroutine[Any, Any, IdentityNewResponse]:
-		overlay_object = identity_new_request
-		return IdentityNewResponse._from_native_promise(self.__stub.IdentityNew(olvid.daemon.admin.v1.identity_admin_pb2.IdentityNewRequest(identity_details=IdentityDetails._to_native(overlay_object.identity_details), server_url=overlay_object.server_url, api_key=overlay_object.api_key), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = identity_new_request
+			return IdentityNewResponse._from_native_promise(self.__stub.IdentityNew(olvid.daemon.admin.v1.identity_admin_pb2.IdentityNewRequest(identity_details=IdentityDetails._to_native(overlay_object.identity_details), server_url=overlay_object.server_url, api_key=overlay_object.api_key), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def identity_keycloak_new(self, identity_keycloak_new_request: IdentityKeycloakNewRequest) -> Coroutine[Any, Any, IdentityKeycloakNewResponse]:
-		overlay_object = identity_keycloak_new_request
-		return IdentityKeycloakNewResponse._from_native_promise(self.__stub.IdentityKeycloakNew(olvid.daemon.admin.v1.identity_admin_pb2.IdentityKeycloakNewRequest(configuration_link=overlay_object.configuration_link), metadata=self._client.grpc_metadata), client=self._client)
+		try:
+			overlay_object = identity_keycloak_new_request
+			return IdentityKeycloakNewResponse._from_native_promise(self.__stub.IdentityKeycloakNew(olvid.daemon.admin.v1.identity_admin_pb2.IdentityKeycloakNewRequest(configuration_link=overlay_object.configuration_link), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e

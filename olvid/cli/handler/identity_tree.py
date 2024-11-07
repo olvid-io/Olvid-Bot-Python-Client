@@ -1,11 +1,11 @@
 import asyncio
 
-import grpc.aio
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
 from ..tools.cli_tools import *
-from olvid import datatypes
+from ...datatypes import datatypes
+from ...core import errors
 from ..tools.click_wrappers import WrapperGroup
 from ..tools.interactive_actions import ask_question_with_context, contact_new, print_with_context
 
@@ -53,10 +53,8 @@ async def identity_current(identity_id: int):
 		# hide invitation url and show result
 		identity.invitation_url = ""
 		print_normal_message(identity, identity.id)
-	except grpc.aio.AioRpcError as e:
-		# identity does not exist, restore previous id
-		if e.code() == grpc.StatusCode.NOT_FOUND:
-			ClientSingleton.set_current_identity_id(previous_identity_id)
+	except errors.NotFoundError as e:
+		ClientSingleton.set_current_identity_id(previous_identity_id)
 		raise e
 
 
