@@ -1,11 +1,19 @@
 # Olvid Bot Command Line Interface
 
-## Install
-You can install this module using pip. Using pypi repository:
+## Introduction
+Welcome to the Olvid Python Client repository, part of the Olvid bots framework. 
+If you're new here, consider starting with our [Documentation](https://doc.bot.olvid.io).
+
+## Installation
+
+You can install this module using pip:
+
 ```bash
-pip3 install olvid-bot 
+pip3 install olvid-bot
 ```
+
 Or from source:
+
 ```bash
 git clone https://github.com/olvid-io/Olvid-Bot-Python-Client
 cd Olvid-Bot-Python-Client

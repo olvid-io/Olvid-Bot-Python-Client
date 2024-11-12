@@ -2,7 +2,7 @@
 
 ## Introduction
 Welcome to the Olvid Python Client repository, part of the Olvid bots framework. 
-If you're new here, consider starting with our [Documentation](https://bot.doc.olvid.io).
+If you're new here, consider starting with our [Documentation](https://doc.bot.olvid.io).
 
 ## Installation
 
@@ -30,4 +30,4 @@ The module also includes a built-in **CLI (Command-Line Interface)**, enabling m
 For more information on using the CLI, refer to [README-cli](./README-cli.md).
 
 ## Quickstart
-Follow our [🚀 Quickstart](https://bot.doc.olvid.io/quickstart) page.
+Follow our [🚀 Quickstart](https://doc.bot.olvid.io/quickstart) page.
