@@ -53,10 +53,10 @@ async def storage_get(get_all: bool, keys: tuple[str], discussion_id: int, field
 	elif not keys:
 		if discussion_id:
 			async for element in ClientSingleton.get_client().discussion_storage_list(discussion_id=discussion_id, filter=storage_filter):
-				print_normal_message(f"{element.key}: {element.value}", f"{element.key}: {element.value}")
+				filter_fields_and_print_normal_message(element, fields)
 		else:
 			async for element in ClientSingleton.get_client().storage_list(filter=storage_filter):
-				print_normal_message(f"{element.key}: {element.value}", f"{element.key}: {element.value}")
+				filter_fields_and_print_normal_message(element, fields)
 
 	# get all storage entries
 	else:
@@ -65,7 +65,7 @@ async def storage_get(get_all: bool, keys: tuple[str], discussion_id: int, field
 				value = await ClientSingleton.get_client().discussion_storage_get(key=key, discussion_id=discussion_id)
 			else:
 				value = await ClientSingleton.get_client().storage_get(key)
-			print_normal_message(f"{key}: {value}", f"{value}")
+			filter_fields_and_print_normal_message(datatypes.StorageElement(key=key, value=value), fields)
 
 
 #####
