@@ -52,12 +52,6 @@ class SelfCleaningBot(OlvidClient):
 					await client.message_delete(message_id=message.id)
 					deleted_messages_count += 1
 
-			# delete locked discussions
-			locked_discussions_count = 0
-			async for locked_discussion in client.discussion_locked_list():
-				locked_discussions_count += 1
-				await client.discussion_locked_delete(discussion_id=locked_discussion.id)
-
 			tools_logger.debug(f"{client.__class__.__name__}: start clean: deleted {deleted_messages_count} messages and {locked_discussions_count} locked discussion")
 		except AioRpcError as rpc_error:
 			tools_logger.error(f"{client.__class__.__name__}: clean on start: {rpc_error.code()}: {rpc_error.details()}")
@@ -98,7 +92,7 @@ class SelfCleaningBot(OlvidClient):
 				return
 			message.attachments_count -= 1
 
-			# every attachment were uploaded
+			# all attachments have been uploaded, we can delete the message.
 			if message.attachments_count == 0:
 				await self.message_delete(message_id=message.id)
 				self._pending_outbound_messages_by_id.pop(message.id.id)

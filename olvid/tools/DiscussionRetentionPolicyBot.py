@@ -25,7 +25,6 @@ class DiscussionRetentionPolicyBot(OlvidClient):
 
 		self.add_background_task(start_task())
 
-	# delete every received messages
 	async def message_received_handler(self, message: datatypes.Message):
 		if self.retention_delay_s or self.discussion_retention_number:
 			await self._clean_discussion_messages(message.discussion_id)
