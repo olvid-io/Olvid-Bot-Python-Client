@@ -3940,15 +3940,17 @@ class Attachment(Attachment):
 	def is_outbound(self) -> bool:
 		return self.id.type == AttachmentId.Type.TYPE_OUTBOUND
 
-	async def save(self, save_dir: str, filename: str = None):
+	async def save(self, save_dir: str, filename: str = None) -> str:
 		if not os.path.isdir(save_dir):
 			os.mkdir(save_dir)
 		if filename is None:
 			filename = self.file_name
 		# create file
-		with open(os.path.join(save_dir, filename), "wb") as fd:
+		filepath: str = os.path.join(save_dir, filename)
+		with open(filepath, "wb") as fd:
 			async for chunk in self._client.attachment_download(attachment_id=self.id):
 				fd.write(chunk)
+		return filepath
 
 	async def delete(self, delete_everywhere: bool = False):
 		await self._client.attachment_delete(attachment_id=self.id, delete_everywhere=delete_everywhere)
@@ -4017,6 +4019,9 @@ class Message(Message):
 		if not self.is_inbound():
 			raise ValueError("Cannot get_sender_contact of outbound message")
 		return await self._client.contact_get(self.sender_id)
+
+	async def get_attachments(self) -> list[Attachment]:
+		return [a async for a in self._client.attachment_message_list(message_id=self.id)]
 
 	####
 	# Interaction api
