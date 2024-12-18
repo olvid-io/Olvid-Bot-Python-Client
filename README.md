@@ -30,4 +30,4 @@ The module also includes a built-in **CLI (Command-Line Interface)**, enabling m
 For more information on using the CLI, refer to [README-cli](./README-cli.md).
 
 ## Quickstart
-Follow our [🚀 Quickstart](https://doc.bot.olvid.io/quickstart) page.
+Follow our [🚀 Quickstart](https://doc.bot.olvid.io/install) page.
