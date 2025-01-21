@@ -26,7 +26,7 @@ from .....olvid.daemon.datatypes.v1 import contact_pb2 as olvid_dot_daemon_dot_d
 from .....olvid.daemon.datatypes.v1 import invitation_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_invitation__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.olvid/daemon/command/v1/contact_commands.proto\x12\x17olvid.daemon.command.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a*olvid/daemon/datatypes/v1/invitation.proto\"f\n\x12\x43ontactListRequest\x12\x45\n\x06\x66ilter\x18\x01 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"U\n\x13\x43ontactListResponse\x12>\n\x08\x63ontacts\x18\x01 \x03(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x08\x63ontacts\"2\n\x11\x43ontactGetRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"R\n\x12\x43ontactGetResponse\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"5\n\x14\x43ontactDeleteRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"\x17\n\x15\x43ontactDeleteResponse\"r\n\x1a\x43ontactIntroductionRequest\x12(\n\x10\x66irst_contact_id\x18\x01 \x01(\x04R\x0e\x66irstContactId\x12*\n\x11second_contact_id\x18\x02 \x01(\x04R\x0fsecondContactId\"\x1d\n\x1b\x43ontactIntroductionResponse\"I\n(ContactInviteToOneToOneDiscussionRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"r\n)ContactInviteToOneToOneDiscussionResponse\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"J\n)ContactDowngradeOneToOneDiscussionRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\",\n*ContactDowngradeOneToOneDiscussionResponseB\xc3\x01\n\x1b\x63om.olvid.daemon.command.v1B\x14\x43ontactCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.olvid/daemon/command/v1/contact_commands.proto\x12\x17olvid.daemon.command.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a*olvid/daemon/datatypes/v1/invitation.proto\"f\n\x12\x43ontactListRequest\x12\x45\n\x06\x66ilter\x18\x01 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"U\n\x13\x43ontactListResponse\x12>\n\x08\x63ontacts\x18\x01 \x03(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x08\x63ontacts\"2\n\x11\x43ontactGetRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"R\n\x12\x43ontactGetResponse\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"A\n ContactGetBytesIdentifierRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"C\n!ContactGetBytesIdentifierResponse\x12\x1e\n\nidentifier\x18\x01 \x01(\x0cR\nidentifier\"@\n\x1f\x43ontactGetInvitationLinkRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"K\n ContactGetInvitationLinkResponse\x12\'\n\x0finvitation_link\x18\x01 \x01(\tR\x0einvitationLink\"5\n\x14\x43ontactDeleteRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"\x17\n\x15\x43ontactDeleteResponse\"r\n\x1a\x43ontactIntroductionRequest\x12(\n\x10\x66irst_contact_id\x18\x01 \x01(\x04R\x0e\x66irstContactId\x12*\n\x11second_contact_id\x18\x02 \x01(\x04R\x0fsecondContactId\"\x1d\n\x1b\x43ontactIntroductionResponse\"I\n(ContactInviteToOneToOneDiscussionRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"r\n)ContactInviteToOneToOneDiscussionResponse\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"J\n)ContactDowngradeOneToOneDiscussionRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\",\n*ContactDowngradeOneToOneDiscussionResponse\"<\n\x1b\x43ontactDownloadPhotoRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"4\n\x1c\x43ontactDownloadPhotoResponse\x12\x14\n\x05photo\x18\x01 \x01(\x0cR\x05photoB\xc3\x01\n\x1b\x63om.olvid.daemon.command.v1B\x14\x43ontactCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -42,20 +42,32 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_CONTACTGETREQUEST']._serialized_end=401
   _globals['_CONTACTGETRESPONSE']._serialized_start=403
   _globals['_CONTACTGETRESPONSE']._serialized_end=485
-  _globals['_CONTACTDELETEREQUEST']._serialized_start=487
-  _globals['_CONTACTDELETEREQUEST']._serialized_end=540
-  _globals['_CONTACTDELETERESPONSE']._serialized_start=542
-  _globals['_CONTACTDELETERESPONSE']._serialized_end=565
-  _globals['_CONTACTINTRODUCTIONREQUEST']._serialized_start=567
-  _globals['_CONTACTINTRODUCTIONREQUEST']._serialized_end=681
-  _globals['_CONTACTINTRODUCTIONRESPONSE']._serialized_start=683
-  _globals['_CONTACTINTRODUCTIONRESPONSE']._serialized_end=712
-  _globals['_CONTACTINVITETOONETOONEDISCUSSIONREQUEST']._serialized_start=714
-  _globals['_CONTACTINVITETOONETOONEDISCUSSIONREQUEST']._serialized_end=787
-  _globals['_CONTACTINVITETOONETOONEDISCUSSIONRESPONSE']._serialized_start=789
-  _globals['_CONTACTINVITETOONETOONEDISCUSSIONRESPONSE']._serialized_end=903
-  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONREQUEST']._serialized_start=905
-  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONREQUEST']._serialized_end=979
-  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONRESPONSE']._serialized_start=981
-  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONRESPONSE']._serialized_end=1025
+  _globals['_CONTACTGETBYTESIDENTIFIERREQUEST']._serialized_start=487
+  _globals['_CONTACTGETBYTESIDENTIFIERREQUEST']._serialized_end=552
+  _globals['_CONTACTGETBYTESIDENTIFIERRESPONSE']._serialized_start=554
+  _globals['_CONTACTGETBYTESIDENTIFIERRESPONSE']._serialized_end=621
+  _globals['_CONTACTGETINVITATIONLINKREQUEST']._serialized_start=623
+  _globals['_CONTACTGETINVITATIONLINKREQUEST']._serialized_end=687
+  _globals['_CONTACTGETINVITATIONLINKRESPONSE']._serialized_start=689
+  _globals['_CONTACTGETINVITATIONLINKRESPONSE']._serialized_end=764
+  _globals['_CONTACTDELETEREQUEST']._serialized_start=766
+  _globals['_CONTACTDELETEREQUEST']._serialized_end=819
+  _globals['_CONTACTDELETERESPONSE']._serialized_start=821
+  _globals['_CONTACTDELETERESPONSE']._serialized_end=844
+  _globals['_CONTACTINTRODUCTIONREQUEST']._serialized_start=846
+  _globals['_CONTACTINTRODUCTIONREQUEST']._serialized_end=960
+  _globals['_CONTACTINTRODUCTIONRESPONSE']._serialized_start=962
+  _globals['_CONTACTINTRODUCTIONRESPONSE']._serialized_end=991
+  _globals['_CONTACTINVITETOONETOONEDISCUSSIONREQUEST']._serialized_start=993
+  _globals['_CONTACTINVITETOONETOONEDISCUSSIONREQUEST']._serialized_end=1066
+  _globals['_CONTACTINVITETOONETOONEDISCUSSIONRESPONSE']._serialized_start=1068
+  _globals['_CONTACTINVITETOONETOONEDISCUSSIONRESPONSE']._serialized_end=1182
+  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONREQUEST']._serialized_start=1184
+  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONREQUEST']._serialized_end=1258
+  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONRESPONSE']._serialized_start=1260
+  _globals['_CONTACTDOWNGRADEONETOONEDISCUSSIONRESPONSE']._serialized_end=1304
+  _globals['_CONTACTDOWNLOADPHOTOREQUEST']._serialized_start=1306
+  _globals['_CONTACTDOWNLOADPHOTOREQUEST']._serialized_end=1366
+  _globals['_CONTACTDOWNLOADPHOTORESPONSE']._serialized_start=1368
+  _globals['_CONTACTDOWNLOADPHOTORESPONSE']._serialized_end=1420
 # @@protoc_insertion_point(module_scope)

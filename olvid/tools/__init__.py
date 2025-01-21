@@ -1,5 +1,6 @@
 from .logger import tools_logger
 from .AutoInvitationBot import AutoInvitationBot
+from .KeycloakAutoInvitationBot import KeycloakAutoInvitationBot
 from .MonitoringBot import MonitoringBot
 from .SelfCleaningBot import SelfCleaningBot
 from .DiscussionRetentionPolicyBot import DiscussionRetentionPolicyBot

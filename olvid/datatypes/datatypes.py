@@ -2334,6 +2334,7 @@ class Identity:
 		self.id: int = id
 		self.display_name: str = display_name
 		self.details: IdentityDetails = details
+		# deprecated field
 		self.invitation_url: str = invitation_url
 		self.keycloak_managed: bool = keycloak_managed
 		self.has_a_photo: bool = has_a_photo
@@ -2806,6 +2807,197 @@ class InvitationFilter:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
+class KeycloakUser:
+	def __init__(self, client: OlvidClient = None, keycloak_id: str = "", display_name: str = "", details: "IdentityDetails" = None, contact_id: int = 0):
+		self._client: OlvidClient = client
+		self.keycloak_id: str = keycloak_id
+		self.display_name: str = display_name
+		self.details: IdentityDetails = details
+		self.contact_id: int = contact_id
+
+	def _update_content(self, keycloak_user: KeycloakUser) -> None:
+		self.keycloak_id: str = keycloak_user.keycloak_id
+		self.display_name: str = keycloak_user.display_name
+		self.details: IdentityDetails = keycloak_user.details
+		self.contact_id: int = keycloak_user.contact_id
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "KeycloakUser":
+		return KeycloakUser(client=self._client, keycloak_id=self.keycloak_id, display_name=self.display_name, details=self.details._clone(), contact_id=self.contact_id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUser, client: OlvidClient = None) -> "KeycloakUser":
+		return KeycloakUser(client, keycloak_id=native_message.keycloak_id, display_name=native_message.display_name, details=IdentityDetails._from_native(native_message.details, client=client), contact_id=native_message.contact_id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUser], client: OlvidClient = None) -> list["KeycloakUser"]:
+		return [KeycloakUser._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUser], client: OlvidClient = None) -> "KeycloakUser":
+		try:
+			native_message = await promise
+			return KeycloakUser._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["KeycloakUser"]):
+		if messages is None:
+			return []
+		return [KeycloakUser._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["KeycloakUser"]):
+		if message is None:
+			return None
+		return olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUser(keycloak_id=message.keycloak_id if message.keycloak_id else None, display_name=message.display_name if message.display_name else None, details=IdentityDetails._to_native(message.details if message.details else None), contact_id=message.contact_id if message.contact_id else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.keycloak_id:
+			s += f'keycloak_id: {self.keycloak_id}, '
+		if self.display_name:
+			s += f'display_name: {self.display_name}, '
+		if self.details:
+			s += f'details: ({self.details}), '
+		if self.contact_id:
+			s += f'contact_id: {self.contact_id}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, KeycloakUser):
+			return False
+		return self.keycloak_id == other.keycloak_id and self.display_name == other.display_name and self.details == other.details and self.contact_id == other.contact_id
+
+	def __bool__(self):
+		return self.keycloak_id != "" or self.display_name != "" or bool(self.details) or self.contact_id != 0
+
+	def __hash__(self):
+		return hash((self.keycloak_id, self.display_name, self.details, self.contact_id))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, KeycloakUser):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.keycloak_id == "" or self.keycloak_id == expected.keycloak_id, "Invalid value: keycloak_id: " + str(expected.keycloak_id) + " != " + str(self.keycloak_id)
+		assert expected.display_name == "" or self.display_name == expected.display_name, "Invalid value: display_name: " + str(expected.display_name) + " != " + str(self.display_name)
+		try:
+			assert expected.details is None or self.details._test_assertion(expected.details)
+		except AssertionError as e:
+			raise AssertionError("details: " + str(e))
+		assert expected.contact_id == 0 or self.contact_id == expected.contact_id, "Invalid value: contact_id: " + str(expected.contact_id) + " != " + str(self.contact_id)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class KeycloakUserFilter:
+	# noinspection PyProtectedMember,PyShadowingBuiltins
+	class Contact(Enum):
+		CONTACT_UNSPECIFIED = 0
+		CONTACT_IS = 1
+		CONTACT_IS_NOT = 2
+	
+		def __str__(self):
+			return self.name
+	
+		@staticmethod
+		def _from_native_list(native_enum_list) -> list["KeycloakUserFilter.Contact"]:
+			return [KeycloakUserFilter.Contact(native_enum) for native_enum in native_enum_list]
+	
+		def __bool__(self):
+			return self.value != 0
+
+	def __init__(self, client: OlvidClient = None, contact: "KeycloakUserFilter.Contact" = 0, display_name_search: str = "", details_search: "IdentityDetails" = None):
+		self._client: OlvidClient = client
+		self.contact: KeycloakUserFilter.Contact = contact
+		self.display_name_search: str = display_name_search
+		self.details_search: IdentityDetails = details_search
+
+	def _update_content(self, keycloak_user_filter: KeycloakUserFilter) -> None:
+		self.contact: KeycloakUserFilter.Contact = keycloak_user_filter.contact
+		self.display_name_search: str = keycloak_user_filter.display_name_search
+		self.details_search: IdentityDetails = keycloak_user_filter.details_search
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "KeycloakUserFilter":
+		return KeycloakUserFilter(client=self._client, contact=self.contact, display_name_search=self.display_name_search, details_search=self.details_search._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUserFilter, client: OlvidClient = None) -> "KeycloakUserFilter":
+		return KeycloakUserFilter(client, contact=KeycloakUserFilter.Contact(native_message.contact), display_name_search=native_message.display_name_search, details_search=IdentityDetails._from_native(native_message.details_search, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUserFilter], client: OlvidClient = None) -> list["KeycloakUserFilter"]:
+		return [KeycloakUserFilter._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUserFilter], client: OlvidClient = None) -> "KeycloakUserFilter":
+		try:
+			native_message = await promise
+			return KeycloakUserFilter._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["KeycloakUserFilter"]):
+		if messages is None:
+			return []
+		return [KeycloakUserFilter._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["KeycloakUserFilter"]):
+		if message is None:
+			return None
+		return olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakUserFilter(contact=message.contact.value if message.contact else None, display_name_search=message.display_name_search if message.display_name_search else None, details_search=IdentityDetails._to_native(message.details_search if message.details_search else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.contact:
+			s += f'contact: {self.contact}, '
+		if self.display_name_search:
+			s += f'display_name_search: {self.display_name_search}, '
+		if self.details_search:
+			s += f'details_search: ({self.details_search}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, KeycloakUserFilter):
+			return False
+		return self.contact == other.contact and self.display_name_search == other.display_name_search and self.details_search == other.details_search
+
+	def __bool__(self):
+		return bool(self.contact) or self.display_name_search != "" or bool(self.details_search)
+
+	def __hash__(self):
+		return hash((self.contact, self.display_name_search, self.details_search))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, KeycloakUserFilter):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.contact == 0 or self.contact == expected.contact, "Invalid value: contact: " + str(expected.contact) + " != " + str(self.contact)
+		assert expected.display_name_search == "" or self.display_name_search == expected.display_name_search, "Invalid value: display_name_search: " + str(expected.display_name_search) + " != " + str(self.display_name_search)
+		try:
+			assert expected.details_search is None or self.details_search._test_assertion(expected.details_search)
+		except AssertionError as e:
+			raise AssertionError("details_search: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
 class MessageId:
 	# noinspection PyProtectedMember,PyShadowingBuiltins
 	class Type(Enum):
@@ -2900,7 +3092,7 @@ class MessageId:
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
 class Message:
-	def __init__(self, client: OlvidClient = None, id: "MessageId" = None, discussion_id: int = 0, sender_id: int = 0, body: str = "", sort_index: float = 0.0, timestamp: int = 0, attachments_count: int = 0, replied_message_id: "MessageId" = None, message_location: "MessageLocation" = None, reactions: "list[MessageReaction]" = None):
+	def __init__(self, client: OlvidClient = None, id: "MessageId" = None, discussion_id: int = 0, sender_id: int = 0, body: str = "", sort_index: float = 0.0, timestamp: int = 0, attachments_count: int = 0, replied_message_id: "MessageId" = None, message_location: "MessageLocation" = None, reactions: "list[MessageReaction]" = None, forwarded: bool = False, edited_body: bool = False):
 		self._client: OlvidClient = client
 		self.id: MessageId = id
 		self.discussion_id: int = discussion_id
@@ -2912,6 +3104,8 @@ class Message:
 		self.replied_message_id: MessageId = replied_message_id
 		self.message_location: MessageLocation = message_location
 		self.reactions: list[MessageReaction] = reactions
+		self.forwarded: bool = forwarded
+		self.edited_body: bool = edited_body
 
 	def _update_content(self, message: Message) -> None:
 		self.id: MessageId = message.id
@@ -2924,15 +3118,17 @@ class Message:
 		self.replied_message_id: MessageId = message.replied_message_id
 		self.message_location: MessageLocation = message.message_location
 		self.reactions: list[MessageReaction] = message.reactions
+		self.forwarded: bool = message.forwarded
+		self.edited_body: bool = message.edited_body
 
 	# noinspection PyProtectedMember
 	def _clone(self) -> "Message":
-		return Message(client=self._client, id=self.id._clone(), discussion_id=self.discussion_id, sender_id=self.sender_id, body=self.body, sort_index=self.sort_index, timestamp=self.timestamp, attachments_count=self.attachments_count, replied_message_id=self.replied_message_id._clone(), message_location=self.message_location._clone(), reactions=[e._clone() for e in self.reactions])
+		return Message(client=self._client, id=self.id._clone(), discussion_id=self.discussion_id, sender_id=self.sender_id, body=self.body, sort_index=self.sort_index, timestamp=self.timestamp, attachments_count=self.attachments_count, replied_message_id=self.replied_message_id._clone(), message_location=self.message_location._clone(), reactions=[e._clone() for e in self.reactions], forwarded=self.forwarded, edited_body=self.edited_body)
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.datatypes.v1.message_pb2.Message, client: OlvidClient = None) -> "Message":
-		return Message(client, id=MessageId._from_native(native_message.id, client=client), discussion_id=native_message.discussion_id, sender_id=native_message.sender_id, body=native_message.body, sort_index=native_message.sort_index, timestamp=native_message.timestamp, attachments_count=native_message.attachments_count, replied_message_id=MessageId._from_native(native_message.replied_message_id, client=client), message_location=MessageLocation._from_native(native_message.message_location, client=client), reactions=MessageReaction._from_native_list(native_message.reactions, client=client))
+		return Message(client, id=MessageId._from_native(native_message.id, client=client), discussion_id=native_message.discussion_id, sender_id=native_message.sender_id, body=native_message.body, sort_index=native_message.sort_index, timestamp=native_message.timestamp, attachments_count=native_message.attachments_count, replied_message_id=MessageId._from_native(native_message.replied_message_id, client=client), message_location=MessageLocation._from_native(native_message.message_location, client=client), reactions=MessageReaction._from_native_list(native_message.reactions, client=client), forwarded=native_message.forwarded, edited_body=native_message.edited_body)
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
@@ -2960,7 +3156,7 @@ class Message:
 	def _to_native(message: Optional["Message"]):
 		if message is None:
 			return None
-		return olvid.daemon.datatypes.v1.message_pb2.Message(id=MessageId._to_native(message.id if message.id else None), discussion_id=message.discussion_id if message.discussion_id else None, sender_id=message.sender_id if message.sender_id else None, body=message.body if message.body else None, sort_index=message.sort_index if message.sort_index else None, timestamp=message.timestamp if message.timestamp else None, attachments_count=message.attachments_count if message.attachments_count else None, replied_message_id=MessageId._to_native(message.replied_message_id if message.replied_message_id else None), message_location=MessageLocation._to_native(message.message_location if message.message_location else None), reactions=MessageReaction._to_native_list(message.reactions if message.reactions else None))
+		return olvid.daemon.datatypes.v1.message_pb2.Message(id=MessageId._to_native(message.id if message.id else None), discussion_id=message.discussion_id if message.discussion_id else None, sender_id=message.sender_id if message.sender_id else None, body=message.body if message.body else None, sort_index=message.sort_index if message.sort_index else None, timestamp=message.timestamp if message.timestamp else None, attachments_count=message.attachments_count if message.attachments_count else None, replied_message_id=MessageId._to_native(message.replied_message_id if message.replied_message_id else None), message_location=MessageLocation._to_native(message.message_location if message.message_location else None), reactions=MessageReaction._to_native_list(message.reactions if message.reactions else None), forwarded=message.forwarded if message.forwarded else None, edited_body=message.edited_body if message.edited_body else None)
 
 	def __str__(self):
 		s: str = ''
@@ -2984,18 +3180,22 @@ class Message:
 			s += f'message_location: ({self.message_location}), '
 		if self.reactions:
 			s += f'reactions: {[str(el) for el in self.reactions]}, '
+		if self.forwarded:
+			s += f'forwarded: {self.forwarded}, '
+		if self.edited_body:
+			s += f'edited_body: {self.edited_body}, '
 		return s.removesuffix(', ')
 
 	def __eq__(self, other):
 		if not isinstance(other, Message):
 			return False
-		return self.id == other.id and self.discussion_id == other.discussion_id and self.sender_id == other.sender_id and self.body == other.body and self.sort_index == other.sort_index and self.timestamp == other.timestamp and self.attachments_count == other.attachments_count and self.replied_message_id == other.replied_message_id and self.message_location == other.message_location and self.reactions == other.reactions
+		return self.id == other.id and self.discussion_id == other.discussion_id and self.sender_id == other.sender_id and self.body == other.body and self.sort_index == other.sort_index and self.timestamp == other.timestamp and self.attachments_count == other.attachments_count and self.replied_message_id == other.replied_message_id and self.message_location == other.message_location and self.reactions == other.reactions and self.forwarded == other.forwarded and self.edited_body == other.edited_body
 
 	def __bool__(self):
-		return bool(self.id) or self.discussion_id != 0 or self.sender_id != 0 or self.body != "" or self.sort_index != 0.0 or self.timestamp != 0 or self.attachments_count != 0 or bool(self.replied_message_id) or bool(self.message_location) or bool(self.reactions)
+		return bool(self.id) or self.discussion_id != 0 or self.sender_id != 0 or self.body != "" or self.sort_index != 0.0 or self.timestamp != 0 or self.attachments_count != 0 or bool(self.replied_message_id) or bool(self.message_location) or bool(self.reactions) or self.forwarded or self.edited_body
 
 	def __hash__(self):
-		return hash((self.id, self.discussion_id, self.sender_id, self.body, self.sort_index, self.timestamp, self.attachments_count, self.replied_message_id, self.message_location, tuple(self.reactions)))
+		return hash((self.id, self.discussion_id, self.sender_id, self.body, self.sort_index, self.timestamp, self.attachments_count, self.replied_message_id, self.message_location, tuple(self.reactions), self.forwarded, self.edited_body))
 
 	# For tests routines
 	# noinspection DuplicatedCode,PyProtectedMember
@@ -3021,6 +3221,8 @@ class Message:
 		except AssertionError as e:
 			raise AssertionError("message_location: " + str(e))
 		pass  # print("Warning: test_assertion: skipped a list field reactions")
+		assert expected.forwarded is False or self.forwarded == expected.forwarded, "Invalid value: forwarded: " + str(expected.forwarded) + " != " + str(self.forwarded)
+		assert expected.edited_body is False or self.edited_body == expected.edited_body, "Invalid value: edited_body: " + str(expected.edited_body) + " != " + str(self.edited_body)
 		return True
 
 

@@ -26,7 +26,7 @@ from .....olvid.daemon.datatypes.v1 import contact_pb2 as olvid_dot_daemon_dot_d
 from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/contact_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a(olvid/daemon/datatypes/v1/identity.proto\"#\n!SubscribeToContactNewNotification\"V\n\x16\x43ontactNewNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"\'\n%SubscribeToContactDeletedNotification\"Z\n\x1a\x43ontactDeletedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\".\n,SubscribeToContactDetailsUpdatedNotification\"\xb8\x01\n!ContactDetailsUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetailsB\xe1\x01\n com.olvid.daemon.notification.v1B\x19\x43ontactNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/contact_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a(olvid/daemon/datatypes/v1/identity.proto\"#\n!SubscribeToContactNewNotification\"V\n\x16\x43ontactNewNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"\'\n%SubscribeToContactDeletedNotification\"Z\n\x1a\x43ontactDeletedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\".\n,SubscribeToContactDetailsUpdatedNotification\"\xb8\x01\n!ContactDetailsUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetails\",\n*SubscribeToContactPhotoUpdatedNotification\"_\n\x1f\x43ontactPhotoUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontactB\xe1\x01\n com.olvid.daemon.notification.v1B\x19\x43ontactNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -46,4 +46,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SUBSCRIBETOCONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=477
   _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_start=480
   _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=664
+  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=666
+  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=710
+  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=712
+  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=807
 # @@protoc_insertion_point(module_scope)

@@ -8,6 +8,7 @@ from .....olvid.daemon.command.v1 import discussion_commands_pb2 as olvid_dot_da
 from .....olvid.daemon.command.v1 import group_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2
 from .....olvid.daemon.command.v1 import identity_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2
 from .....olvid.daemon.command.v1 import invitation_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_invitation__commands__pb2
+from .....olvid.daemon.command.v1 import keycloak_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2
 from .....olvid.daemon.command.v1 import message_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2
 from .....olvid.daemon.command.v1 import storage_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_storage__commands__pb2
 
@@ -27,6 +28,16 @@ class IdentityCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetResponse.FromString,
                 _registered_method=True)
+        self.IdentityGetBytesIdentifier = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityCommandService/IdentityGetBytesIdentifier',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierResponse.FromString,
+                _registered_method=True)
+        self.IdentityGetInvitationLink = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityCommandService/IdentityGetInvitationLink',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkResponse.FromString,
+                _registered_method=True)
         self.IdentityUpdateDetails = channel.unary_unary(
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentityUpdateDetails',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsRequest.SerializeToString,
@@ -41,6 +52,11 @@ class IdentityCommandServiceStub(object):
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentitySetPhoto',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoResponse.FromString,
+                _registered_method=True)
+        self.IdentityDownloadPhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityCommandService/IdentityDownloadPhoto',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.FromString,
                 _registered_method=True)
         self.IdentityKeycloakBind = channel.unary_unary(
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentityKeycloakBind',
@@ -74,6 +90,18 @@ class IdentityCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def IdentityGetBytesIdentifier(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityGetInvitationLink(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def IdentityUpdateDetails(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -87,6 +115,12 @@ class IdentityCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def IdentitySetPhoto(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityDownloadPhoto(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -124,6 +158,16 @@ def add_IdentityCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetResponse.SerializeToString,
             ),
+            'IdentityGetBytesIdentifier': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityGetBytesIdentifier,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierResponse.SerializeToString,
+            ),
+            'IdentityGetInvitationLink': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityGetInvitationLink,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkResponse.SerializeToString,
+            ),
             'IdentityUpdateDetails': grpc.unary_unary_rpc_method_handler(
                     servicer.IdentityUpdateDetails,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsRequest.FromString,
@@ -138,6 +182,11 @@ def add_IdentityCommandServiceServicer_to_server(servicer, server):
                     servicer.IdentitySetPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoResponse.SerializeToString,
+            ),
+            'IdentityDownloadPhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityDownloadPhoto,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.SerializeToString,
             ),
             'IdentityKeycloakBind': grpc.unary_unary_rpc_method_handler(
                     servicer.IdentityKeycloakBind,
@@ -188,6 +237,60 @@ class IdentityCommandService(object):
             '/olvid.daemon.services.v1.IdentityCommandService/IdentityGet',
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityGetBytesIdentifier(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityCommandService/IdentityGetBytesIdentifier',
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetBytesIdentifierResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityGetInvitationLink(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityCommandService/IdentityGetInvitationLink',
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityGetInvitationLinkResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -269,6 +372,33 @@ class IdentityCommandService(object):
             '/olvid.daemon.services.v1.IdentityCommandService/IdentitySetPhoto',
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityDownloadPhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityCommandService/IdentityDownloadPhoto',
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -741,6 +871,16 @@ class ContactCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetResponse.FromString,
                 _registered_method=True)
+        self.ContactGetBytesIdentifier = channel.unary_unary(
+                '/olvid.daemon.services.v1.ContactCommandService/ContactGetBytesIdentifier',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierResponse.FromString,
+                _registered_method=True)
+        self.ContactGetInvitationLink = channel.unary_unary(
+                '/olvid.daemon.services.v1.ContactCommandService/ContactGetInvitationLink',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkResponse.FromString,
+                _registered_method=True)
         self.ContactDelete = channel.unary_unary(
                 '/olvid.daemon.services.v1.ContactCommandService/ContactDelete',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDeleteRequest.SerializeToString,
@@ -750,6 +890,11 @@ class ContactCommandServiceStub(object):
                 '/olvid.daemon.services.v1.ContactCommandService/ContactIntroduction',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionResponse.FromString,
+                _registered_method=True)
+        self.ContactDownloadPhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.ContactCommandService/ContactDownloadPhoto',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.FromString,
                 _registered_method=True)
         self.ContactInviteToOneToOneDiscussion = channel.unary_unary(
                 '/olvid.daemon.services.v1.ContactCommandService/ContactInviteToOneToOneDiscussion',
@@ -779,6 +924,18 @@ class ContactCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ContactGetBytesIdentifier(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ContactGetInvitationLink(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ContactDelete(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -791,9 +948,14 @@ class ContactCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ContactDownloadPhoto(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ContactInviteToOneToOneDiscussion(self, request, context):
-        """	rpc ContactDownloadPhoto(command.v1.ContactDownloadPhotoRequest) returns (stream command.v1.ContactDownloadPhotoResponse) {}
-        collected contacts
+        """collected contacts
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -818,6 +980,16 @@ def add_ContactCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetResponse.SerializeToString,
             ),
+            'ContactGetBytesIdentifier': grpc.unary_unary_rpc_method_handler(
+                    servicer.ContactGetBytesIdentifier,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierResponse.SerializeToString,
+            ),
+            'ContactGetInvitationLink': grpc.unary_unary_rpc_method_handler(
+                    servicer.ContactGetInvitationLink,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkResponse.SerializeToString,
+            ),
             'ContactDelete': grpc.unary_unary_rpc_method_handler(
                     servicer.ContactDelete,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDeleteRequest.FromString,
@@ -827,6 +999,11 @@ def add_ContactCommandServiceServicer_to_server(servicer, server):
                     servicer.ContactIntroduction,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionResponse.SerializeToString,
+            ),
+            'ContactDownloadPhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.ContactDownloadPhoto,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.SerializeToString,
             ),
             'ContactInviteToOneToOneDiscussion': grpc.unary_unary_rpc_method_handler(
                     servicer.ContactInviteToOneToOneDiscussion,
@@ -905,6 +1082,60 @@ class ContactCommandService(object):
             _registered_method=True)
 
     @staticmethod
+    def ContactGetBytesIdentifier(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ContactCommandService/ContactGetBytesIdentifier',
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetBytesIdentifierResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ContactGetInvitationLink(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ContactCommandService/ContactGetInvitationLink',
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactGetInvitationLinkResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def ContactDelete(request,
             target,
             options=(),
@@ -948,6 +1179,33 @@ class ContactCommandService(object):
             '/olvid.daemon.services.v1.ContactCommandService/ContactIntroduction',
             olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactIntroductionResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ContactDownloadPhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ContactCommandService/ContactDownloadPhoto',
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -1013,6 +1271,124 @@ class ContactCommandService(object):
             _registered_method=True)
 
 
+class KeycloakCommandServiceStub(object):
+    """Keycloak
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.KeycloakUserList = channel.unary_stream(
+                '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakUserList',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListResponse.FromString,
+                _registered_method=True)
+        self.KeycloakAddUserAsContact = channel.unary_unary(
+                '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakAddUserAsContact',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.FromString,
+                _registered_method=True)
+
+
+class KeycloakCommandServiceServicer(object):
+    """Keycloak
+    """
+
+    def KeycloakUserList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def KeycloakAddUserAsContact(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_KeycloakCommandServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'KeycloakUserList': grpc.unary_stream_rpc_method_handler(
+                    servicer.KeycloakUserList,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListResponse.SerializeToString,
+            ),
+            'KeycloakAddUserAsContact': grpc.unary_unary_rpc_method_handler(
+                    servicer.KeycloakAddUserAsContact,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'olvid.daemon.services.v1.KeycloakCommandService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('olvid.daemon.services.v1.KeycloakCommandService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class KeycloakCommandService(object):
+    """Keycloak
+    """
+
+    @staticmethod
+    def KeycloakUserList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakUserList',
+            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakUserListResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def KeycloakAddUserAsContact(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakAddUserAsContact',
+            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
 class GroupCommandServiceStub(object):
     """Group
     """
@@ -1032,6 +1408,11 @@ class GroupCommandServiceStub(object):
                 '/olvid.daemon.services.v1.GroupCommandService/GroupGet',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetResponse.FromString,
+                _registered_method=True)
+        self.GroupGetBytesIdentifier = channel.unary_unary(
+                '/olvid.daemon.services.v1.GroupCommandService/GroupGetBytesIdentifier',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierResponse.FromString,
                 _registered_method=True)
         self.GroupNewStandardGroup = channel.unary_unary(
                 '/olvid.daemon.services.v1.GroupCommandService/GroupNewStandardGroup',
@@ -1078,6 +1459,11 @@ class GroupCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoResponse.FromString,
                 _registered_method=True)
+        self.GroupDownloadPhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.GroupCommandService/GroupDownloadPhoto',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.FromString,
+                _registered_method=True)
 
 
 class GroupCommandServiceServicer(object):
@@ -1091,6 +1477,12 @@ class GroupCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GroupGet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GroupGetBytesIdentifier(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1150,6 +1542,12 @@ class GroupCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GroupDownloadPhoto(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GroupCommandServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1162,6 +1560,11 @@ def add_GroupCommandServiceServicer_to_server(servicer, server):
                     servicer.GroupGet,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetResponse.SerializeToString,
+            ),
+            'GroupGetBytesIdentifier': grpc.unary_unary_rpc_method_handler(
+                    servicer.GroupGetBytesIdentifier,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierResponse.SerializeToString,
             ),
             'GroupNewStandardGroup': grpc.unary_unary_rpc_method_handler(
                     servicer.GroupNewStandardGroup,
@@ -1207,6 +1610,11 @@ def add_GroupCommandServiceServicer_to_server(servicer, server):
                     servicer.GroupSetPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoResponse.SerializeToString,
+            ),
+            'GroupDownloadPhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.GroupDownloadPhoto,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1264,6 +1672,33 @@ class GroupCommandService(object):
             '/olvid.daemon.services.v1.GroupCommandService/GroupGet',
             olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GroupGetBytesIdentifier(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.GroupCommandService/GroupGetBytesIdentifier',
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupGetBytesIdentifierResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -1517,6 +1952,33 @@ class GroupCommandService(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def GroupDownloadPhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.GroupCommandService/GroupDownloadPhoto',
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class DiscussionCommandServiceStub(object):
     """Discussion
@@ -1537,6 +1999,11 @@ class DiscussionCommandServiceStub(object):
                 '/olvid.daemon.services.v1.DiscussionCommandService/DiscussionGet',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetResponse.FromString,
+                _registered_method=True)
+        self.DiscussionGetBytesIdentifier = channel.unary_unary(
+                '/olvid.daemon.services.v1.DiscussionCommandService/DiscussionGetBytesIdentifier',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierResponse.FromString,
                 _registered_method=True)
         self.DiscussionGetByContact = channel.unary_unary(
                 '/olvid.daemon.services.v1.DiscussionCommandService/DiscussionGetByContact',
@@ -1586,6 +2053,12 @@ class DiscussionCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def DiscussionGet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DiscussionGetBytesIdentifier(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1646,6 +2119,11 @@ def add_DiscussionCommandServiceServicer_to_server(servicer, server):
                     servicer.DiscussionGet,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetResponse.SerializeToString,
+            ),
+            'DiscussionGetBytesIdentifier': grpc.unary_unary_rpc_method_handler(
+                    servicer.DiscussionGetBytesIdentifier,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierResponse.SerializeToString,
             ),
             'DiscussionGetByContact': grpc.unary_unary_rpc_method_handler(
                     servicer.DiscussionGetByContact,
@@ -1738,6 +2216,33 @@ class DiscussionCommandService(object):
             '/olvid.daemon.services.v1.DiscussionCommandService/DiscussionGet',
             olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DiscussionGetBytesIdentifier(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.DiscussionCommandService/DiscussionGetBytesIdentifier',
+            olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2.DiscussionGetBytesIdentifierResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -263,6 +263,11 @@ class ContactNotificationServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.SubscribeToContactDetailsUpdatedNotification.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.ContactDetailsUpdatedNotification.FromString,
                 _registered_method=True)
+        self.ContactPhotoUpdated = channel.unary_stream(
+                '/olvid.daemon.services.v1.ContactNotificationService/ContactPhotoUpdated',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.SubscribeToContactPhotoUpdatedNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.ContactPhotoUpdatedNotification.FromString,
+                _registered_method=True)
 
 
 class ContactNotificationServiceServicer(object):
@@ -287,6 +292,12 @@ class ContactNotificationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ContactPhotoUpdated(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ContactNotificationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -304,6 +315,11 @@ def add_ContactNotificationServiceServicer_to_server(servicer, server):
                     servicer.ContactDetailsUpdated,
                     request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.SubscribeToContactDetailsUpdatedNotification.FromString,
                     response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.ContactDetailsUpdatedNotification.SerializeToString,
+            ),
+            'ContactPhotoUpdated': grpc.unary_stream_rpc_method_handler(
+                    servicer.ContactPhotoUpdated,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.SubscribeToContactPhotoUpdatedNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.ContactPhotoUpdatedNotification.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -398,6 +414,33 @@ class ContactNotificationService(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def ContactPhotoUpdated(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ContactNotificationService/ContactPhotoUpdated',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.SubscribeToContactPhotoUpdatedNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2.ContactPhotoUpdatedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class GroupNotificationServiceStub(object):
     """Group
@@ -423,6 +466,11 @@ class GroupNotificationServiceStub(object):
                 '/olvid.daemon.services.v1.GroupNotificationService/GroupNameUpdated',
                 request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupNameUpdatedNotification.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupNameUpdatedNotification.FromString,
+                _registered_method=True)
+        self.GroupPhotoUpdated = channel.unary_stream(
+                '/olvid.daemon.services.v1.GroupNotificationService/GroupPhotoUpdated',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupPhotoUpdatedNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupPhotoUpdatedNotification.FromString,
                 _registered_method=True)
         self.GroupDescriptionUpdated = channel.unary_stream(
                 '/olvid.daemon.services.v1.GroupNotificationService/GroupDescriptionUpdated',
@@ -488,6 +536,12 @@ class GroupNotificationServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GroupNameUpdated(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GroupPhotoUpdated(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -564,6 +618,11 @@ def add_GroupNotificationServiceServicer_to_server(servicer, server):
                     servicer.GroupNameUpdated,
                     request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupNameUpdatedNotification.FromString,
                     response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupNameUpdatedNotification.SerializeToString,
+            ),
+            'GroupPhotoUpdated': grpc.unary_stream_rpc_method_handler(
+                    servicer.GroupPhotoUpdated,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupPhotoUpdatedNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupPhotoUpdatedNotification.SerializeToString,
             ),
             'GroupDescriptionUpdated': grpc.unary_stream_rpc_method_handler(
                     servicer.GroupDescriptionUpdated,
@@ -693,6 +752,33 @@ class GroupNotificationService(object):
             '/olvid.daemon.services.v1.GroupNotificationService/GroupNameUpdated',
             olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupNameUpdatedNotification.SerializeToString,
             olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupNameUpdatedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GroupPhotoUpdated(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.GroupNotificationService/GroupPhotoUpdated',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupPhotoUpdatedNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupPhotoUpdatedNotification.FromString,
             options,
             channel_credentials,
             insecure,

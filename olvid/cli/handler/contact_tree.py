@@ -1,3 +1,4 @@
+import os
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
@@ -40,10 +41,11 @@ async def contact_new_cmd():
 # noinspection PyProtectedMember
 @contact_tree.command("get", help="list current identity contacts")
 @click.option("-a", "--all", "get_all", is_flag=True)
+@click.option("-l", "--link", "show_invitation_link", is_flag=True)
 @click.argument("contact_ids", nargs=-1, type=click.INT)
 @click.option("-f", "--fields", "fields", type=str)
 @click.option("--filter", "filter_", type=str)
-async def contact_get(get_all, contact_ids, fields: str, filter_: str = ""):
+async def contact_get(get_all, show_invitation_link: bool, contact_ids, fields: str, filter_: str = ""):
 	# build filter
 	contact_filter: datatypes.ContactFilter = datatypes.ContactFilter()
 	if filter_:
@@ -55,11 +57,14 @@ async def contact_get(get_all, contact_ids, fields: str, filter_: str = ""):
 			return
 
 	if get_all or not contact_ids:
-		async for contact in ClientSingleton.get_client().contact_list(filter=contact_filter):
-			filter_fields_and_print_normal_message(contact, fields)
+		contacts: list[datatypes.Contact] = [c async for c in ClientSingleton.get_client().contact_list(filter=contact_filter)]
 	else:
-		for contact_id in contact_ids:
-			contact = await ClientSingleton.get_client().contact_get(contact_id)
+		contacts = [await ClientSingleton.get_client().contact_get(contact_id) for contact_id in contact_ids]
+
+	for contact in contacts:
+		if show_invitation_link:
+			print(f"{contact.id}: {await ClientSingleton.get_client().contact_get_invitation_link(contact_id=contact.id)}")
+		else:
 			filter_fields_and_print_normal_message(contact, fields)
 
 
@@ -112,3 +117,87 @@ async def contact_downgrade(contact_ids: tuple[int]):
 	for contact_id in contact_ids:
 		await ClientSingleton.get_client().contact_downgrade_one_to_one_discussion(contact_id)
 		print_command_result(f"Contact downgraded: {contact_id}")
+
+
+#####
+# contact photo
+#####
+@contact_tree.group("photo", help="get contact photos", cls=WrapperGroup)
+def contact_photo_tree():
+	pass
+
+
+#####
+# contact photo save
+#####
+@contact_photo_tree.command("save", help="Save contact photos to local files.")
+@click.argument("contact_ids", required=False, nargs=-1, type=click.INT)
+@click.option("-a", "--all", "save_all", is_flag=True, help="Save all contact photos")
+@click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)
+@click.option("-f", "--filename", "filename", help="specify file name to use (ignored if saving more than one image)", nargs=1, type=click.STRING, required=False)
+async def contact_photo_set(path: str, filename: str, save_all: bool, contact_ids: list[int]):
+	# use default save directory if necessary
+	if not path:
+		path = "./photos"
+	# create save directory
+	os.makedirs(path, exist_ok=True)
+
+	if not contact_ids or save_all:
+		contact_ids = [g.id async for g in ClientSingleton.get_client().contact_list()]
+
+	# save every requested photo
+	for contact_id in contact_ids:
+		photo_bytes: bytes = await ClientSingleton.get_client().contact_download_photo(contact_id=contact_id)
+
+		# specified filename flag
+		if len(contact_ids) == 1 and filename:
+			filepath: str = os.path.join(path, filename)
+		# default filename
+		else:
+			filepath: str = os.path.join(path, f"contact_{contact_id}.jpeg")
+		with open(filepath, "wb") as photo:
+			photo.write(photo_bytes)
+		print_normal_message(f"Photo saved in: {filepath}", filepath)
+
+
+#####
+# contact kc
+#####
+@contact_tree.group("kc", help="manage keycloak contacts", cls=WrapperGroup)
+def contact_kc_tree():
+	pass
+
+
+#####
+# contact kc get
+#####
+@contact_kc_tree.command("get", help="list keycloak users")
+@click.option("-t", "--timestamp", type=int, default=0, help="last list user timestamp")
+@click.option("-f", "--fields", "fields", type=str)
+@click.option("--filter", "filter_", type=str)
+async def contact_kc_get(filter_: str, fields: str, timestamp: int):
+	# build filter
+	keycloak_user_filter: datatypes.KeycloakUserFilter = datatypes.KeycloakUserFilter()
+	if filter_:
+		try:
+			parsed_message = Parse(filter_, datatypes.KeycloakUserFilter()._to_native(keycloak_user_filter))
+			keycloak_user_filter = datatypes.KeycloakUserFilter._from_native(parsed_message)
+		except ParseError as e:
+			print_error_message(f"Cannot parse filter: {e}")
+			return
+
+	last_list_timestamp = 0
+	async for users, last_list_timestamp in ClientSingleton.get_client().keycloak_user_list(filter=keycloak_user_filter, last_list_timestamp=timestamp if timestamp else None):
+		for user in users:
+			filter_fields_and_print_normal_message(user, fields)
+	print_normal_message(f"Last list timestamp: {last_list_timestamp}", last_list_timestamp)
+
+
+#####
+# contact kc add
+#####
+@contact_kc_tree.command("add", help="add a keycloak user as a contact")
+@click.argument("user_id", nargs=1, required=True, type=click.STRING)
+async def contact_kc_get(user_id: str):
+	await ClientSingleton.get_client().keycloak_add_user_as_contact(keycloak_id=user_id)
+	print_normal_message("Added contact", "")

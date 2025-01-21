@@ -134,6 +134,23 @@ class ContactDetailsUpdatedListener(GenericNotificationListener):
 		super().add_checker(lambda n: checker(n.contact, n.previous_details))
 
 
+# noinspection DuplicatedCode
+class ContactPhotoUpdatedListener(GenericNotificationListener):
+	def __init__(self, handler: Callable[[datatypes.Contact], Optional[Coroutine]], checkers: list[Callable[[datatypes.Contact], Union[bool, Coroutine[Any, Any, bool]]]] = None, count: int = -1, priority: int = 0):
+		if checkers:
+			checkers = [lambda n: checker(n.contact) for checker in checkers]
+		super().__init__(
+			notification_type=NOTIFICATIONS.CONTACT_PHOTO_UPDATED,
+			handler=lambda n: handler(n.contact),
+			checkers=checkers,
+			count=count,
+			priority=priority
+		)
+	
+	def add_checker(self, checker: Callable[[datatypes.Contact], Union[bool, Coroutine[Any, Any, bool]]]):
+		super().add_checker(lambda n: checker(n.contact))
+
+
 # GroupNotificationService
 # noinspection DuplicatedCode
 class GroupNewListener(GenericNotificationListener):
@@ -184,6 +201,23 @@ class GroupNameUpdatedListener(GenericNotificationListener):
 
 	def add_checker(self, checker: Callable[[datatypes.Group, str], Union[bool, Coroutine[Any, Any, bool]]]):
 		super().add_checker(lambda n: checker(n.group, n.previous_name))
+
+
+# noinspection DuplicatedCode
+class GroupPhotoUpdatedListener(GenericNotificationListener):
+	def __init__(self, handler: Callable[[datatypes.Group], Optional[Coroutine]], checkers: list[Callable[[datatypes.Group], Union[bool, Coroutine[Any, Any, bool]]]] = None, count: int = -1, priority: int = 0):
+		if checkers:
+			checkers = [lambda n: checker(n.group) for checker in checkers]
+		super().__init__(
+			notification_type=NOTIFICATIONS.GROUP_PHOTO_UPDATED,
+			handler=lambda n: handler(n.group),
+			checkers=checkers,
+			count=count,
+			priority=priority
+		)
+	
+	def add_checker(self, checker: Callable[[datatypes.Group], Union[bool, Coroutine[Any, Any, bool]]]):
+		super().add_checker(lambda n: checker(n.group))
 
 
 # noinspection DuplicatedCode

@@ -494,6 +494,16 @@ class OlvidClient(CommandHolder):
 		response: commands.IdentityGetResponse = await self._stubs.identityCommandStub.identity_get(commands.IdentityGetRequest(client=self))
 		return response.identity
 	
+	async def identity_get_bytes_identifier(self) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetBytesIdentifier')
+		response: commands.IdentityGetBytesIdentifierResponse = await self._stubs.identityCommandStub.identity_get_bytes_identifier(commands.IdentityGetBytesIdentifierRequest(client=self))
+		return response.identifier
+	
+	async def identity_get_invitation_link(self) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetInvitationLink')
+		response: commands.IdentityGetInvitationLinkResponse = await self._stubs.identityCommandStub.identity_get_invitation_link(commands.IdentityGetInvitationLinkRequest(client=self))
+		return response.invitation_link
+	
 	async def identity_update_details(self, new_details: datatypes.IdentityDetails) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityUpdateDetails')
 		await self._stubs.identityCommandStub.identity_update_details(commands.IdentityUpdateDetailsRequest(client=self, new_details=new_details))
@@ -503,6 +513,11 @@ class OlvidClient(CommandHolder):
 		await self._stubs.identityCommandStub.identity_remove_photo(commands.IdentityRemovePhotoRequest(client=self))
 	
 	# identity_set_photo: cannot generate request stream rpc code
+	
+	async def identity_download_photo(self) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityDownloadPhoto')
+		response: commands.IdentityDownloadPhotoResponse = await self._stubs.identityCommandStub.identity_download_photo(commands.IdentityDownloadPhotoRequest(client=self))
+		return response.photo
 	
 	async def identity_keycloak_bind(self, configuration_link: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityKeycloakBind')
@@ -573,6 +588,16 @@ class OlvidClient(CommandHolder):
 		response: commands.ContactGetResponse = await self._stubs.contactCommandStub.contact_get(commands.ContactGetRequest(client=self, contact_id=contact_id))
 		return response.contact
 	
+	async def contact_get_bytes_identifier(self, contact_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: ContactGetBytesIdentifier')
+		response: commands.ContactGetBytesIdentifierResponse = await self._stubs.contactCommandStub.contact_get_bytes_identifier(commands.ContactGetBytesIdentifierRequest(client=self, contact_id=contact_id))
+		return response.identifier
+	
+	async def contact_get_invitation_link(self, contact_id: int) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: ContactGetInvitationLink')
+		response: commands.ContactGetInvitationLinkResponse = await self._stubs.contactCommandStub.contact_get_invitation_link(commands.ContactGetInvitationLinkRequest(client=self, contact_id=contact_id))
+		return response.invitation_link
+	
 	async def contact_delete(self, contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactDelete')
 		await self._stubs.contactCommandStub.contact_delete(commands.ContactDeleteRequest(client=self, contact_id=contact_id))
@@ -580,6 +605,11 @@ class OlvidClient(CommandHolder):
 	async def contact_introduction(self, first_contact_id: int, second_contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactIntroduction')
 		await self._stubs.contactCommandStub.contact_introduction(commands.ContactIntroductionRequest(client=self, first_contact_id=first_contact_id, second_contact_id=second_contact_id))
+	
+	async def contact_download_photo(self, contact_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: ContactDownloadPhoto')
+		response: commands.ContactDownloadPhotoResponse = await self._stubs.contactCommandStub.contact_download_photo(commands.ContactDownloadPhotoRequest(client=self, contact_id=contact_id))
+		return response.photo
 	
 	async def contact_invite_to_one_to_one_discussion(self, contact_id: int) -> datatypes.Invitation:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactInviteToOneToOneDiscussion')
@@ -589,6 +619,19 @@ class OlvidClient(CommandHolder):
 	async def contact_downgrade_one_to_one_discussion(self, contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactDowngradeOneToOneDiscussion')
 		await self._stubs.contactCommandStub.contact_downgrade_one_to_one_discussion(commands.ContactDowngradeOneToOneDiscussionRequest(client=self, contact_id=contact_id))
+	
+	# KeycloakCommandService
+	def keycloak_user_list(self, filter: datatypes.KeycloakUserFilter = None, last_list_timestamp: int = 0) -> AsyncIterator[list[datatypes.KeycloakUser], int]:
+		command_logger.info(f'{self.__class__.__name__}: command: KeycloakUserList')
+	
+		async def iterator(message_iterator: AsyncIterator[commands.KeycloakUserListResponse]) -> AsyncIterator[list[datatypes.KeycloakUser], int]:
+			async for message in message_iterator:
+				yield message.users, message.last_list_timestamp
+		return iterator(self._stubs.keycloakCommandStub.keycloak_user_list(commands.KeycloakUserListRequest(client=self, filter=filter, last_list_timestamp=last_list_timestamp)))
+	
+	async def keycloak_add_user_as_contact(self, keycloak_id: str) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: KeycloakAddUserAsContact')
+		await self._stubs.keycloakCommandStub.keycloak_add_user_as_contact(commands.KeycloakAddUserAsContactRequest(client=self, keycloak_id=keycloak_id))
 	
 	# GroupCommandService
 	def group_list(self, filter: datatypes.GroupFilter = None) -> AsyncIterator[datatypes.Group]:
@@ -604,6 +647,11 @@ class OlvidClient(CommandHolder):
 		command_logger.info(f'{self.__class__.__name__}: command: GroupGet')
 		response: commands.GroupGetResponse = await self._stubs.groupCommandStub.group_get(commands.GroupGetRequest(client=self, group_id=group_id))
 		return response.group
+	
+	async def group_get_bytes_identifier(self, group_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: GroupGetBytesIdentifier')
+		response: commands.GroupGetBytesIdentifierResponse = await self._stubs.groupCommandStub.group_get_bytes_identifier(commands.GroupGetBytesIdentifierRequest(client=self, group_id=group_id))
+		return response.identifier
 	
 	async def group_new_standard_group(self, name: str = "", description: str = "", admin_contact_ids: list[int] = ()) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupNewStandardGroup')
@@ -647,6 +695,11 @@ class OlvidClient(CommandHolder):
 	
 	# group_set_photo: cannot generate request stream rpc code
 	
+	async def group_download_photo(self, group_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: GroupDownloadPhoto')
+		response: commands.GroupDownloadPhotoResponse = await self._stubs.groupCommandStub.group_download_photo(commands.GroupDownloadPhotoRequest(client=self, group_id=group_id))
+		return response.photo
+	
 	# DiscussionCommandService
 	def discussion_list(self, filter: datatypes.DiscussionFilter = None) -> AsyncIterator[datatypes.Discussion]:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionList')
@@ -661,6 +714,11 @@ class OlvidClient(CommandHolder):
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGet')
 		response: commands.DiscussionGetResponse = await self._stubs.discussionCommandStub.discussion_get(commands.DiscussionGetRequest(client=self, discussion_id=discussion_id))
 		return response.discussion
+	
+	async def discussion_get_bytes_identifier(self, discussion_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGetBytesIdentifier')
+		response: commands.DiscussionGetBytesIdentifierResponse = await self._stubs.discussionCommandStub.discussion_get_bytes_identifier(commands.DiscussionGetBytesIdentifierRequest(client=self, discussion_id=discussion_id))
+		return response.identifier
 	
 	async def discussion_get_by_contact(self, contact_id: int) -> datatypes.Discussion:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGetByContact')
@@ -853,6 +911,10 @@ class OlvidClient(CommandHolder):
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactDetailsUpdated')
 		return self._stubs.contactNotificationStub.contact_details_updated(notifications.SubscribeToContactDetailsUpdatedNotification(client=self))
 	
+	def _notif_contact_photo_updated(self) -> AsyncIterator[notifications.ContactPhotoUpdatedNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactPhotoUpdated')
+		return self._stubs.contactNotificationStub.contact_photo_updated(notifications.SubscribeToContactPhotoUpdatedNotification(client=self))
+	
 	# GroupNotificationService
 	def _notif_group_new(self) -> AsyncIterator[notifications.GroupNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNew')
@@ -865,6 +927,10 @@ class OlvidClient(CommandHolder):
 	def _notif_group_name_updated(self) -> AsyncIterator[notifications.GroupNameUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNameUpdated')
 		return self._stubs.groupNotificationStub.group_name_updated(notifications.SubscribeToGroupNameUpdatedNotification(client=self))
+	
+	def _notif_group_photo_updated(self) -> AsyncIterator[notifications.GroupPhotoUpdatedNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPhotoUpdated')
+		return self._stubs.groupNotificationStub.group_photo_updated(notifications.SubscribeToGroupPhotoUpdatedNotification(client=self))
 	
 	def _notif_group_description_updated(self) -> AsyncIterator[notifications.GroupDescriptionUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupDescriptionUpdated')
@@ -1008,6 +1074,9 @@ class OlvidClient(CommandHolder):
 	async def on_contact_details_updated(self, contact: datatypes.Contact, previous_details: datatypes.IdentityDetails):
 		pass
 
+	async def on_contact_photo_updated(self, contact: datatypes.Contact):
+		pass
+
 	# GroupNotificationService
 	async def on_group_new(self, group: datatypes.Group):
 		pass
@@ -1016,6 +1085,9 @@ class OlvidClient(CommandHolder):
 		pass
 
 	async def on_group_name_updated(self, group: datatypes.Group, previous_name: str):
+		pass
+
+	async def on_group_photo_updated(self, group: datatypes.Group):
 		pass
 
 	async def on_group_description_updated(self, group: datatypes.Group, previous_description: str):

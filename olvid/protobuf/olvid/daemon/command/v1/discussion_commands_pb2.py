@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import discussion_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_discussion__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n1olvid/daemon/command/v1/discussion_commands.proto\x12\x17olvid.daemon.command.v1\x1a*olvid/daemon/datatypes/v1/discussion.proto\"l\n\x15\x44iscussionListRequest\x12H\n\x06\x66ilter\x18\x01 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"a\n\x16\x44iscussionListResponse\x12G\n\x0b\x64iscussions\x18\x01 \x03(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\x0b\x64iscussions\";\n\x14\x44iscussionGetRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\"^\n\x15\x44iscussionGetResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\">\n\x1d\x44iscussionGetByContactRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"g\n\x1e\x44iscussionGetByContactResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"8\n\x1b\x44iscussionGetByGroupRequest\x12\x19\n\x08group_id\x18\x01 \x01(\x04R\x07groupId\"e\n\x1c\x44iscussionGetByGroupResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"\x85\x01\n\x16\x44iscussionEmptyRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\x12\x30\n\x11\x64\x65lete_everywhere\x18\x02 \x01(\x08H\x00R\x10\x64\x65leteEverywhere\x88\x01\x01\x42\x14\n\x12_delete_everywhere\"\x19\n\x17\x44iscussionEmptyResponse\"C\n\x1c\x44iscussionSettingsGetRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\"j\n\x1d\x44iscussionSettingsGetResponse\x12I\n\x08settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x08settings\"i\n\x1c\x44iscussionSettingsSetRequest\x12I\n\x08settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x08settings\"q\n\x1d\x44iscussionSettingsSetResponse\x12P\n\x0cnew_settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x0bnewSettings\"\x1d\n\x1b\x44iscussionLockedListRequest\"g\n\x1c\x44iscussionLockedListResponse\x12G\n\x0b\x64iscussions\x18\x01 \x03(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\x0b\x64iscussions\"D\n\x1d\x44iscussionLockedDeleteRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\" \n\x1e\x44iscussionLockedDeleteResponseB\xc6\x01\n\x1b\x63om.olvid.daemon.command.v1B\x17\x44iscussionCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n1olvid/daemon/command/v1/discussion_commands.proto\x12\x17olvid.daemon.command.v1\x1a*olvid/daemon/datatypes/v1/discussion.proto\"l\n\x15\x44iscussionListRequest\x12H\n\x06\x66ilter\x18\x01 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"a\n\x16\x44iscussionListResponse\x12G\n\x0b\x64iscussions\x18\x01 \x03(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\x0b\x64iscussions\";\n\x14\x44iscussionGetRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\"^\n\x15\x44iscussionGetResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"J\n#DiscussionGetBytesIdentifierRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\"F\n$DiscussionGetBytesIdentifierResponse\x12\x1e\n\nidentifier\x18\x01 \x01(\x0cR\nidentifier\">\n\x1d\x44iscussionGetByContactRequest\x12\x1d\n\ncontact_id\x18\x01 \x01(\x04R\tcontactId\"g\n\x1e\x44iscussionGetByContactResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"8\n\x1b\x44iscussionGetByGroupRequest\x12\x19\n\x08group_id\x18\x01 \x01(\x04R\x07groupId\"e\n\x1c\x44iscussionGetByGroupResponse\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"\x85\x01\n\x16\x44iscussionEmptyRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\x12\x30\n\x11\x64\x65lete_everywhere\x18\x02 \x01(\x08H\x00R\x10\x64\x65leteEverywhere\x88\x01\x01\x42\x14\n\x12_delete_everywhere\"\x19\n\x17\x44iscussionEmptyResponse\"C\n\x1c\x44iscussionSettingsGetRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\"j\n\x1d\x44iscussionSettingsGetResponse\x12I\n\x08settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x08settings\"i\n\x1c\x44iscussionSettingsSetRequest\x12I\n\x08settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x08settings\"q\n\x1d\x44iscussionSettingsSetResponse\x12P\n\x0cnew_settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x0bnewSettings\"\x1d\n\x1b\x44iscussionLockedListRequest\"g\n\x1c\x44iscussionLockedListResponse\x12G\n\x0b\x64iscussions\x18\x01 \x03(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\x0b\x64iscussions\"D\n\x1d\x44iscussionLockedDeleteRequest\x12#\n\rdiscussion_id\x18\x01 \x01(\x04R\x0c\x64iscussionId\" \n\x1e\x44iscussionLockedDeleteResponseB\xc6\x01\n\x1b\x63om.olvid.daemon.command.v1B\x17\x44iscussionCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,32 +41,36 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_DISCUSSIONGETREQUEST']._serialized_end=390
   _globals['_DISCUSSIONGETRESPONSE']._serialized_start=392
   _globals['_DISCUSSIONGETRESPONSE']._serialized_end=486
-  _globals['_DISCUSSIONGETBYCONTACTREQUEST']._serialized_start=488
-  _globals['_DISCUSSIONGETBYCONTACTREQUEST']._serialized_end=550
-  _globals['_DISCUSSIONGETBYCONTACTRESPONSE']._serialized_start=552
-  _globals['_DISCUSSIONGETBYCONTACTRESPONSE']._serialized_end=655
-  _globals['_DISCUSSIONGETBYGROUPREQUEST']._serialized_start=657
-  _globals['_DISCUSSIONGETBYGROUPREQUEST']._serialized_end=713
-  _globals['_DISCUSSIONGETBYGROUPRESPONSE']._serialized_start=715
-  _globals['_DISCUSSIONGETBYGROUPRESPONSE']._serialized_end=816
-  _globals['_DISCUSSIONEMPTYREQUEST']._serialized_start=819
-  _globals['_DISCUSSIONEMPTYREQUEST']._serialized_end=952
-  _globals['_DISCUSSIONEMPTYRESPONSE']._serialized_start=954
-  _globals['_DISCUSSIONEMPTYRESPONSE']._serialized_end=979
-  _globals['_DISCUSSIONSETTINGSGETREQUEST']._serialized_start=981
-  _globals['_DISCUSSIONSETTINGSGETREQUEST']._serialized_end=1048
-  _globals['_DISCUSSIONSETTINGSGETRESPONSE']._serialized_start=1050
-  _globals['_DISCUSSIONSETTINGSGETRESPONSE']._serialized_end=1156
-  _globals['_DISCUSSIONSETTINGSSETREQUEST']._serialized_start=1158
-  _globals['_DISCUSSIONSETTINGSSETREQUEST']._serialized_end=1263
-  _globals['_DISCUSSIONSETTINGSSETRESPONSE']._serialized_start=1265
-  _globals['_DISCUSSIONSETTINGSSETRESPONSE']._serialized_end=1378
-  _globals['_DISCUSSIONLOCKEDLISTREQUEST']._serialized_start=1380
-  _globals['_DISCUSSIONLOCKEDLISTREQUEST']._serialized_end=1409
-  _globals['_DISCUSSIONLOCKEDLISTRESPONSE']._serialized_start=1411
-  _globals['_DISCUSSIONLOCKEDLISTRESPONSE']._serialized_end=1514
-  _globals['_DISCUSSIONLOCKEDDELETEREQUEST']._serialized_start=1516
-  _globals['_DISCUSSIONLOCKEDDELETEREQUEST']._serialized_end=1584
-  _globals['_DISCUSSIONLOCKEDDELETERESPONSE']._serialized_start=1586
-  _globals['_DISCUSSIONLOCKEDDELETERESPONSE']._serialized_end=1618
+  _globals['_DISCUSSIONGETBYTESIDENTIFIERREQUEST']._serialized_start=488
+  _globals['_DISCUSSIONGETBYTESIDENTIFIERREQUEST']._serialized_end=562
+  _globals['_DISCUSSIONGETBYTESIDENTIFIERRESPONSE']._serialized_start=564
+  _globals['_DISCUSSIONGETBYTESIDENTIFIERRESPONSE']._serialized_end=634
+  _globals['_DISCUSSIONGETBYCONTACTREQUEST']._serialized_start=636
+  _globals['_DISCUSSIONGETBYCONTACTREQUEST']._serialized_end=698
+  _globals['_DISCUSSIONGETBYCONTACTRESPONSE']._serialized_start=700
+  _globals['_DISCUSSIONGETBYCONTACTRESPONSE']._serialized_end=803
+  _globals['_DISCUSSIONGETBYGROUPREQUEST']._serialized_start=805
+  _globals['_DISCUSSIONGETBYGROUPREQUEST']._serialized_end=861
+  _globals['_DISCUSSIONGETBYGROUPRESPONSE']._serialized_start=863
+  _globals['_DISCUSSIONGETBYGROUPRESPONSE']._serialized_end=964
+  _globals['_DISCUSSIONEMPTYREQUEST']._serialized_start=967
+  _globals['_DISCUSSIONEMPTYREQUEST']._serialized_end=1100
+  _globals['_DISCUSSIONEMPTYRESPONSE']._serialized_start=1102
+  _globals['_DISCUSSIONEMPTYRESPONSE']._serialized_end=1127
+  _globals['_DISCUSSIONSETTINGSGETREQUEST']._serialized_start=1129
+  _globals['_DISCUSSIONSETTINGSGETREQUEST']._serialized_end=1196
+  _globals['_DISCUSSIONSETTINGSGETRESPONSE']._serialized_start=1198
+  _globals['_DISCUSSIONSETTINGSGETRESPONSE']._serialized_end=1304
+  _globals['_DISCUSSIONSETTINGSSETREQUEST']._serialized_start=1306
+  _globals['_DISCUSSIONSETTINGSSETREQUEST']._serialized_end=1411
+  _globals['_DISCUSSIONSETTINGSSETRESPONSE']._serialized_start=1413
+  _globals['_DISCUSSIONSETTINGSSETRESPONSE']._serialized_end=1526
+  _globals['_DISCUSSIONLOCKEDLISTREQUEST']._serialized_start=1528
+  _globals['_DISCUSSIONLOCKEDLISTREQUEST']._serialized_end=1557
+  _globals['_DISCUSSIONLOCKEDLISTRESPONSE']._serialized_start=1559
+  _globals['_DISCUSSIONLOCKEDLISTRESPONSE']._serialized_end=1662
+  _globals['_DISCUSSIONLOCKEDDELETEREQUEST']._serialized_start=1664
+  _globals['_DISCUSSIONLOCKEDDELETEREQUEST']._serialized_end=1732
+  _globals['_DISCUSSIONLOCKEDDELETERESPONSE']._serialized_start=1734
+  _globals['_DISCUSSIONLOCKEDDELETERESPONSE']._serialized_end=1766
 # @@protoc_insertion_point(module_scope)

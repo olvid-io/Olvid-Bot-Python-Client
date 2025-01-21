@@ -40,7 +40,8 @@ async def root_tree(arguments: list[str], identity: int = 0, client_key: str = "
 		# set identity (or run for_each)
 		identity_ids: list[int] = [i.id async for i in ClientSingleton.get_client().admin_identity_list()] if for_each and identity == -1 else [identity]
 		for identity_id in identity_ids:
-			ClientSingleton.set_current_identity_id(identity_id)
+			if not client_key:
+				ClientSingleton.set_current_identity_id(identity_id)
 
 			# parse command
 			async with await interactive_tree.make_context(info_name="olvid-cli", args=list(arguments)) as ctx:

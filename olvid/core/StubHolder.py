@@ -23,6 +23,8 @@ class StubHolder:
 			"invitationCommandStub", commands.InvitationCommandServiceStub)
 		self.contactCommandStub: commands.ContactCommandServiceStub = self._get_or_create_stub("contactCommandStub",
 																								commands.ContactCommandServiceStub)
+		self.keycloakCommandStub: commands.KeycloakCommandServiceStub = self._get_or_create_stub("keycloakCommandStub",
+																								commands.KeycloakCommandServiceStub)
 		self.groupCommandStub: commands.GroupCommandServiceStub = self._get_or_create_stub("groupCommandStub",
 																							commands.GroupCommandServiceStub)
 		self.discussionCommandStub: commands.DiscussionCommandServiceStub = self._get_or_create_stub(

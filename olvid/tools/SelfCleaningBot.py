@@ -52,7 +52,7 @@ class SelfCleaningBot(OlvidClient):
 					await client.message_delete(message_id=message.id)
 					deleted_messages_count += 1
 
-			tools_logger.debug(f"{client.__class__.__name__}: start clean: deleted {deleted_messages_count} messages and {locked_discussions_count} locked discussion")
+			tools_logger.debug(f"{client.__class__.__name__}: start clean: deleted {deleted_messages_count} messages")
 		except AioRpcError as rpc_error:
 			tools_logger.error(f"{client.__class__.__name__}: clean on start: {rpc_error.code()}: {rpc_error.details()}")
 		except Exception:

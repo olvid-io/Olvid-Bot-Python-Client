@@ -1,10 +1,11 @@
+import os
 import asyncclick as click
 from google.protobuf.json_format import Parse, ParseError
 
 from olvid import datatypes
 from ..interactive_tree import interactive_tree
 from ..tools.ClientSingleton import ClientSingleton
-from ..tools.cli_tools import filter_fields, print_error_message
+from ..tools.cli_tools import filter_fields, print_error_message, print_normal_message
 from ..tools.click_wrappers import WrapperGroup
 
 # default permissions
@@ -52,13 +53,10 @@ async def group_get(get_all: bool, group_ids: list[int], fields: str, filter_: s
 		groups = [await ClientSingleton.get_client().group_get(group_id=group_id) for group_id in group_ids]
 
 	group_as_strings: list[str] = []
-	for group in groups:
-		if fields:
-			group_as_strings.append(filter_fields(group, fields))
-		else:
-			group_as_strings.append(await group_to_string(group))
-
-	print(("-" * 20 + "\n").join(group_as_strings))
+	if fields:
+		print("\n".join([filter_fields(group, fields) for group in groups]))
+	else:
+		print(("-" * 20 + "\n").join([await group_to_string(g) for g in groups]))
 
 
 #####
@@ -311,6 +309,39 @@ async def group_photo_set(group_id: int, photo_path: str):
 
 	updated_group = await ClientSingleton.get_client().group_set_photo(group_id, photo_path)
 	print(await group_to_string(updated_group))
+
+
+#####
+# group photo save
+#####
+@group_photo_tree.command("save", help="Save group photos to local files.")
+@click.argument("group_ids", required=False, nargs=-1, type=click.INT)
+@click.option("-a", "--all", "save_all", is_flag=True, help="Save all group photos")
+@click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)
+@click.option("-f", "--filename", "filename", help="specify file name to use (ignored if saving more than one image)", nargs=1, type=click.STRING, required=False)
+async def group_photo_set(path: str, filename: str, save_all: bool, group_ids: list[int]):
+	# use default save directory if necessary
+	if not path:
+		path = "./photos"
+	# create save directory
+	os.makedirs(path, exist_ok=True)
+
+	if not group_ids or save_all:
+		group_ids = [g.id async for g in ClientSingleton.get_client().group_list()]
+
+	# save every requested photo
+	for group_id in group_ids:
+		photo_bytes: bytes = await ClientSingleton.get_client().group_download_photo(group_id=group_id)
+
+		# specified filename flag
+		if len(group_ids) == 1 and filename:
+			filepath: str = os.path.join(path, filename)
+		# default filename
+		else:
+			filepath: str = os.path.join(path, f"group_{group_id}.jpeg")
+		with open(filepath, "wb") as photo:
+			photo.write(photo_bytes)
+		print_normal_message(f"Photo saved in: {filepath}", filepath)
 
 
 #####

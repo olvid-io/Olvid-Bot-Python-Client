@@ -110,6 +110,21 @@ class OlvidAdminClient(OlvidClient):
 		response: admin.IdentityAdminGetResponse = await self._stubs.identityAdminStub.identity_admin_get(admin.IdentityAdminGetRequest(client=self, identity_id=identity_id))
 		return response.identity
 	
+	async def admin_identity_admin_get_bytes_identifier(self, identity_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityAdminGetBytesIdentifier')
+		response: admin.IdentityAdminGetBytesIdentifierResponse = await self._stubs.identityAdminStub.identity_admin_get_bytes_identifier(admin.IdentityAdminGetBytesIdentifierRequest(client=self, identity_id=identity_id))
+		return response.identifier
+	
+	async def admin_identity_admin_get_invitation_link(self, identity_id: int) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityAdminGetInvitationLink')
+		response: admin.IdentityAdminGetInvitationLinkResponse = await self._stubs.identityAdminStub.identity_admin_get_invitation_link(admin.IdentityAdminGetInvitationLinkRequest(client=self, identity_id=identity_id))
+		return response.invitation_link
+	
+	async def admin_identity_admin_download_photo(self, identity_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityAdminDownloadPhoto')
+		response: admin.IdentityAdminDownloadPhotoResponse = await self._stubs.identityAdminStub.identity_admin_download_photo(admin.IdentityAdminDownloadPhotoRequest(client=self, identity_id=identity_id))
+		return response.photo
+	
 	async def admin_identity_delete(self, identity_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityDelete')
 		await self._stubs.identityAdminStub.identity_delete(admin.IdentityDeleteRequest(client=self, identity_id=identity_id))

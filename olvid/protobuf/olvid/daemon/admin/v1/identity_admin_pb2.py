@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*olvid/daemon/admin/v1/identity_admin.proto\x12\x15olvid.daemon.admin.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"h\n\x13IdentityListRequest\x12\x46\n\x06\x66ilter\x18\x01 \x01(\x0b\x32).olvid.daemon.datatypes.v1.IdentityFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"[\n\x14IdentityListResponse\x12\x43\n\nidentities\x18\x01 \x03(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\nidentities\":\n\x17IdentityAdminGetRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"[\n\x18IdentityAdminGetResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"\xc8\x01\n\x12IdentityNewRequest\x12U\n\x10identity_details\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fidentityDetails\x12\"\n\nserver_url\x18\x02 \x01(\tH\x00R\tserverUrl\x88\x01\x01\x12\x1c\n\x07\x61pi_key\x18\x03 \x01(\tH\x01R\x06\x61piKey\x88\x01\x01\x42\r\n\x0b_server_urlB\n\n\x08_api_key\"V\n\x13IdentityNewResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"8\n\x15IdentityDeleteRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"\x18\n\x16IdentityDeleteResponse\"K\n\x1aIdentityKeycloakNewRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"^\n\x1bIdentityKeycloakNewResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identityB\xb7\x01\n\x19\x63om.olvid.daemon.admin.v1B\x12IdentityAdminProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODA\xaa\x02\x15Olvid.Daemon.Admin.V1\xca\x02\x15Olvid\\Daemon\\Admin\\V1\xe2\x02!Olvid\\Daemon\\Admin\\V1\\GPBMetadata\xea\x02\x18Olvid::Daemon::Admin::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*olvid/daemon/admin/v1/identity_admin.proto\x12\x15olvid.daemon.admin.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"h\n\x13IdentityListRequest\x12\x46\n\x06\x66ilter\x18\x01 \x01(\x0b\x32).olvid.daemon.datatypes.v1.IdentityFilterH\x00R\x06\x66ilter\x88\x01\x01\x42\t\n\x07_filter\"[\n\x14IdentityListResponse\x12\x43\n\nidentities\x18\x01 \x03(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\nidentities\":\n\x17IdentityAdminGetRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"[\n\x18IdentityAdminGetResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"I\n&IdentityAdminGetBytesIdentifierRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"I\n\'IdentityAdminGetBytesIdentifierResponse\x12\x1e\n\nidentifier\x18\x01 \x01(\x0cR\nidentifier\"H\n%IdentityAdminGetInvitationLinkRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"Q\n&IdentityAdminGetInvitationLinkResponse\x12\'\n\x0finvitation_link\x18\x01 \x01(\tR\x0einvitationLink\"D\n!IdentityAdminDownloadPhotoRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\":\n\"IdentityAdminDownloadPhotoResponse\x12\x14\n\x05photo\x18\x01 \x01(\x0cR\x05photo\"\xc8\x01\n\x12IdentityNewRequest\x12U\n\x10identity_details\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fidentityDetails\x12\"\n\nserver_url\x18\x02 \x01(\tH\x00R\tserverUrl\x88\x01\x01\x12\x1c\n\x07\x61pi_key\x18\x03 \x01(\tH\x01R\x06\x61piKey\x88\x01\x01\x42\r\n\x0b_server_urlB\n\n\x08_api_key\"V\n\x13IdentityNewResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"8\n\x15IdentityDeleteRequest\x12\x1f\n\x0bidentity_id\x18\x01 \x01(\x04R\nidentityId\"\x18\n\x16IdentityDeleteResponse\"K\n\x1aIdentityKeycloakNewRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"^\n\x1bIdentityKeycloakNewResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identityB\xb7\x01\n\x19\x63om.olvid.daemon.admin.v1B\x12IdentityAdminProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODA\xaa\x02\x15Olvid.Daemon.Admin.V1\xca\x02\x15Olvid\\Daemon\\Admin\\V1\xe2\x02!Olvid\\Daemon\\Admin\\V1\\GPBMetadata\xea\x02\x18Olvid::Daemon::Admin::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,16 +41,28 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_IDENTITYADMINGETREQUEST']._serialized_end=368
   _globals['_IDENTITYADMINGETRESPONSE']._serialized_start=370
   _globals['_IDENTITYADMINGETRESPONSE']._serialized_end=461
-  _globals['_IDENTITYNEWREQUEST']._serialized_start=464
-  _globals['_IDENTITYNEWREQUEST']._serialized_end=664
-  _globals['_IDENTITYNEWRESPONSE']._serialized_start=666
-  _globals['_IDENTITYNEWRESPONSE']._serialized_end=752
-  _globals['_IDENTITYDELETEREQUEST']._serialized_start=754
-  _globals['_IDENTITYDELETEREQUEST']._serialized_end=810
-  _globals['_IDENTITYDELETERESPONSE']._serialized_start=812
-  _globals['_IDENTITYDELETERESPONSE']._serialized_end=836
-  _globals['_IDENTITYKEYCLOAKNEWREQUEST']._serialized_start=838
-  _globals['_IDENTITYKEYCLOAKNEWREQUEST']._serialized_end=913
-  _globals['_IDENTITYKEYCLOAKNEWRESPONSE']._serialized_start=915
-  _globals['_IDENTITYKEYCLOAKNEWRESPONSE']._serialized_end=1009
+  _globals['_IDENTITYADMINGETBYTESIDENTIFIERREQUEST']._serialized_start=463
+  _globals['_IDENTITYADMINGETBYTESIDENTIFIERREQUEST']._serialized_end=536
+  _globals['_IDENTITYADMINGETBYTESIDENTIFIERRESPONSE']._serialized_start=538
+  _globals['_IDENTITYADMINGETBYTESIDENTIFIERRESPONSE']._serialized_end=611
+  _globals['_IDENTITYADMINGETINVITATIONLINKREQUEST']._serialized_start=613
+  _globals['_IDENTITYADMINGETINVITATIONLINKREQUEST']._serialized_end=685
+  _globals['_IDENTITYADMINGETINVITATIONLINKRESPONSE']._serialized_start=687
+  _globals['_IDENTITYADMINGETINVITATIONLINKRESPONSE']._serialized_end=768
+  _globals['_IDENTITYADMINDOWNLOADPHOTOREQUEST']._serialized_start=770
+  _globals['_IDENTITYADMINDOWNLOADPHOTOREQUEST']._serialized_end=838
+  _globals['_IDENTITYADMINDOWNLOADPHOTORESPONSE']._serialized_start=840
+  _globals['_IDENTITYADMINDOWNLOADPHOTORESPONSE']._serialized_end=898
+  _globals['_IDENTITYNEWREQUEST']._serialized_start=901
+  _globals['_IDENTITYNEWREQUEST']._serialized_end=1101
+  _globals['_IDENTITYNEWRESPONSE']._serialized_start=1103
+  _globals['_IDENTITYNEWRESPONSE']._serialized_end=1189
+  _globals['_IDENTITYDELETEREQUEST']._serialized_start=1191
+  _globals['_IDENTITYDELETEREQUEST']._serialized_end=1247
+  _globals['_IDENTITYDELETERESPONSE']._serialized_start=1249
+  _globals['_IDENTITYDELETERESPONSE']._serialized_end=1273
+  _globals['_IDENTITYKEYCLOAKNEWREQUEST']._serialized_start=1275
+  _globals['_IDENTITYKEYCLOAKNEWREQUEST']._serialized_end=1350
+  _globals['_IDENTITYKEYCLOAKNEWRESPONSE']._serialized_start=1352
+  _globals['_IDENTITYKEYCLOAKNEWRESPONSE']._serialized_end=1446
 # @@protoc_insertion_point(module_scope)

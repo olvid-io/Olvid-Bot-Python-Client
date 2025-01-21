@@ -230,6 +230,21 @@ class IdentityAdminServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetResponse.FromString,
                 _registered_method=True)
+        self.IdentityAdminGetBytesIdentifier = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminGetBytesIdentifier',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierResponse.FromString,
+                _registered_method=True)
+        self.IdentityAdminGetInvitationLink = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminGetInvitationLink',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkResponse.FromString,
+                _registered_method=True)
+        self.IdentityAdminDownloadPhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminDownloadPhoto',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoResponse.FromString,
+                _registered_method=True)
         self.IdentityDelete = channel.unary_unary(
                 '/olvid.daemon.services.v1.IdentityAdminService/IdentityDelete',
                 request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityDeleteRequest.SerializeToString,
@@ -258,6 +273,24 @@ class IdentityAdminServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def IdentityAdminGet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityAdminGetBytesIdentifier(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityAdminGetInvitationLink(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityAdminDownloadPhoto(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -293,6 +326,21 @@ def add_IdentityAdminServiceServicer_to_server(servicer, server):
                     servicer.IdentityAdminGet,
                     request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetResponse.SerializeToString,
+            ),
+            'IdentityAdminGetBytesIdentifier': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityAdminGetBytesIdentifier,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierResponse.SerializeToString,
+            ),
+            'IdentityAdminGetInvitationLink': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityAdminGetInvitationLink,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkResponse.SerializeToString,
+            ),
+            'IdentityAdminDownloadPhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityAdminDownloadPhoto,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoResponse.SerializeToString,
             ),
             'IdentityDelete': grpc.unary_unary_rpc_method_handler(
                     servicer.IdentityDelete,
@@ -365,6 +413,87 @@ class IdentityAdminService(object):
             '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminGet',
             olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetRequest.SerializeToString,
             olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityAdminGetBytesIdentifier(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminGetBytesIdentifier',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetBytesIdentifierResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityAdminGetInvitationLink(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminGetInvitationLink',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminGetInvitationLinkResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityAdminDownloadPhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityAdminService/IdentityAdminDownloadPhoto',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityAdminDownloadPhotoResponse.FromString,
             options,
             channel_credentials,
             insecure,

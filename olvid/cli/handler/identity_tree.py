@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from google.protobuf.json_format import Parse, ParseError
 
@@ -132,11 +133,12 @@ async def identity_new(first_opt: str, last_opt: str, position_opt: str, company
 # noinspection PyProtectedMember
 @identity_tree.command("get", help="list identities on this daemon")
 @click.option("-a", "--all", "get_all", is_flag=True)
-# @click.option("-l", "--link", "show_invitation_link", is_flag=True)
+@click.option("-l", "--link", "show_invitation_link", is_flag=True)
 @click.option("-f", "--fields", "fields", type=str)
 @click.argument("identity_ids", nargs=-1, type=click.INT)
 @click.option("--filter", "filter_", type=str)
-async def identity_get(get_all: bool, identity_ids: tuple[int], fields: str, filter_: str = ""):
+async def identity_get(get_all: bool, show_invitation_link: bool, identity_ids: tuple[int], fields: str, filter_: str = ""):
+	# normal case
 	if ClientSingleton.is_client_admin():
 		# build filter
 		identity_filter: datatypes.IdentityFilter = datatypes.IdentityFilter()
@@ -149,27 +151,23 @@ async def identity_get(get_all: bool, identity_ids: tuple[int], fields: str, fil
 				return
 
 		if get_all or not identity_ids:
-			async for identity in ClientSingleton.get_client().admin_identity_list(filter=identity_filter):
-				# hide invitation link
-				# if not show_invitation_link:
-				# 	identity.invitation_url = ""
-				filter_fields_and_print_normal_message(identity, fields)
+			identities: list[datatypes.Identity] = [i async for i in ClientSingleton.get_client().admin_identity_list(filter=identity_filter)]
 		else:
-			for identity_id in identity_ids:
-				identity = await ClientSingleton.get_client().admin_identity_admin_get(identity_id=identity_id)
-				# hide invitation link
-				# if not show_invitation_link:
-				# 	identity.invitation_url = ""
-				filter_fields_and_print_normal_message(identity, fields)
+			identities: list[datatypes.Identity] = [await ClientSingleton.get_client().admin_identity_admin_get(identity_id) for identity_id in identity_ids]
+	# non-admin client case
 	else:
 		if identity_ids:
 			print_error_message("Cannot list identities when impersonating a non admin key")
 			return
-		identity = await ClientSingleton.get_client().identity_get()
-		# hide invitation link
-		# if not show_invitation_link:
-		# 	identity.invitation_url = ""
-		filter_fields_and_print_normal_message(identity, fields)
+		identities: list[datatypes.Identity] = [await ClientSingleton.get_client().identity_get()]
+
+	# hide deprecated invitation url field
+	for identity in identities:
+		identity.invitation_url = ""
+		if show_invitation_link:
+			print(f"{identity.id}: {await ClientSingleton.get_client().identity_get_invitation_link()}")
+		else:
+			filter_fields_and_print_normal_message(identity, fields)
 
 
 #####
@@ -194,7 +192,7 @@ async def identity_delete(delete_all: bool, identity_ids: tuple[int]):
 
 	for identity_id in identity_ids:
 		await ClientSingleton.get_client().admin_identity_delete(identity_id)
-		print_command_result(f"Identity deleted: {identity_id}", identity_ids)
+		print_command_result(f"Identity deleted: {identity_id}", identity_id)
 
 
 #####
@@ -260,6 +258,47 @@ async def identity_photo_set(photo_path):
 		print_command_result("Identity photo set")
 	except IOError as e:
 		raise click.exceptions.BadArgumentUsage(str(e))
+
+
+#####
+# identity photo save
+#####
+@identity_photo_tree.command("save", help="Save identity photo to local files. Specify identity_ids to use or it uses current identity id by default")
+@click.argument("identity_ids", required=False, nargs=-1, type=click.INT)
+@click.option("-a", "--all", "save_all", is_flag=True, help="save all identity photos")
+@click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)
+@click.option("-f", "--filename", "filename", help="specify file name to use (ignored if saving more than one image)", nargs=1, type=click.STRING, required=False)
+async def identity_photo_set(path: str, filename: str, save_all: bool, identity_ids: list[int]):
+	# if identity_id is not specified and not --all use current identity
+	if save_all:
+		if not ClientSingleton.is_client_admin():
+			print_error_message("Cannot save every identity photo identity when impersonating a non admin key")
+			return
+		identity_ids = [i.id async for i in ClientSingleton.get_client().admin_identity_list()]
+	if not save_all and not identity_ids:
+		# check current identity is properly set
+		current_identity = await ClientSingleton.get_client().identity_get()
+		identity_ids = [current_identity.id]
+
+	# use default save directory if necessary
+	if not path:
+		path = "./photos"
+	# create save directory
+	os.makedirs(path, exist_ok=True)
+
+	# save every requested photo
+	for identity_id in identity_ids:
+		photo_bytes = await ClientSingleton.get_client().admin_identity_admin_download_photo(identity_id=identity_id)
+
+		# specified filename flag
+		if len(identity_ids) == 1 and filename:
+			filepath: str = os.path.join(path, filename)
+		# default filename
+		else:
+			filepath: str = os.path.join(path, f"identity_{identity_id}.jpeg")
+		with open(filepath, "wb") as photo:
+			photo.write(photo_bytes)
+		print_normal_message(f"Photo saved in: {filepath}", filepath)
 
 
 #####

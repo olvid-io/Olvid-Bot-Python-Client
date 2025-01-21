@@ -743,6 +743,150 @@ class ContactDetailsUpdatedNotification:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
+class SubscribeToContactPhotoUpdatedNotification:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, subscribe_to_contact_photo_updated_notification: SubscribeToContactPhotoUpdatedNotification) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "SubscribeToContactPhotoUpdatedNotification":
+		return SubscribeToContactPhotoUpdatedNotification(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactPhotoUpdatedNotification, client: OlvidClient = None) -> "SubscribeToContactPhotoUpdatedNotification":
+		return SubscribeToContactPhotoUpdatedNotification(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactPhotoUpdatedNotification], client: OlvidClient = None) -> list["SubscribeToContactPhotoUpdatedNotification"]:
+		return [SubscribeToContactPhotoUpdatedNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactPhotoUpdatedNotification], client: OlvidClient = None) -> "SubscribeToContactPhotoUpdatedNotification":
+		try:
+			native_message = await promise
+			return SubscribeToContactPhotoUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["SubscribeToContactPhotoUpdatedNotification"]):
+		if messages is None:
+			return []
+		return [SubscribeToContactPhotoUpdatedNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["SubscribeToContactPhotoUpdatedNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactPhotoUpdatedNotification()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, SubscribeToContactPhotoUpdatedNotification):
+			return False
+		return 
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, SubscribeToContactPhotoUpdatedNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class ContactPhotoUpdatedNotification:
+	def __init__(self, client: OlvidClient = None, contact: "Contact" = None):
+		self._client: OlvidClient = client
+		self.contact: Contact = contact
+
+	def _update_content(self, contact_photo_updated_notification: ContactPhotoUpdatedNotification) -> None:
+		self.contact: Contact = contact_photo_updated_notification.contact
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "ContactPhotoUpdatedNotification":
+		return ContactPhotoUpdatedNotification(client=self._client, contact=self.contact._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.contact_notifications_pb2.ContactPhotoUpdatedNotification, client: OlvidClient = None) -> "ContactPhotoUpdatedNotification":
+		return ContactPhotoUpdatedNotification(client, contact=Contact._from_native(native_message.contact, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.contact_notifications_pb2.ContactPhotoUpdatedNotification], client: OlvidClient = None) -> list["ContactPhotoUpdatedNotification"]:
+		return [ContactPhotoUpdatedNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.contact_notifications_pb2.ContactPhotoUpdatedNotification], client: OlvidClient = None) -> "ContactPhotoUpdatedNotification":
+		try:
+			native_message = await promise
+			return ContactPhotoUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["ContactPhotoUpdatedNotification"]):
+		if messages is None:
+			return []
+		return [ContactPhotoUpdatedNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["ContactPhotoUpdatedNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.contact_notifications_pb2.ContactPhotoUpdatedNotification(contact=Contact._to_native(message.contact if message.contact else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.contact:
+			s += f'contact: ({self.contact}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, ContactPhotoUpdatedNotification):
+			return False
+		return self.contact == other.contact
+
+	def __bool__(self):
+		return bool(self.contact)
+
+	def __hash__(self):
+		return hash(self.contact)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, ContactPhotoUpdatedNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.contact is None or self.contact._test_assertion(expected.contact)
+		except AssertionError as e:
+			raise AssertionError("contact: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
 class SubscribeToDiscussionNewNotification:
 	def __init__(self, client: OlvidClient = None):
 		self._client: OlvidClient = client
@@ -1765,6 +1909,150 @@ class GroupNameUpdatedNotification:
 		except AssertionError as e:
 			raise AssertionError("group: " + str(e))
 		assert expected.previous_name == "" or self.previous_name == expected.previous_name, "Invalid value: previous_name: " + str(expected.previous_name) + " != " + str(self.previous_name)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class SubscribeToGroupPhotoUpdatedNotification:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, subscribe_to_group_photo_updated_notification: SubscribeToGroupPhotoUpdatedNotification) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "SubscribeToGroupPhotoUpdatedNotification":
+		return SubscribeToGroupPhotoUpdatedNotification(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPhotoUpdatedNotification, client: OlvidClient = None) -> "SubscribeToGroupPhotoUpdatedNotification":
+		return SubscribeToGroupPhotoUpdatedNotification(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPhotoUpdatedNotification], client: OlvidClient = None) -> list["SubscribeToGroupPhotoUpdatedNotification"]:
+		return [SubscribeToGroupPhotoUpdatedNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPhotoUpdatedNotification], client: OlvidClient = None) -> "SubscribeToGroupPhotoUpdatedNotification":
+		try:
+			native_message = await promise
+			return SubscribeToGroupPhotoUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["SubscribeToGroupPhotoUpdatedNotification"]):
+		if messages is None:
+			return []
+		return [SubscribeToGroupPhotoUpdatedNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["SubscribeToGroupPhotoUpdatedNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPhotoUpdatedNotification()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, SubscribeToGroupPhotoUpdatedNotification):
+			return False
+		return 
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, SubscribeToGroupPhotoUpdatedNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class GroupPhotoUpdatedNotification:
+	def __init__(self, client: OlvidClient = None, group: "Group" = None):
+		self._client: OlvidClient = client
+		self.group: Group = group
+
+	def _update_content(self, group_photo_updated_notification: GroupPhotoUpdatedNotification) -> None:
+		self.group: Group = group_photo_updated_notification.group
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "GroupPhotoUpdatedNotification":
+		return GroupPhotoUpdatedNotification(client=self._client, group=self.group._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.group_notifications_pb2.GroupPhotoUpdatedNotification, client: OlvidClient = None) -> "GroupPhotoUpdatedNotification":
+		return GroupPhotoUpdatedNotification(client, group=Group._from_native(native_message.group, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.group_notifications_pb2.GroupPhotoUpdatedNotification], client: OlvidClient = None) -> list["GroupPhotoUpdatedNotification"]:
+		return [GroupPhotoUpdatedNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.group_notifications_pb2.GroupPhotoUpdatedNotification], client: OlvidClient = None) -> "GroupPhotoUpdatedNotification":
+		try:
+			native_message = await promise
+			return GroupPhotoUpdatedNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["GroupPhotoUpdatedNotification"]):
+		if messages is None:
+			return []
+		return [GroupPhotoUpdatedNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["GroupPhotoUpdatedNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.group_notifications_pb2.GroupPhotoUpdatedNotification(group=Group._to_native(message.group if message.group else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.group:
+			s += f'group: ({self.group}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, GroupPhotoUpdatedNotification):
+			return False
+		return self.group == other.group
+
+	def __bool__(self):
+		return bool(self.group)
+
+	def __hash__(self):
+		return hash(self.group)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, GroupPhotoUpdatedNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.group is None or self.group._test_assertion(expected.group)
+		except AssertionError as e:
+			raise AssertionError("group: " + str(e))
 		return True
 
 
@@ -6325,6 +6613,21 @@ class ContactNotificationServiceStub:
 		except errors.AioRpcError as e:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def contact_photo_updated(self, subscribe_to_contact_photo_updated_notification: SubscribeToContactPhotoUpdatedNotification) -> AsyncIterator[ContactPhotoUpdatedNotification]:
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.contact_notifications_pb2.ContactPhotoUpdatedNotification]) -> AsyncIterator[ContactPhotoUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield ContactPhotoUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_contact_photo_updated_notification
+			return response_iterator(self.__stub.ContactPhotoUpdated(olvid.daemon.notification.v1.contact_notifications_pb2.SubscribeToContactPhotoUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
 
 class GroupNotificationServiceStub:
 	def __init__(self, client: OlvidClient, channel: Channel):
@@ -6373,6 +6676,21 @@ class GroupNotificationServiceStub:
 					raise errors.OlvidError._from_aio_rpc_error(e) from e
 			overlay_object = subscribe_to_group_name_updated_notification
 			return response_iterator(self.__stub.GroupNameUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupNameUpdatedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def group_photo_updated(self, subscribe_to_group_photo_updated_notification: SubscribeToGroupPhotoUpdatedNotification) -> AsyncIterator[GroupPhotoUpdatedNotification]:
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.group_notifications_pb2.GroupPhotoUpdatedNotification]) -> AsyncIterator[GroupPhotoUpdatedNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield GroupPhotoUpdatedNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_group_photo_updated_notification
+			return response_iterator(self.__stub.GroupPhotoUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupPhotoUpdatedNotification(), metadata=self._client.grpc_metadata))
 		except errors.AioRpcError as e:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
