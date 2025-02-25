@@ -201,3 +201,23 @@ async def contact_kc_get(filter_: str, fields: str, timestamp: int):
 async def contact_kc_get(user_id: str):
 	await ClientSingleton.get_client().keycloak_add_user_as_contact(keycloak_id=user_id)
 	print_normal_message("Added contact", "")
+
+
+#####
+# contact reset
+#####
+@contact_tree.command("reset", help="Recreate secure channels")
+@click.option("-a", "--all", "reset_all", is_flag=True, help="Re-create secure channels for every contact")
+@click.argument("contact_ids", nargs=-1, type=click.INT)
+async def contact_reset(reset_all: bool, contact_ids: tuple[int]):
+	if (not len(contact_ids) and not reset_all):
+		raise click.exceptions.BadArgumentUsage("Specify contact id")
+
+	if reset_all:
+		contact_ids = [c.id async for c in ClientSingleton.get_client().contact_list()]
+		if not contact_ids:
+			raise click.exceptions.BadArgumentUsage("No contacts found")
+
+	for contact_id in contact_ids:
+		await ClientSingleton.get_client().contact_recreate_channels(contact_id=contact_id)
+		print_command_result(f"Recreating channels: {contact_id}", contact_id)

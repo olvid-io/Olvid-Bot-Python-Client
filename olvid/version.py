@@ -1,6 +1,8 @@
-__version__ = "1.2.0"
-# docker image version does not use .postN format (we can override elements)
-__docker_version__ = __version__ if __version__.split(".")[-1].isdigit() else ".".join(__version__.split(".")[:-1])
+# for __version__ use python version syntax: https://packaging.python.org/en/latest/discussions/versioning/
+# for alpha version: set x.x.xa0
+__version__ = "1.3.0"
+# for __docker_version__: use same version as daemon (x.x.x, x.x.x-alpha)
+__docker_version__ = "1.3.0"
 
 if __name__ == "__main__":
 	print(__version__, end="")

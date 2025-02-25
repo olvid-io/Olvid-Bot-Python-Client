@@ -164,28 +164,6 @@ async def message_send_reaction(message_id: str, reaction: str):
 
 
 #####
-# message location
-#####
-@message_tree.command("location", help="send a location message")
-@click.option("-p", "--preview", "preview_file", type=click.Path(exists=True, readable=True, file_okay=True, dir_okay=False, resolve_path=True))
-@click.argument("discussion_id", nargs=1, type=click.INT)
-@click.argument("latitude", nargs=1, type=click.FLOAT)
-@click.argument("longitude", nargs=1, type=click.FLOAT)
-@click.argument("address", nargs=1, type=str, required=False)
-async def message_send_location(discussion_id: int, latitude: float, longitude: float, address: str = "", preview_file: str = None):
-	if preview_file is not None:
-		with open(preview_file, "rb") as fd:
-			preview_payload: bytes = fd.read()
-		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
-			discussion_id=discussion_id, latitude=latitude, longitude=longitude,
-			address=address, preview_filename=preview_file, preview_payload=preview_payload)
-	else:
-		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
-			discussion_id=discussion_id, latitude=latitude, longitude=longitude, address=address)
-	print_normal_message(message, message.id)
-
-
-#####
 # message voip
 #####
 @message_tree.command("voip", help="start a fake call in a discussion")
@@ -202,3 +180,54 @@ async def message_send_voip(discussion_id: int):
 async def message_update():
 	await ClientSingleton.get_client().message_refresh()
 	print_command_result("Refreshed messages")
+
+#####
+# message location
+#####
+@message_tree.group(name="location")
+def message_location_tree():
+	pass
+
+@message_location_tree.command("send", help="send a location message")
+@click.option("-p", "--preview", "preview_file", type=click.Path(exists=True, readable=True, file_okay=True, dir_okay=False, resolve_path=True))
+@click.option("--address", type=click.STRING)
+@click.option("-a", "--altitude", type=click.FLOAT)
+@click.option("-p", "--precision", type=click.FLOAT)
+@click.argument("discussion_id", nargs=1, type=click.INT)
+@click.argument("latitude", nargs=1, type=click.FLOAT)
+@click.argument("longitude", nargs=1, type=click.FLOAT)
+async def message_send_location(discussion_id: int, latitude: float, longitude: float, address: str = "", preview_file: str = None, altitude: float = None, precision: float = None):
+	if preview_file is not None:
+		with open(preview_file, "rb") as fd:
+			preview_payload: bytes = fd.read()
+		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
+			discussion_id=discussion_id, latitude=latitude, longitude=longitude,
+			address=address, preview_filename=preview_file, preview_payload=preview_payload, altitude=altitude, precision=precision)
+	else:
+		message: datatypes.Message = await ClientSingleton.get_client().message_send_location(
+			discussion_id=discussion_id, latitude=latitude, longitude=longitude, address=address, altitude=altitude, precision=precision)
+	print_normal_message(message, message.id)
+
+@message_location_tree.command("start", help="start to share a location")
+@click.option("-a", "--altitude", type=click.FLOAT)
+@click.option("-p", "--precision", type=click.FLOAT)
+@click.argument("discussion_id", nargs=1, type=click.INT)
+@click.argument("latitude", nargs=1, type=click.FLOAT)
+@click.argument("longitude", nargs=1, type=click.FLOAT)
+async def message_location_start(discussion_id: int, latitude: float, longitude: float, altitude: float = None, precision: float = None):
+	message = await ClientSingleton.get_client().message_start_location_sharing(discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision)
+	print_normal_message(message, message.id)
+
+@message_location_tree.command("update", help="update a location sharing message")
+@click.option("-a", "--altitude", type=click.FLOAT)
+@click.option("-p", "--precision", type=click.FLOAT)
+@click.argument("message_id", nargs=1, type=click.STRING)
+@click.argument("latitude", nargs=1, type=click.FLOAT)
+@click.argument("longitude", nargs=1, type=click.FLOAT)
+async def message_location_update(message_id: str, latitude: float, longitude: float, altitude: float = None, precision: float = None):
+	await ClientSingleton.get_client().message_update_location_sharing(message_id=string_to_message_id(message_id), latitude=latitude, longitude=longitude, altitude=altitude, precision=precision)
+
+@message_location_tree.command("end", help="end a location sharing message")
+@click.argument("message_id", nargs=1, type=click.STRING)
+async def message_location_end(message_id: str):
+	await ClientSingleton.get_client().message_end_location_sharing(message_id=string_to_message_id(message_id))

@@ -1908,6 +1908,147 @@ class ContactDownloadPhotoResponse:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
+class ContactRecreateChannelsRequest:
+	def __init__(self, client: OlvidClient = None, contact_id: int = 0):
+		self._client: OlvidClient = client
+		self.contact_id: int = contact_id
+
+	def _update_content(self, contact_recreate_channels_request: ContactRecreateChannelsRequest) -> None:
+		self.contact_id: int = contact_recreate_channels_request.contact_id
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "ContactRecreateChannelsRequest":
+		return ContactRecreateChannelsRequest(client=self._client, contact_id=self.contact_id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsRequest, client: OlvidClient = None) -> "ContactRecreateChannelsRequest":
+		return ContactRecreateChannelsRequest(client, contact_id=native_message.contact_id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsRequest], client: OlvidClient = None) -> list["ContactRecreateChannelsRequest"]:
+		return [ContactRecreateChannelsRequest._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsRequest], client: OlvidClient = None) -> "ContactRecreateChannelsRequest":
+		try:
+			native_message = await promise
+			return ContactRecreateChannelsRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["ContactRecreateChannelsRequest"]):
+		if messages is None:
+			return []
+		return [ContactRecreateChannelsRequest._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["ContactRecreateChannelsRequest"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsRequest(contact_id=message.contact_id if message.contact_id else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.contact_id:
+			s += f'contact_id: {self.contact_id}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, ContactRecreateChannelsRequest):
+			return False
+		return self.contact_id == other.contact_id
+
+	def __bool__(self):
+		return self.contact_id != 0
+
+	def __hash__(self):
+		return hash(self.contact_id)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, ContactRecreateChannelsRequest):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.contact_id == 0 or self.contact_id == expected.contact_id, "Invalid value: contact_id: " + str(expected.contact_id) + " != " + str(self.contact_id)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class ContactRecreateChannelsResponse:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, contact_recreate_channels_response: ContactRecreateChannelsResponse) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "ContactRecreateChannelsResponse":
+		return ContactRecreateChannelsResponse(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsResponse, client: OlvidClient = None) -> "ContactRecreateChannelsResponse":
+		return ContactRecreateChannelsResponse(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsResponse], client: OlvidClient = None) -> list["ContactRecreateChannelsResponse"]:
+		return [ContactRecreateChannelsResponse._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsResponse], client: OlvidClient = None) -> "ContactRecreateChannelsResponse":
+		try:
+			native_message = await promise
+			return ContactRecreateChannelsResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["ContactRecreateChannelsResponse"]):
+		if messages is None:
+			return []
+		return [ContactRecreateChannelsResponse._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["ContactRecreateChannelsResponse"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsResponse()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, ContactRecreateChannelsResponse):
+			return False
+		return 
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, ContactRecreateChannelsResponse):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
 class DiscussionListRequest:
 	def __init__(self, client: OlvidClient = None, filter: "DiscussionFilter" = None):
 		self._client: OlvidClient = client
@@ -9483,13 +9624,13 @@ class MessageSendWithAttachmentsResponse:
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
 class MessageSendLocationRequest:
-	def __init__(self, client: OlvidClient = None, discussion_id: int = 0, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: None = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: "MessageEphemerality" = None):
+	def __init__(self, client: OlvidClient = None, discussion_id: int = 0, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: float = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: "MessageEphemerality" = None):
 		self._client: OlvidClient = client
 		self.discussion_id: int = discussion_id
 		self.latitude: float = latitude
 		self.longitude: float = longitude
 		self.altitude: float = altitude
-		self.precision: None = precision
+		self.precision: float = precision
 		self.address: str = address
 		self.preview_filename: str = preview_filename
 		self.preview_payload: bytes = preview_payload
@@ -9500,7 +9641,7 @@ class MessageSendLocationRequest:
 		self.latitude: float = message_send_location_request.latitude
 		self.longitude: float = message_send_location_request.longitude
 		self.altitude: float = message_send_location_request.altitude
-		self.precision: None = message_send_location_request.precision
+		self.precision: float = message_send_location_request.precision
 		self.address: str = message_send_location_request.address
 		self.preview_filename: str = message_send_location_request.preview_filename
 		self.preview_payload: bytes = message_send_location_request.preview_payload
@@ -9663,6 +9804,493 @@ class MessageSendLocationResponse:
 	# noinspection DuplicatedCode,PyProtectedMember
 	def _test_assertion(self, expected):
 		if not isinstance(expected, MessageSendLocationResponse):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message is None or self.message._test_assertion(expected.message)
+		except AssertionError as e:
+			raise AssertionError("message: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageStartLocationSharingRequest:
+	def __init__(self, client: OlvidClient = None, discussion_id: int = 0, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: float = 0.0):
+		self._client: OlvidClient = client
+		self.discussion_id: int = discussion_id
+		self.latitude: float = latitude
+		self.longitude: float = longitude
+		self.altitude: float = altitude
+		self.precision: float = precision
+
+	def _update_content(self, message_start_location_sharing_request: MessageStartLocationSharingRequest) -> None:
+		self.discussion_id: int = message_start_location_sharing_request.discussion_id
+		self.latitude: float = message_start_location_sharing_request.latitude
+		self.longitude: float = message_start_location_sharing_request.longitude
+		self.altitude: float = message_start_location_sharing_request.altitude
+		self.precision: float = message_start_location_sharing_request.precision
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageStartLocationSharingRequest":
+		return MessageStartLocationSharingRequest(client=self._client, discussion_id=self.discussion_id, latitude=self.latitude, longitude=self.longitude, altitude=self.altitude, precision=self.precision)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingRequest, client: OlvidClient = None) -> "MessageStartLocationSharingRequest":
+		return MessageStartLocationSharingRequest(client, discussion_id=native_message.discussion_id, latitude=native_message.latitude, longitude=native_message.longitude, altitude=native_message.altitude, precision=native_message.precision)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingRequest], client: OlvidClient = None) -> list["MessageStartLocationSharingRequest"]:
+		return [MessageStartLocationSharingRequest._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingRequest], client: OlvidClient = None) -> "MessageStartLocationSharingRequest":
+		try:
+			native_message = await promise
+			return MessageStartLocationSharingRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageStartLocationSharingRequest"]):
+		if messages is None:
+			return []
+		return [MessageStartLocationSharingRequest._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageStartLocationSharingRequest"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingRequest(discussion_id=message.discussion_id if message.discussion_id else None, latitude=message.latitude if message.latitude else None, longitude=message.longitude if message.longitude else None, altitude=message.altitude if message.altitude else None, precision=message.precision if message.precision else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.discussion_id:
+			s += f'discussion_id: {self.discussion_id}, '
+		if self.latitude:
+			s += f'latitude: {self.latitude}, '
+		if self.longitude:
+			s += f'longitude: {self.longitude}, '
+		if self.altitude:
+			s += f'altitude: {self.altitude}, '
+		if self.precision:
+			s += f'precision: {self.precision}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageStartLocationSharingRequest):
+			return False
+		return self.discussion_id == other.discussion_id and self.latitude == other.latitude and self.longitude == other.longitude and self.altitude == other.altitude and self.precision == other.precision
+
+	def __bool__(self):
+		return self.discussion_id != 0 or self.latitude != 0.0 or self.longitude != 0.0 or self.altitude != 0.0 or self.precision != 0.0
+
+	def __hash__(self):
+		return hash((self.discussion_id, self.latitude, self.longitude, self.altitude, self.precision))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageStartLocationSharingRequest):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.discussion_id == 0 or self.discussion_id == expected.discussion_id, "Invalid value: discussion_id: " + str(expected.discussion_id) + " != " + str(self.discussion_id)
+		assert expected.latitude == 0.0 or self.latitude == expected.latitude, "Invalid value: latitude: " + str(expected.latitude) + " != " + str(self.latitude)
+		assert expected.longitude == 0.0 or self.longitude == expected.longitude, "Invalid value: longitude: " + str(expected.longitude) + " != " + str(self.longitude)
+		assert expected.altitude == 0.0 or self.altitude == expected.altitude, "Invalid value: altitude: " + str(expected.altitude) + " != " + str(self.altitude)
+		assert expected.precision == 0.0 or self.precision == expected.precision, "Invalid value: precision: " + str(expected.precision) + " != " + str(self.precision)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageStartLocationSharingResponse:
+	def __init__(self, client: OlvidClient = None, message: "Message" = None):
+		self._client: OlvidClient = client
+		self.message: Message = message
+
+	def _update_content(self, message_start_location_sharing_response: MessageStartLocationSharingResponse) -> None:
+		self.message: Message = message_start_location_sharing_response.message
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageStartLocationSharingResponse":
+		return MessageStartLocationSharingResponse(client=self._client, message=self.message._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingResponse, client: OlvidClient = None) -> "MessageStartLocationSharingResponse":
+		return MessageStartLocationSharingResponse(client, message=Message._from_native(native_message.message, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingResponse], client: OlvidClient = None) -> list["MessageStartLocationSharingResponse"]:
+		return [MessageStartLocationSharingResponse._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingResponse], client: OlvidClient = None) -> "MessageStartLocationSharingResponse":
+		try:
+			native_message = await promise
+			return MessageStartLocationSharingResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageStartLocationSharingResponse"]):
+		if messages is None:
+			return []
+		return [MessageStartLocationSharingResponse._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageStartLocationSharingResponse"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingResponse(message=Message._to_native(message.message if message.message else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.message:
+			s += f'message: ({self.message}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageStartLocationSharingResponse):
+			return False
+		return self.message == other.message
+
+	def __bool__(self):
+		return bool(self.message)
+
+	def __hash__(self):
+		return hash(self.message)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageStartLocationSharingResponse):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message is None or self.message._test_assertion(expected.message)
+		except AssertionError as e:
+			raise AssertionError("message: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageUpdateLocationSharingRequest:
+	def __init__(self, client: OlvidClient = None, message_id: "MessageId" = None, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: float = 0.0):
+		self._client: OlvidClient = client
+		self.message_id: MessageId = message_id
+		self.latitude: float = latitude
+		self.longitude: float = longitude
+		self.altitude: float = altitude
+		self.precision: float = precision
+
+	def _update_content(self, message_update_location_sharing_request: MessageUpdateLocationSharingRequest) -> None:
+		self.message_id: MessageId = message_update_location_sharing_request.message_id
+		self.latitude: float = message_update_location_sharing_request.latitude
+		self.longitude: float = message_update_location_sharing_request.longitude
+		self.altitude: float = message_update_location_sharing_request.altitude
+		self.precision: float = message_update_location_sharing_request.precision
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageUpdateLocationSharingRequest":
+		return MessageUpdateLocationSharingRequest(client=self._client, message_id=self.message_id._clone(), latitude=self.latitude, longitude=self.longitude, altitude=self.altitude, precision=self.precision)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingRequest, client: OlvidClient = None) -> "MessageUpdateLocationSharingRequest":
+		return MessageUpdateLocationSharingRequest(client, message_id=MessageId._from_native(native_message.message_id, client=client), latitude=native_message.latitude, longitude=native_message.longitude, altitude=native_message.altitude, precision=native_message.precision)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingRequest], client: OlvidClient = None) -> list["MessageUpdateLocationSharingRequest"]:
+		return [MessageUpdateLocationSharingRequest._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingRequest], client: OlvidClient = None) -> "MessageUpdateLocationSharingRequest":
+		try:
+			native_message = await promise
+			return MessageUpdateLocationSharingRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageUpdateLocationSharingRequest"]):
+		if messages is None:
+			return []
+		return [MessageUpdateLocationSharingRequest._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageUpdateLocationSharingRequest"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingRequest(message_id=MessageId._to_native(message.message_id if message.message_id else None), latitude=message.latitude if message.latitude else None, longitude=message.longitude if message.longitude else None, altitude=message.altitude if message.altitude else None, precision=message.precision if message.precision else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.message_id:
+			s += f'message_id: ({self.message_id}), '
+		if self.latitude:
+			s += f'latitude: {self.latitude}, '
+		if self.longitude:
+			s += f'longitude: {self.longitude}, '
+		if self.altitude:
+			s += f'altitude: {self.altitude}, '
+		if self.precision:
+			s += f'precision: {self.precision}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageUpdateLocationSharingRequest):
+			return False
+		return self.message_id == other.message_id and self.latitude == other.latitude and self.longitude == other.longitude and self.altitude == other.altitude and self.precision == other.precision
+
+	def __bool__(self):
+		return bool(self.message_id) or self.latitude != 0.0 or self.longitude != 0.0 or self.altitude != 0.0 or self.precision != 0.0
+
+	def __hash__(self):
+		return hash((self.message_id, self.latitude, self.longitude, self.altitude, self.precision))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageUpdateLocationSharingRequest):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message_id is None or self.message_id._test_assertion(expected.message_id)
+		except AssertionError as e:
+			raise AssertionError("message_id: " + str(e))
+		assert expected.latitude == 0.0 or self.latitude == expected.latitude, "Invalid value: latitude: " + str(expected.latitude) + " != " + str(self.latitude)
+		assert expected.longitude == 0.0 or self.longitude == expected.longitude, "Invalid value: longitude: " + str(expected.longitude) + " != " + str(self.longitude)
+		assert expected.altitude == 0.0 or self.altitude == expected.altitude, "Invalid value: altitude: " + str(expected.altitude) + " != " + str(self.altitude)
+		assert expected.precision == 0.0 or self.precision == expected.precision, "Invalid value: precision: " + str(expected.precision) + " != " + str(self.precision)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageUpdateLocationSharingResponse:
+	def __init__(self, client: OlvidClient = None, message: "Message" = None):
+		self._client: OlvidClient = client
+		self.message: Message = message
+
+	def _update_content(self, message_update_location_sharing_response: MessageUpdateLocationSharingResponse) -> None:
+		self.message: Message = message_update_location_sharing_response.message
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageUpdateLocationSharingResponse":
+		return MessageUpdateLocationSharingResponse(client=self._client, message=self.message._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingResponse, client: OlvidClient = None) -> "MessageUpdateLocationSharingResponse":
+		return MessageUpdateLocationSharingResponse(client, message=Message._from_native(native_message.message, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingResponse], client: OlvidClient = None) -> list["MessageUpdateLocationSharingResponse"]:
+		return [MessageUpdateLocationSharingResponse._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingResponse], client: OlvidClient = None) -> "MessageUpdateLocationSharingResponse":
+		try:
+			native_message = await promise
+			return MessageUpdateLocationSharingResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageUpdateLocationSharingResponse"]):
+		if messages is None:
+			return []
+		return [MessageUpdateLocationSharingResponse._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageUpdateLocationSharingResponse"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingResponse(message=Message._to_native(message.message if message.message else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.message:
+			s += f'message: ({self.message}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageUpdateLocationSharingResponse):
+			return False
+		return self.message == other.message
+
+	def __bool__(self):
+		return bool(self.message)
+
+	def __hash__(self):
+		return hash(self.message)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageUpdateLocationSharingResponse):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message is None or self.message._test_assertion(expected.message)
+		except AssertionError as e:
+			raise AssertionError("message: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageEndLocationSharingRequest:
+	def __init__(self, client: OlvidClient = None, message_id: "MessageId" = None):
+		self._client: OlvidClient = client
+		self.message_id: MessageId = message_id
+
+	def _update_content(self, message_end_location_sharing_request: MessageEndLocationSharingRequest) -> None:
+		self.message_id: MessageId = message_end_location_sharing_request.message_id
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageEndLocationSharingRequest":
+		return MessageEndLocationSharingRequest(client=self._client, message_id=self.message_id._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingRequest, client: OlvidClient = None) -> "MessageEndLocationSharingRequest":
+		return MessageEndLocationSharingRequest(client, message_id=MessageId._from_native(native_message.message_id, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingRequest], client: OlvidClient = None) -> list["MessageEndLocationSharingRequest"]:
+		return [MessageEndLocationSharingRequest._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingRequest], client: OlvidClient = None) -> "MessageEndLocationSharingRequest":
+		try:
+			native_message = await promise
+			return MessageEndLocationSharingRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageEndLocationSharingRequest"]):
+		if messages is None:
+			return []
+		return [MessageEndLocationSharingRequest._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageEndLocationSharingRequest"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingRequest(message_id=MessageId._to_native(message.message_id if message.message_id else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.message_id:
+			s += f'message_id: ({self.message_id}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageEndLocationSharingRequest):
+			return False
+		return self.message_id == other.message_id
+
+	def __bool__(self):
+		return bool(self.message_id)
+
+	def __hash__(self):
+		return hash(self.message_id)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageEndLocationSharingRequest):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message_id is None or self.message_id._test_assertion(expected.message_id)
+		except AssertionError as e:
+			raise AssertionError("message_id: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageEndLocationSharingResponse:
+	def __init__(self, client: OlvidClient = None, message: "Message" = None):
+		self._client: OlvidClient = client
+		self.message: Message = message
+
+	def _update_content(self, message_end_location_sharing_response: MessageEndLocationSharingResponse) -> None:
+		self.message: Message = message_end_location_sharing_response.message
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageEndLocationSharingResponse":
+		return MessageEndLocationSharingResponse(client=self._client, message=self.message._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingResponse, client: OlvidClient = None) -> "MessageEndLocationSharingResponse":
+		return MessageEndLocationSharingResponse(client, message=Message._from_native(native_message.message, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingResponse], client: OlvidClient = None) -> list["MessageEndLocationSharingResponse"]:
+		return [MessageEndLocationSharingResponse._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingResponse], client: OlvidClient = None) -> "MessageEndLocationSharingResponse":
+		try:
+			native_message = await promise
+			return MessageEndLocationSharingResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageEndLocationSharingResponse"]):
+		if messages is None:
+			return []
+		return [MessageEndLocationSharingResponse._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageEndLocationSharingResponse"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingResponse(message=Message._to_native(message.message if message.message else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.message:
+			s += f'message: ({self.message}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageEndLocationSharingResponse):
+			return False
+		return self.message == other.message
+
+	def __bool__(self):
+		return bool(self.message)
+
+	def __hash__(self):
+		return hash(self.message)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageEndLocationSharingResponse):
 			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
 		try:
 			assert expected.message is None or self.message._test_assertion(expected.message)
@@ -11536,6 +12164,14 @@ class ContactCommandServiceStub:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
 	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def contact_recreate_channels(self, contact_recreate_channels_request: ContactRecreateChannelsRequest) -> Coroutine[Any, Any, ContactRecreateChannelsResponse]:
+		try:
+			overlay_object = contact_recreate_channels_request
+			return ContactRecreateChannelsResponse._from_native_promise(self.__stub.ContactRecreateChannels(olvid.daemon.command.v1.contact_commands_pb2.ContactRecreateChannelsRequest(contact_id=overlay_object.contact_id), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
 	def contact_invite_to_one_to_one_discussion(self, contact_invite_to_one_to_one_discussion_request: ContactInviteToOneToOneDiscussionRequest) -> Coroutine[Any, Any, ContactInviteToOneToOneDiscussionResponse]:
 		try:
 			overlay_object = contact_invite_to_one_to_one_discussion_request
@@ -11875,6 +12511,30 @@ class MessageCommandServiceStub:
 		try:
 			overlay_object = message_send_location_request
 			return MessageSendLocationResponse._from_native_promise(self.__stub.MessageSendLocation(olvid.daemon.command.v1.message_commands_pb2.MessageSendLocationRequest(discussion_id=overlay_object.discussion_id, latitude=overlay_object.latitude, longitude=overlay_object.longitude, altitude=overlay_object.altitude, precision=overlay_object.precision, address=overlay_object.address, preview_filename=overlay_object.preview_filename, preview_payload=overlay_object.preview_payload, ephemerality=MessageEphemerality._to_native(overlay_object.ephemerality)), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def message_start_location_sharing(self, message_start_location_sharing_request: MessageStartLocationSharingRequest) -> Coroutine[Any, Any, MessageStartLocationSharingResponse]:
+		try:
+			overlay_object = message_start_location_sharing_request
+			return MessageStartLocationSharingResponse._from_native_promise(self.__stub.MessageStartLocationSharing(olvid.daemon.command.v1.message_commands_pb2.MessageStartLocationSharingRequest(discussion_id=overlay_object.discussion_id, latitude=overlay_object.latitude, longitude=overlay_object.longitude, altitude=overlay_object.altitude, precision=overlay_object.precision), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def message_update_location_sharing(self, message_update_location_sharing_request: MessageUpdateLocationSharingRequest) -> Coroutine[Any, Any, MessageUpdateLocationSharingResponse]:
+		try:
+			overlay_object = message_update_location_sharing_request
+			return MessageUpdateLocationSharingResponse._from_native_promise(self.__stub.MessageUpdateLocationSharing(olvid.daemon.command.v1.message_commands_pb2.MessageUpdateLocationSharingRequest(message_id=MessageId._to_native(overlay_object.message_id), latitude=overlay_object.latitude, longitude=overlay_object.longitude, altitude=overlay_object.altitude, precision=overlay_object.precision), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def message_end_location_sharing(self, message_end_location_sharing_request: MessageEndLocationSharingRequest) -> Coroutine[Any, Any, MessageEndLocationSharingResponse]:
+		try:
+			overlay_object = message_end_location_sharing_request
+			return MessageEndLocationSharingResponse._from_native_promise(self.__stub.MessageEndLocationSharing(olvid.daemon.command.v1.message_commands_pb2.MessageEndLocationSharingRequest(message_id=MessageId._to_native(overlay_object.message_id)), metadata=self._client.grpc_metadata), client=self._client)
 		except errors.AioRpcError as e:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 

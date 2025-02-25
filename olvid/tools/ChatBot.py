@@ -93,12 +93,15 @@ class ChatBot(OlvidClient):
 		# check if we send help on invalid command, and if this was supposed to be a command
 		if self._help_command_prefix and message.body.startswith(self._help_command_prefix):
 			await self.send_help_message(message.discussion_id)
+			return
 
 		discussion: datatypes.Discussion = await self.discussion_get(discussion_id=message.discussion_id)
 		if discussion.contact_id and self._help_always_send_in_to_one:
 			await self.send_help_message(message.discussion_id)
+			return
 		elif discussion.group_id and self._help_always_send_in_group:
 			await self.send_help_message(message.discussion_id)
+			return
 
 	#####
 	# Welcome configuration

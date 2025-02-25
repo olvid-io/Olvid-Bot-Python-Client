@@ -30,6 +30,10 @@ class OlvidAdminClient(OlvidClient):
 	_KEY_FILE_PATH = ".admin_client_key"
 
 	def __init__(self, identity_id: int, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional['OlvidClient'] = None, tls_configuration: GrpcTlsConfiguration = None):
+		# admin client need to specify an identity id in all requests metadata
+		# set identity id before super() call, because notification subscriptions for overwritten handler methods will need it.
+		self._current_identity_id: int = identity_id
+
 		try:
 			super().__init__(client_key=client_key, server_target=server_target, parent_client=parent_client, tls_configuration=tls_configuration)
 		except ValueError:
@@ -37,9 +41,6 @@ class OlvidAdminClient(OlvidClient):
 
 		# overwrite parent client type
 		self._parent_client: Optional["OlvidAdminClient"] = parent_client
-
-		# admin client need to specify an identity id in all requests metadata
-		self._current_identity_id: int = identity_id
 
 		# generate admin stubs
 		self._stubs.create_admin_stubs()

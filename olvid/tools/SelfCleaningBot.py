@@ -42,9 +42,10 @@ class SelfCleaningBot(OlvidClient):
 			# delete every messages
 			deleted_messages_count = 0
 			async for message in client.message_list():
-				if is_message_for_cleaning and await is_message_for_cleaning(message):
-					await client.message_delete(message_id=message.id)
-					deleted_messages_count += 1
+				if is_message_for_cleaning:
+					if await is_message_for_cleaning(message):
+						await client.message_delete(message_id=message.id)
+						deleted_messages_count += 1
 				elif clean_inbound_messages and message.is_inbound():
 					await client.message_delete(message_id=message.id)
 					deleted_messages_count += 1

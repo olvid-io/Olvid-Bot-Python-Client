@@ -3409,14 +3409,14 @@ class MessageLocation:
 		def __bool__(self):
 			return self.value != 0
 
-	def __init__(self, client: OlvidClient = None, type: "MessageLocation.LocationType" = 0, timestamp: int = 0, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: None = 0.0, address: str = ""):
+	def __init__(self, client: OlvidClient = None, type: "MessageLocation.LocationType" = 0, timestamp: int = 0, latitude: float = 0.0, longitude: float = 0.0, altitude: float = 0.0, precision: float = 0.0, address: str = ""):
 		self._client: OlvidClient = client
 		self.type: MessageLocation.LocationType = type
 		self.timestamp: int = timestamp
 		self.latitude: float = latitude
 		self.longitude: float = longitude
 		self.altitude: float = altitude
-		self.precision: None = precision
+		self.precision: float = precision
 		self.address: str = address
 
 	def _update_content(self, message_location: MessageLocation) -> None:
@@ -3425,7 +3425,7 @@ class MessageLocation:
 		self.latitude: float = message_location.latitude
 		self.longitude: float = message_location.longitude
 		self.altitude: float = message_location.altitude
-		self.precision: None = message_location.precision
+		self.precision: float = message_location.precision
 		self.address: str = message_location.address
 
 	# noinspection PyProtectedMember

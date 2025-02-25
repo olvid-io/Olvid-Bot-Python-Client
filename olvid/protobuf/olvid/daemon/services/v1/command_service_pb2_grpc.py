@@ -896,6 +896,11 @@ class ContactCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.FromString,
                 _registered_method=True)
+        self.ContactRecreateChannels = channel.unary_unary(
+                '/olvid.daemon.services.v1.ContactCommandService/ContactRecreateChannels',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsResponse.FromString,
+                _registered_method=True)
         self.ContactInviteToOneToOneDiscussion = channel.unary_unary(
                 '/olvid.daemon.services.v1.ContactCommandService/ContactInviteToOneToOneDiscussion',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactInviteToOneToOneDiscussionRequest.SerializeToString,
@@ -954,6 +959,12 @@ class ContactCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ContactRecreateChannels(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ContactInviteToOneToOneDiscussion(self, request, context):
         """collected contacts
         """
@@ -1004,6 +1015,11 @@ def add_ContactCommandServiceServicer_to_server(servicer, server):
                     servicer.ContactDownloadPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.SerializeToString,
+            ),
+            'ContactRecreateChannels': grpc.unary_unary_rpc_method_handler(
+                    servicer.ContactRecreateChannels,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsResponse.SerializeToString,
             ),
             'ContactInviteToOneToOneDiscussion': grpc.unary_unary_rpc_method_handler(
                     servicer.ContactInviteToOneToOneDiscussion,
@@ -1206,6 +1222,33 @@ class ContactCommandService(object):
             '/olvid.daemon.services.v1.ContactCommandService/ContactDownloadPhoto',
             olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactDownloadPhotoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ContactRecreateChannels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ContactCommandService/ContactRecreateChannels',
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2.ContactRecreateChannelsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -2488,6 +2531,21 @@ class MessageCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.FromString,
                 _registered_method=True)
+        self.MessageStartLocationSharing = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageStartLocationSharing',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingResponse.FromString,
+                _registered_method=True)
+        self.MessageUpdateLocationSharing = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateLocationSharing',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingResponse.FromString,
+                _registered_method=True)
+        self.MessageEndLocationSharing = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageEndLocationSharing',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingResponse.FromString,
+                _registered_method=True)
         self.MessageReact = channel.unary_unary(
                 '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
@@ -2551,6 +2609,24 @@ class MessageCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def MessageStartLocationSharing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageUpdateLocationSharing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageEndLocationSharing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def MessageReact(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -2606,6 +2682,21 @@ def add_MessageCommandServiceServicer_to_server(servicer, server):
                     servicer.MessageSendLocation,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.SerializeToString,
+            ),
+            'MessageStartLocationSharing': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageStartLocationSharing,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingResponse.SerializeToString,
+            ),
+            'MessageUpdateLocationSharing': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageUpdateLocationSharing,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingResponse.SerializeToString,
+            ),
+            'MessageEndLocationSharing': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageEndLocationSharing,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingResponse.SerializeToString,
             ),
             'MessageReact': grpc.unary_unary_rpc_method_handler(
                     servicer.MessageReact,
@@ -2813,6 +2904,87 @@ class MessageCommandService(object):
             '/olvid.daemon.services.v1.MessageCommandService/MessageSendLocation',
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendLocationResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageStartLocationSharing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageStartLocationSharing',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageStartLocationSharingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageUpdateLocationSharing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateLocationSharing',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateLocationSharingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageEndLocationSharing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageEndLocationSharing',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingResponse.FromString,
             options,
             channel_credentials,
             insecure,

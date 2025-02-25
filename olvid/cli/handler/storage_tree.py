@@ -87,8 +87,8 @@ async def storage_set(key: str, value: str, discussion_id: int):
 # storage rm
 #####
 @storage_tree.command("rm")
-@click.option("-a", "--all", "delete_all", is_flag=True)
-@click.option("-d", "discussion_id", nargs=1, type=click.INT, default=0)
+@click.option("-a", "--all", "delete_all", is_flag=True, help="Delete every elements in global storage")
+@click.option("-d", "discussion_id", nargs=1, type=click.INT, default=0, help="Delete every elements in discussion storage")
 @click.argument("keys", nargs=-1, type=click.STRING)
 async def storage_delete(delete_all: bool, discussion_id: int, keys: tuple[str]):
 	if delete_all:
@@ -116,3 +116,18 @@ async def storage_delete(delete_all: bool, discussion_id: int, keys: tuple[str])
 		else:
 			previous_value = await ClientSingleton.get_client().storage_unset(key)
 			print_command_result(f"Element deleted: {key}: {previous_value}")
+
+
+#####
+# storage reset
+#####
+@storage_tree.command("reset", help="Remove every entry in global and discussion storage")
+async def storage_clean():
+	async for element in ClientSingleton.get_client().storage_list():
+		await ClientSingleton.get_client().storage_unset(element.key)
+		print_command_result(f"Deleted element: {element.key}={element.value}")
+	async for discussion in ClientSingleton.get_client().discussion_list():
+		async for element in ClientSingleton.get_client().discussion_storage_list(discussion_id=discussion.id):
+			await ClientSingleton.get_client().discussion_storage_unset(key=element.key, discussion_id=discussion.id)
+			print_command_result(f"Deleted element: {element.key}={element.value}")
+	print_command_result("Finished cleaning", "")

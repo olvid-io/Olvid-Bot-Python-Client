@@ -611,6 +611,10 @@ class OlvidClient(CommandHolder):
 		response: commands.ContactDownloadPhotoResponse = await self._stubs.contactCommandStub.contact_download_photo(commands.ContactDownloadPhotoRequest(client=self, contact_id=contact_id))
 		return response.photo
 	
+	async def contact_recreate_channels(self, contact_id: int) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: ContactRecreateChannels')
+		await self._stubs.contactCommandStub.contact_recreate_channels(commands.ContactRecreateChannelsRequest(client=self, contact_id=contact_id))
+	
 	async def contact_invite_to_one_to_one_discussion(self, contact_id: int) -> datatypes.Invitation:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactInviteToOneToOneDiscussion')
 		response: commands.ContactInviteToOneToOneDiscussionResponse = await self._stubs.contactCommandStub.contact_invite_to_one_to_one_discussion(commands.ContactInviteToOneToOneDiscussionRequest(client=self, contact_id=contact_id))
@@ -621,10 +625,10 @@ class OlvidClient(CommandHolder):
 		await self._stubs.contactCommandStub.contact_downgrade_one_to_one_discussion(commands.ContactDowngradeOneToOneDiscussionRequest(client=self, contact_id=contact_id))
 	
 	# KeycloakCommandService
-	def keycloak_user_list(self, filter: datatypes.KeycloakUserFilter = None, last_list_timestamp: int = 0) -> AsyncIterator[list[datatypes.KeycloakUser], int]:
+	def keycloak_user_list(self, filter: datatypes.KeycloakUserFilter = None, last_list_timestamp: int = 0) -> AsyncIterator[tuple[list[datatypes.KeycloakUser], int]]:
 		command_logger.info(f'{self.__class__.__name__}: command: KeycloakUserList')
 	
-		async def iterator(message_iterator: AsyncIterator[commands.KeycloakUserListResponse]) -> AsyncIterator[list[datatypes.KeycloakUser], int]:
+		async def iterator(message_iterator: AsyncIterator[commands.KeycloakUserListResponse]) -> AsyncIterator[tuple[list[datatypes.KeycloakUser], int]]:
 			async for message in message_iterator:
 				yield message.users, message.last_list_timestamp
 		return iterator(self._stubs.keycloakCommandStub.keycloak_user_list(commands.KeycloakUserListRequest(client=self, filter=filter, last_list_timestamp=last_list_timestamp)))
@@ -787,9 +791,24 @@ class OlvidClient(CommandHolder):
 	
 	# message_send_with_attachments: cannot generate request stream rpc code
 	
-	async def message_send_location(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: None = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: datatypes.MessageEphemerality = None) -> datatypes.Message:
+	async def message_send_location(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: datatypes.MessageEphemerality = None) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSendLocation')
 		response: commands.MessageSendLocationResponse = await self._stubs.messageCommandStub.message_send_location(commands.MessageSendLocationRequest(client=self, discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision, address=address, preview_filename=preview_filename, preview_payload=preview_payload, ephemerality=ephemerality))
+		return response.message
+	
+	async def message_start_location_sharing(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0) -> datatypes.Message:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageStartLocationSharing')
+		response: commands.MessageStartLocationSharingResponse = await self._stubs.messageCommandStub.message_start_location_sharing(commands.MessageStartLocationSharingRequest(client=self, discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
+		return response.message
+	
+	async def message_update_location_sharing(self, message_id: datatypes.MessageId, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0) -> datatypes.Message:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageUpdateLocationSharing')
+		response: commands.MessageUpdateLocationSharingResponse = await self._stubs.messageCommandStub.message_update_location_sharing(commands.MessageUpdateLocationSharingRequest(client=self, message_id=message_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
+		return response.message
+	
+	async def message_end_location_sharing(self, message_id: datatypes.MessageId) -> datatypes.Message:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageEndLocationSharing')
+		response: commands.MessageEndLocationSharingResponse = await self._stubs.messageCommandStub.message_end_location_sharing(commands.MessageEndLocationSharingRequest(client=self, message_id=message_id))
 		return response.message
 	
 	async def message_react(self, message_id: datatypes.MessageId, reaction: str) -> None:
@@ -1018,6 +1037,10 @@ class OlvidClient(CommandHolder):
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationReceived')
 		return self._stubs.messageNotificationStub.message_location_received(notifications.SubscribeToMessageLocationReceivedNotification(client=self))
 	
+	def _notif_message_location_sent(self) -> AsyncIterator[notifications.MessageLocationSentNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSent')
+		return self._stubs.messageNotificationStub.message_location_sent(notifications.SubscribeToMessageLocationSentNotification(client=self))
+	
 	def _notif_message_location_sharing_start(self) -> AsyncIterator[notifications.MessageLocationSharingStartNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingStart')
 		return self._stubs.messageNotificationStub.message_location_sharing_start(notifications.SubscribeToMessageLocationSharingStartNotification(client=self))
@@ -1153,6 +1176,9 @@ class OlvidClient(CommandHolder):
 		pass
 
 	async def on_message_location_received(self, message: datatypes.Message):
+		pass
+
+	async def on_message_location_sent(self, message: datatypes.Message):
 		pass
 
 	async def on_message_location_sharing_start(self, message: datatypes.Message):

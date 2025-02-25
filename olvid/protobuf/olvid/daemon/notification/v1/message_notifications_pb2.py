@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import message_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/message_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/message.proto\"(\n&SubscribeToMessageReceivedNotification\"[\n\x1bMessageReceivedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"$\n\"SubscribeToMessageSentNotification\"W\n\x17MessageSentNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"\'\n%SubscribeToMessageDeletedNotification\"Z\n\x1aMessageDeletedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"+\n)SubscribeToMessageBodyUpdatedNotification\"\x83\x01\n\x1eMessageBodyUpdatedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12#\n\rprevious_body\x18\x02 \x01(\tR\x0cpreviousBody\"(\n&SubscribeToMessageUploadedNotification\"[\n\x1bMessageUploadedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\")\n\'SubscribeToMessageDeliveredNotification\"\\\n\x1cMessageDeliveredNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"$\n\"SubscribeToMessageReadNotification\"W\n\x17MessageReadNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"0\n.SubscribeToMessageLocationReceivedNotification\"c\n#MessageLocationReceivedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"4\n2SubscribeToMessageLocationSharingStartNotification\"g\n\'MessageLocationSharingStartNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"5\n3SubscribeToMessageLocationSharingUpdateNotification\"\xc1\x01\n(MessageLocationSharingUpdateNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12W\n\x11previous_location\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageLocationR\x10previousLocation\"2\n0SubscribeToMessageLocationSharingEndNotification\"e\n%MessageLocationSharingEndNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"-\n+SubscribeToMessageReactionAddedNotification\"\xa8\x01\n MessageReactionAddedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reaction\"/\n-SubscribeToMessageReactionUpdatedNotification\"\x83\x02\n\"MessageReactionUpdatedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reaction\x12W\n\x11previous_reaction\x18\x03 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x10previousReaction\"/\n-SubscribeToMessageReactionRemovedNotification\"\xaa\x01\n\"MessageReactionRemovedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reactionB\xe1\x01\n com.olvid.daemon.notification.v1B\x19MessageNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/message_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/message.proto\"(\n&SubscribeToMessageReceivedNotification\"[\n\x1bMessageReceivedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"$\n\"SubscribeToMessageSentNotification\"W\n\x17MessageSentNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"\'\n%SubscribeToMessageDeletedNotification\"Z\n\x1aMessageDeletedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"+\n)SubscribeToMessageBodyUpdatedNotification\"\x83\x01\n\x1eMessageBodyUpdatedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12#\n\rprevious_body\x18\x02 \x01(\tR\x0cpreviousBody\"(\n&SubscribeToMessageUploadedNotification\"[\n\x1bMessageUploadedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\")\n\'SubscribeToMessageDeliveredNotification\"\\\n\x1cMessageDeliveredNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"$\n\"SubscribeToMessageReadNotification\"W\n\x17MessageReadNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"0\n.SubscribeToMessageLocationReceivedNotification\"c\n#MessageLocationReceivedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\",\n*SubscribeToMessageLocationSentNotification\"_\n\x1fMessageLocationSentNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"4\n2SubscribeToMessageLocationSharingStartNotification\"g\n\'MessageLocationSharingStartNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"5\n3SubscribeToMessageLocationSharingUpdateNotification\"\xc1\x01\n(MessageLocationSharingUpdateNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12W\n\x11previous_location\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageLocationR\x10previousLocation\"2\n0SubscribeToMessageLocationSharingEndNotification\"e\n%MessageLocationSharingEndNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\"-\n+SubscribeToMessageReactionAddedNotification\"\xa8\x01\n MessageReactionAddedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reaction\"/\n-SubscribeToMessageReactionUpdatedNotification\"\x83\x02\n\"MessageReactionUpdatedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reaction\x12W\n\x11previous_reaction\x18\x03 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x10previousReaction\"/\n-SubscribeToMessageReactionRemovedNotification\"\xaa\x01\n\"MessageReactionRemovedNotification\x12<\n\x07message\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.MessageR\x07message\x12\x46\n\x08reaction\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.MessageReactionR\x08reactionB\xe1\x01\n com.olvid.daemon.notification.v1B\x19MessageNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -65,28 +65,32 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SUBSCRIBETOMESSAGELOCATIONRECEIVEDNOTIFICATION']._serialized_end=1152
   _globals['_MESSAGELOCATIONRECEIVEDNOTIFICATION']._serialized_start=1154
   _globals['_MESSAGELOCATIONRECEIVEDNOTIFICATION']._serialized_end=1253
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_start=1255
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_end=1307
-  _globals['_MESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_start=1309
-  _globals['_MESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_end=1412
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_start=1414
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_end=1467
-  _globals['_MESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_start=1470
-  _globals['_MESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_end=1663
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_start=1665
-  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_end=1715
-  _globals['_MESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_start=1717
-  _globals['_MESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_end=1818
-  _globals['_SUBSCRIBETOMESSAGEREACTIONADDEDNOTIFICATION']._serialized_start=1820
-  _globals['_SUBSCRIBETOMESSAGEREACTIONADDEDNOTIFICATION']._serialized_end=1865
-  _globals['_MESSAGEREACTIONADDEDNOTIFICATION']._serialized_start=1868
-  _globals['_MESSAGEREACTIONADDEDNOTIFICATION']._serialized_end=2036
-  _globals['_SUBSCRIBETOMESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_start=2038
-  _globals['_SUBSCRIBETOMESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_end=2085
-  _globals['_MESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_start=2088
-  _globals['_MESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_end=2347
-  _globals['_SUBSCRIBETOMESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_start=2349
-  _globals['_SUBSCRIBETOMESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_end=2396
-  _globals['_MESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_start=2399
-  _globals['_MESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_end=2569
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSENTNOTIFICATION']._serialized_start=1255
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSENTNOTIFICATION']._serialized_end=1299
+  _globals['_MESSAGELOCATIONSENTNOTIFICATION']._serialized_start=1301
+  _globals['_MESSAGELOCATIONSENTNOTIFICATION']._serialized_end=1396
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_start=1398
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_end=1450
+  _globals['_MESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_start=1452
+  _globals['_MESSAGELOCATIONSHARINGSTARTNOTIFICATION']._serialized_end=1555
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_start=1557
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_end=1610
+  _globals['_MESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_start=1613
+  _globals['_MESSAGELOCATIONSHARINGUPDATENOTIFICATION']._serialized_end=1806
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_start=1808
+  _globals['_SUBSCRIBETOMESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_end=1858
+  _globals['_MESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_start=1860
+  _globals['_MESSAGELOCATIONSHARINGENDNOTIFICATION']._serialized_end=1961
+  _globals['_SUBSCRIBETOMESSAGEREACTIONADDEDNOTIFICATION']._serialized_start=1963
+  _globals['_SUBSCRIBETOMESSAGEREACTIONADDEDNOTIFICATION']._serialized_end=2008
+  _globals['_MESSAGEREACTIONADDEDNOTIFICATION']._serialized_start=2011
+  _globals['_MESSAGEREACTIONADDEDNOTIFICATION']._serialized_end=2179
+  _globals['_SUBSCRIBETOMESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_start=2181
+  _globals['_SUBSCRIBETOMESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_end=2228
+  _globals['_MESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_start=2231
+  _globals['_MESSAGEREACTIONUPDATEDNOTIFICATION']._serialized_end=2490
+  _globals['_SUBSCRIBETOMESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_start=2492
+  _globals['_SUBSCRIBETOMESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_end=2539
+  _globals['_MESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_start=2542
+  _globals['_MESSAGEREACTIONREMOVEDNOTIFICATION']._serialized_end=2712
 # @@protoc_insertion_point(module_scope)

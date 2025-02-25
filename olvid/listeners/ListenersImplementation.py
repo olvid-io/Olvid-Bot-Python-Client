@@ -580,6 +580,23 @@ class MessageLocationReceivedListener(GenericNotificationListener):
 
 
 # noinspection DuplicatedCode
+class MessageLocationSentListener(GenericNotificationListener):
+	def __init__(self, handler: Callable[[datatypes.Message], Optional[Coroutine]], checkers: list[Callable[[datatypes.Message], Union[bool, Coroutine[Any, Any, bool]]]] = None, count: int = -1, priority: int = 0):
+		if checkers:
+			checkers = [lambda n: checker(n.message) for checker in checkers]
+		super().__init__(
+			notification_type=NOTIFICATIONS.MESSAGE_LOCATION_SENT,
+			handler=lambda n: handler(n.message),
+			checkers=checkers,
+			count=count,
+			priority=priority
+		)
+	
+	def add_checker(self, checker: Callable[[datatypes.Message], Union[bool, Coroutine[Any, Any, bool]]]):
+		super().add_checker(lambda n: checker(n.message))
+
+
+# noinspection DuplicatedCode
 class MessageLocationSharingStartListener(GenericNotificationListener):
 	def __init__(self, handler: Callable[[datatypes.Message], Optional[Coroutine]], checkers: list[Callable[[datatypes.Message], Union[bool, Coroutine[Any, Any, bool]]]] = None, count: int = -1, priority: int = 0):
 		if checkers:

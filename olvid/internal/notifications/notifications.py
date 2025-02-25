@@ -5594,6 +5594,150 @@ class MessageLocationReceivedNotification:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
+class SubscribeToMessageLocationSentNotification:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, subscribe_to_message_location_sent_notification: SubscribeToMessageLocationSentNotification) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "SubscribeToMessageLocationSentNotification":
+		return SubscribeToMessageLocationSentNotification(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSentNotification, client: OlvidClient = None) -> "SubscribeToMessageLocationSentNotification":
+		return SubscribeToMessageLocationSentNotification(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSentNotification], client: OlvidClient = None) -> list["SubscribeToMessageLocationSentNotification"]:
+		return [SubscribeToMessageLocationSentNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSentNotification], client: OlvidClient = None) -> "SubscribeToMessageLocationSentNotification":
+		try:
+			native_message = await promise
+			return SubscribeToMessageLocationSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["SubscribeToMessageLocationSentNotification"]):
+		if messages is None:
+			return []
+		return [SubscribeToMessageLocationSentNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["SubscribeToMessageLocationSentNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSentNotification()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, SubscribeToMessageLocationSentNotification):
+			return False
+		return 
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, SubscribeToMessageLocationSentNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageLocationSentNotification:
+	def __init__(self, client: OlvidClient = None, message: "Message" = None):
+		self._client: OlvidClient = client
+		self.message: Message = message
+
+	def _update_content(self, message_location_sent_notification: MessageLocationSentNotification) -> None:
+		self.message: Message = message_location_sent_notification.message
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageLocationSentNotification":
+		return MessageLocationSentNotification(client=self._client, message=self.message._clone())
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSentNotification, client: OlvidClient = None) -> "MessageLocationSentNotification":
+		return MessageLocationSentNotification(client, message=Message._from_native(native_message.message, client=client))
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSentNotification], client: OlvidClient = None) -> list["MessageLocationSentNotification"]:
+		return [MessageLocationSentNotification._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSentNotification], client: OlvidClient = None) -> "MessageLocationSentNotification":
+		try:
+			native_message = await promise
+			return MessageLocationSentNotification._from_native(native_message, client=client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageLocationSentNotification"]):
+		if messages is None:
+			return []
+		return [MessageLocationSentNotification._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageLocationSentNotification"]):
+		if message is None:
+			return None
+		return olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSentNotification(message=Message._to_native(message.message if message.message else None))
+
+	def __str__(self):
+		s: str = ''
+		if self.message:
+			s += f'message: ({self.message}), '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageLocationSentNotification):
+			return False
+		return self.message == other.message
+
+	def __bool__(self):
+		return bool(self.message)
+
+	def __hash__(self):
+		return hash(self.message)
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageLocationSentNotification):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		try:
+			assert expected.message is None or self.message._test_assertion(expected.message)
+		except AssertionError as e:
+			raise AssertionError("message: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
 class SubscribeToMessageLocationSharingStartNotification:
 	def __init__(self, client: OlvidClient = None):
 		self._client: OlvidClient = client
@@ -7018,6 +7162,21 @@ class MessageNotificationServiceStub:
 					raise errors.OlvidError._from_aio_rpc_error(e) from e
 			overlay_object = subscribe_to_message_location_received_notification
 			return response_iterator(self.__stub.MessageLocationReceived(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationReceivedNotification(), metadata=self._client.grpc_metadata))
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def message_location_sent(self, subscribe_to_message_location_sent_notification: SubscribeToMessageLocationSentNotification) -> AsyncIterator[MessageLocationSentNotification]:
+		try:
+			# noinspection PyUnresolvedReferences,PyProtectedMember
+			async def response_iterator(iterator: AsyncIterator[olvid.daemon.notification.v1.message_notifications_pb2.MessageLocationSentNotification]) -> AsyncIterator[MessageLocationSentNotification]:
+				try:
+					async for native_message in iterator.__aiter__():
+						yield MessageLocationSentNotification._from_native(native_message, client=self._client)
+				except errors.AioRpcError as e:
+					raise errors.OlvidError._from_aio_rpc_error(e) from e
+			overlay_object = subscribe_to_message_location_sent_notification
+			return response_iterator(self.__stub.MessageLocationSent(olvid.daemon.notification.v1.message_notifications_pb2.SubscribeToMessageLocationSentNotification(), metadata=self._client.grpc_metadata))
 		except errors.AioRpcError as e:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 

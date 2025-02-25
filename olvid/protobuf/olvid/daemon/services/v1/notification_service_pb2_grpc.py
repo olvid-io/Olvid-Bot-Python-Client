@@ -1287,6 +1287,11 @@ class MessageNotificationServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationReceivedNotification.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationReceivedNotification.FromString,
                 _registered_method=True)
+        self.MessageLocationSent = channel.unary_stream(
+                '/olvid.daemon.services.v1.MessageNotificationService/MessageLocationSent',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationSentNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationSentNotification.FromString,
+                _registered_method=True)
         self.MessageLocationSharingStart = channel.unary_stream(
                 '/olvid.daemon.services.v1.MessageNotificationService/MessageLocationSharingStart',
                 request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationSharingStartNotification.SerializeToString,
@@ -1373,6 +1378,12 @@ class MessageNotificationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def MessageLocationSent(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def MessageLocationSharingStart(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -1452,6 +1463,11 @@ def add_MessageNotificationServiceServicer_to_server(servicer, server):
                     servicer.MessageLocationReceived,
                     request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationReceivedNotification.FromString,
                     response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationReceivedNotification.SerializeToString,
+            ),
+            'MessageLocationSent': grpc.unary_stream_rpc_method_handler(
+                    servicer.MessageLocationSent,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationSentNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationSentNotification.SerializeToString,
             ),
             'MessageLocationSharingStart': grpc.unary_stream_rpc_method_handler(
                     servicer.MessageLocationSharingStart,
@@ -1701,6 +1717,33 @@ class MessageNotificationService(object):
             '/olvid.daemon.services.v1.MessageNotificationService/MessageLocationReceived',
             olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationReceivedNotification.SerializeToString,
             olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationReceivedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageLocationSent(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageNotificationService/MessageLocationSent',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.SubscribeToMessageLocationSentNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_message__notifications__pb2.MessageLocationSentNotification.FromString,
             options,
             channel_credentials,
             insecure,
