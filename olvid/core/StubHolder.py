@@ -37,6 +37,8 @@ class StubHolder:
 																								commands.StorageCommandServiceStub)
 		self.discussionStorageCommandStub: commands.DiscussionStorageCommandServiceStub = self._get_or_create_stub(
 			"discussionStorageCommandStub", commands.DiscussionStorageCommandServiceStub)
+		self.callCommandStub: commands.CallCommandServiceStub = self._get_or_create_stub(
+			"callCommandStub", commands.CallCommandServiceStub)
 
 		# create notification stubs
 		self.invitationNotificationStub: notifications.InvitationNotificationServiceStub = self._get_or_create_stub(
@@ -51,6 +53,8 @@ class StubHolder:
 			"messageNotificationStub", notifications.MessageNotificationServiceStub)
 		self.attachmentNotificationStub: notifications.AttachmentNotificationServiceStub = self._get_or_create_stub(
 			"attachmentNotificationStub", notifications.AttachmentNotificationServiceStub)
+		self.callNotificationStub: notifications.CallNotificationServiceStub = self._get_or_create_stub(
+			"callNotificationStub", notifications.CallNotificationServiceStub)
 
 		# do not create admin stubs
 		self.clientKeyAdminStub: Optional[admin.ClientKeyAdminServiceStub] = None

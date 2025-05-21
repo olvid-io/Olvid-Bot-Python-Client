@@ -44,7 +44,8 @@ class Command(MessageReceivedListener):
 	- usage: str (optional): can be used to create help messages
 	"""
 	def __init__(self, regexp_filter: str, handler: Callable[[datatypes.Message], Optional[Coroutine]], name: str = None, usage: str = None, ignore_case: bool = True):
-		super().__init__(handler=self._handler_wrapper(handler), checkers=[self.match], count=-1)
+		# TODO use a filter on body instead of a checker
+		super().__init__(handler=self._handler_wrapper(handler), checkers=[self.match])
 
 		self._regexp_filter: str = regexp_filter
 		self._original_handler: Callable[[datatypes.Message], Optional[Coroutine]] = handler
@@ -170,7 +171,7 @@ class ClassCommandDecorator(CommandDecorator):
 		# methods as handlers.
 		# Data structure: dict: bot class_name -> dict2
 		# dict2: regexp_filter -> (class_method_name, usage, name)
-		self._command_elements_by_name_by_class_name: dict[str, dict[str, (str, str, str, bool)]] = {}
+		self._command_elements_by_name_by_class_name: dict[str, dict[str, tuple[str, str, str, bool]]] = {}
 
 	# add command to the global OlvidClient command holder
 	def _add_command(self, function: callable, regexp_filter: str, usage: str = None, name: str = None, ignore_case: bool = None):

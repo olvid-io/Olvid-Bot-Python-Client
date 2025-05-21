@@ -31,4 +31,5 @@ if "protobuf" in locals() or "protobuf" in globals():
 
 # noinspection PyUnresolvedReferences
 from .version import __version__
+from .version import __docker_version__
 del version

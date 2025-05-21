@@ -15,7 +15,7 @@ authors = [
 keywords = ["olvid", "daemon", "bot"]
 description = "A Python GRPC client implementation for building chatbots and programs that interact with the Olvid application."
 readme = { file = "README.md" , content-type = "text/markdown"}
-license = {file = "LICENSE"}
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",

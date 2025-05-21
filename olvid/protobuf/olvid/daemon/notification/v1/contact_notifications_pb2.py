@@ -26,7 +26,7 @@ from .....olvid.daemon.datatypes.v1 import contact_pb2 as olvid_dot_daemon_dot_d
 from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/contact_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a(olvid/daemon/datatypes/v1/identity.proto\"#\n!SubscribeToContactNewNotification\"V\n\x16\x43ontactNewNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"\'\n%SubscribeToContactDeletedNotification\"Z\n\x1a\x43ontactDeletedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\".\n,SubscribeToContactDetailsUpdatedNotification\"\xb8\x01\n!ContactDetailsUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetails\",\n*SubscribeToContactPhotoUpdatedNotification\"_\n\x1f\x43ontactPhotoUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontactB\xe1\x01\n com.olvid.daemon.notification.v1B\x19\x43ontactNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n8olvid/daemon/notification/v1/contact_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a\'olvid/daemon/datatypes/v1/contact.proto\x1a(olvid/daemon/datatypes/v1/identity.proto\"\x9a\x01\n!SubscribeToContactNewNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12\x45\n\x06\x66ilter\x18\x02 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x01R\x06\x66ilter\x88\x01\x01\x42\x08\n\x06_countB\t\n\x07_filter\"V\n\x16\x43ontactNewNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"\xbf\x01\n%SubscribeToContactDeletedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12\x45\n\x06\x66ilter\x18\x02 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x01R\x06\x66ilter\x88\x01\x01\x12\x1f\n\x0b\x63ontact_ids\x18\x03 \x03(\x04R\ncontactIdsB\x08\n\x06_countB\t\n\x07_filter\"Z\n\x1a\x43ontactDeletedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\"\xc6\x01\n,SubscribeToContactDetailsUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12\x45\n\x06\x66ilter\x18\x02 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x01R\x06\x66ilter\x88\x01\x01\x12\x1f\n\x0b\x63ontact_ids\x18\x03 \x03(\x04R\ncontactIdsB\x08\n\x06_countB\t\n\x07_filter\"\xb8\x01\n!ContactDetailsUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontact\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetails\"\xc4\x01\n*SubscribeToContactPhotoUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12\x45\n\x06\x66ilter\x18\x02 \x01(\x0b\x32(.olvid.daemon.datatypes.v1.ContactFilterH\x01R\x06\x66ilter\x88\x01\x01\x12\x1f\n\x0b\x63ontact_ids\x18\x03 \x03(\x04R\ncontactIdsB\x08\n\x06_countB\t\n\x07_filter\"_\n\x1f\x43ontactPhotoUpdatedNotification\x12<\n\x07\x63ontact\x18\x01 \x01(\x0b\x32\".olvid.daemon.datatypes.v1.ContactR\x07\x63ontactB\xe1\x01\n com.olvid.daemon.notification.v1B\x19\x43ontactNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,20 +34,20 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'olvid.daemon.notification.v
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n com.olvid.daemon.notification.v1B\031ContactNotificationsProtoP\001Z\017olvid.io/daemon\242\002\003ODN\252\002\034Olvid.Daemon.Notification.V1\312\002\034Olvid\\Daemon\\Notification\\V1\342\002(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\352\002\037Olvid::Daemon::Notification::V1'
-  _globals['_SUBSCRIBETOCONTACTNEWNOTIFICATION']._serialized_start=173
-  _globals['_SUBSCRIBETOCONTACTNEWNOTIFICATION']._serialized_end=208
-  _globals['_CONTACTNEWNOTIFICATION']._serialized_start=210
-  _globals['_CONTACTNEWNOTIFICATION']._serialized_end=296
-  _globals['_SUBSCRIBETOCONTACTDELETEDNOTIFICATION']._serialized_start=298
-  _globals['_SUBSCRIBETOCONTACTDELETEDNOTIFICATION']._serialized_end=337
-  _globals['_CONTACTDELETEDNOTIFICATION']._serialized_start=339
-  _globals['_CONTACTDELETEDNOTIFICATION']._serialized_end=429
-  _globals['_SUBSCRIBETOCONTACTDETAILSUPDATEDNOTIFICATION']._serialized_start=431
-  _globals['_SUBSCRIBETOCONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=477
-  _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_start=480
-  _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=664
-  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=666
-  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=710
-  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=712
-  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=807
+  _globals['_SUBSCRIBETOCONTACTNEWNOTIFICATION']._serialized_start=174
+  _globals['_SUBSCRIBETOCONTACTNEWNOTIFICATION']._serialized_end=328
+  _globals['_CONTACTNEWNOTIFICATION']._serialized_start=330
+  _globals['_CONTACTNEWNOTIFICATION']._serialized_end=416
+  _globals['_SUBSCRIBETOCONTACTDELETEDNOTIFICATION']._serialized_start=419
+  _globals['_SUBSCRIBETOCONTACTDELETEDNOTIFICATION']._serialized_end=610
+  _globals['_CONTACTDELETEDNOTIFICATION']._serialized_start=612
+  _globals['_CONTACTDELETEDNOTIFICATION']._serialized_end=702
+  _globals['_SUBSCRIBETOCONTACTDETAILSUPDATEDNOTIFICATION']._serialized_start=705
+  _globals['_SUBSCRIBETOCONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=903
+  _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_start=906
+  _globals['_CONTACTDETAILSUPDATEDNOTIFICATION']._serialized_end=1090
+  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=1093
+  _globals['_SUBSCRIBETOCONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=1289
+  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_start=1291
+  _globals['_CONTACTPHOTOUPDATEDNOTIFICATION']._serialized_end=1386
 # @@protoc_insertion_point(module_scope)

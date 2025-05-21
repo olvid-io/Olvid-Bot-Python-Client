@@ -164,16 +164,6 @@ async def message_send_reaction(message_id: str, reaction: str):
 
 
 #####
-# message voip
-#####
-@message_tree.command("voip", help="start a fake call in a discussion")
-@click.argument("discussion_id", nargs=1, type=click.INT)
-async def message_send_voip(discussion_id: int):
-	await ClientSingleton.get_client().message_send_voip(discussion_id=discussion_id)
-	print_command_result("Fake call sent")
-
-
-#####
 # message refresh
 #####
 @message_tree.command("refresh", help="fore downloading last messages from server")
@@ -231,3 +221,13 @@ async def message_location_update(message_id: str, latitude: float, longitude: f
 @click.argument("message_id", nargs=1, type=click.STRING)
 async def message_location_end(message_id: str):
 	await ClientSingleton.get_client().message_end_location_sharing(message_id=string_to_message_id(message_id))
+
+#####
+# message voip
+#####
+@message_tree.command("voip", help="start a fake call in a discussion")
+@click.argument("discussion_id", nargs=1, type=click.INT)
+async def message_send_voip(discussion_id: int):
+	print("⚠️ Deprecated: use `call start` command instead")
+	await ClientSingleton.get_client().message_send_voip(discussion_id=discussion_id)
+	print_command_result("Fake call sent")

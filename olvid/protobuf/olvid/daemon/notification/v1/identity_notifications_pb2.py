@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n9olvid/daemon/notification/v1/identity_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"(\n&SubscribeToIdentityCreatedNotification\"^\n\x1bIdentityCreatedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"(\n&SubscribeToIdentityDeletedNotification\"^\n\x1bIdentityDeletedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"(\n&SubscribeToIdentityUpdatedNotification\"\xbc\x01\n\"IdentityDetailsUpdatedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetailsB\xe2\x01\n com.olvid.daemon.notification.v1B\x1aIdentityNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n9olvid/daemon/notification/v1/identity_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"M\n&SubscribeToIdentityCreatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x42\x08\n\x06_count\"^\n\x1bIdentityCreatedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"M\n&SubscribeToIdentityDeletedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x42\x08\n\x06_count\"^\n\x1bIdentityDeletedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"M\n&SubscribeToIdentityUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x42\x08\n\x06_count\"\xbc\x01\n\"IdentityDetailsUpdatedNotification\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\x12U\n\x10previous_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\x0fpreviousDetailsB\xe2\x01\n com.olvid.daemon.notification.v1B\x1aIdentityNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,15 +34,15 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n com.olvid.daemon.notification.v1B\032IdentityNotificationsProtoP\001Z\017olvid.io/daemon\242\002\003ODN\252\002\034Olvid.Daemon.Notification.V1\312\002\034Olvid\\Daemon\\Notification\\V1\342\002(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\352\002\037Olvid::Daemon::Notification::V1'
   _globals['_SUBSCRIBETOIDENTITYCREATEDNOTIFICATION']._serialized_start=133
-  _globals['_SUBSCRIBETOIDENTITYCREATEDNOTIFICATION']._serialized_end=173
-  _globals['_IDENTITYCREATEDNOTIFICATION']._serialized_start=175
-  _globals['_IDENTITYCREATEDNOTIFICATION']._serialized_end=269
-  _globals['_SUBSCRIBETOIDENTITYDELETEDNOTIFICATION']._serialized_start=271
-  _globals['_SUBSCRIBETOIDENTITYDELETEDNOTIFICATION']._serialized_end=311
-  _globals['_IDENTITYDELETEDNOTIFICATION']._serialized_start=313
-  _globals['_IDENTITYDELETEDNOTIFICATION']._serialized_end=407
-  _globals['_SUBSCRIBETOIDENTITYUPDATEDNOTIFICATION']._serialized_start=409
-  _globals['_SUBSCRIBETOIDENTITYUPDATEDNOTIFICATION']._serialized_end=449
-  _globals['_IDENTITYDETAILSUPDATEDNOTIFICATION']._serialized_start=452
-  _globals['_IDENTITYDETAILSUPDATEDNOTIFICATION']._serialized_end=640
+  _globals['_SUBSCRIBETOIDENTITYCREATEDNOTIFICATION']._serialized_end=210
+  _globals['_IDENTITYCREATEDNOTIFICATION']._serialized_start=212
+  _globals['_IDENTITYCREATEDNOTIFICATION']._serialized_end=306
+  _globals['_SUBSCRIBETOIDENTITYDELETEDNOTIFICATION']._serialized_start=308
+  _globals['_SUBSCRIBETOIDENTITYDELETEDNOTIFICATION']._serialized_end=385
+  _globals['_IDENTITYDELETEDNOTIFICATION']._serialized_start=387
+  _globals['_IDENTITYDELETEDNOTIFICATION']._serialized_end=481
+  _globals['_SUBSCRIBETOIDENTITYUPDATEDNOTIFICATION']._serialized_start=483
+  _globals['_SUBSCRIBETOIDENTITYUPDATEDNOTIFICATION']._serialized_end=560
+  _globals['_IDENTITYDETAILSUPDATEDNOTIFICATION']._serialized_start=563
+  _globals['_IDENTITYDETAILSUPDATEDNOTIFICATION']._serialized_end=751
 # @@protoc_insertion_point(module_scope)

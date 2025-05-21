@@ -8,7 +8,7 @@ from ..core.errors import AioRpcError
 from ..core.logger import core_logger, notification_logger
 
 if TYPE_CHECKING:
-	from typing import Optional, Set, AsyncIterator, Dict
+	from typing import Set, AsyncIterator, Dict
 	from ..internal import types
 	from .Notifications import NOTIFICATIONS
 	from .GenericNotificationListener import GenericNotificationListener
@@ -23,15 +23,9 @@ class ClientListenerHolder:
 		self._iterators_tasks: Dict[str, asyncio.Task] = {}
 		self._listener_removed_event: asyncio.Event = asyncio.Event()
 
-		self._stream_listener_task: Optional[asyncio.Task] = None
-
 	#####
 	# Public api
 	#####
-	async def await_task(self):
-		if self._stream_listener_task is not None:
-			await self._stream_listener_task
-
 	async def wait_for_listener_removed_event(self):
 		await self._listener_removed_event.wait()
 
@@ -39,12 +33,6 @@ class ClientListenerHolder:
 		# cancel every background task
 		for notif in self._iterators_tasks.keys():
 			self._iterators_tasks.get(notif).cancel()
-		# cancel listening task
-		if self._stream_listener_task:
-			self._stream_listener_task.cancel()
-		# wait for listening task end
-		if self._stream_listener_task:
-			await self._stream_listener_task
 
 	def add_listener(self, listener: GenericNotificationListener):
 		# check listener count is valid (if count == 0 on start it will stay active forever)
@@ -107,10 +95,6 @@ class ClientListenerHolder:
 		# cancel current iterator and remove it from tasks
 		task.cancel()
 		self._iterators_tasks.pop(listener_key)
-
-		# if there are no more iterators stop listening task
-		if len(self._iterators_tasks) == 0 and self._stream_listener_task:
-			self._stream_listener_task.cancel()
 
 	async def _iterator_wrapper(self, listener_key: str, notification_type: NOTIFICATIONS, async_iterator: AsyncIterator):
 		try:

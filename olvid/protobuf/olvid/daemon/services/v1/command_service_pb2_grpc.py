@@ -3,6 +3,7 @@
 import grpc
 
 from .....olvid.daemon.command.v1 import attachment_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_attachment__commands__pb2
+from .....olvid.daemon.command.v1 import call_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2
 from .....olvid.daemon.command.v1 import contact_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_contact__commands__pb2
 from .....olvid.daemon.command.v1 import discussion_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_discussion__commands__pb2
 from .....olvid.daemon.command.v1 import group_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2
@@ -2640,7 +2641,8 @@ class MessageCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def MessageSendVoip(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """⚠️ deprecated: use CallCommandService instead ⚠️
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -3678,6 +3680,124 @@ class DiscussionStorageCommandService(object):
             '/olvid.daemon.services.v1.DiscussionStorageCommandService/DiscussionStorageUnset',
             olvid_dot_daemon_dot_command_dot_v1_dot_storage__commands__pb2.DiscussionStorageUnsetRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_storage__commands__pb2.DiscussionStorageUnsetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class CallCommandServiceStub(object):
+    """Call
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.CallStartDiscussionCall = channel.unary_unary(
+                '/olvid.daemon.services.v1.CallCommandService/CallStartDiscussionCall',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallResponse.FromString,
+                _registered_method=True)
+        self.CallStartCustomCall = channel.unary_unary(
+                '/olvid.daemon.services.v1.CallCommandService/CallStartCustomCall',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallResponse.FromString,
+                _registered_method=True)
+
+
+class CallCommandServiceServicer(object):
+    """Call
+    """
+
+    def CallStartDiscussionCall(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallStartCustomCall(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_CallCommandServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'CallStartDiscussionCall': grpc.unary_unary_rpc_method_handler(
+                    servicer.CallStartDiscussionCall,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallResponse.SerializeToString,
+            ),
+            'CallStartCustomCall': grpc.unary_unary_rpc_method_handler(
+                    servicer.CallStartCustomCall,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'olvid.daemon.services.v1.CallCommandService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('olvid.daemon.services.v1.CallCommandService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class CallCommandService(object):
+    """Call
+    """
+
+    @staticmethod
+    def CallStartDiscussionCall(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallCommandService/CallStartDiscussionCall',
+            olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartDiscussionCallResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallStartCustomCall(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallCommandService/CallStartCustomCall',
+            olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_call__commands__pb2.CallStartCustomCallResponse.FromString,
             options,
             channel_credentials,
             insecure,

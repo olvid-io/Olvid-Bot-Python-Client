@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import invitation_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_invitation__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/invitation_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/invitation.proto\"+\n)SubscribeToInvitationReceivedNotification\"g\n\x1eInvitationReceivedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"\'\n%SubscribeToInvitationSentNotification\"c\n\x1aInvitationSentNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"*\n(SubscribeToInvitationDeletedNotification\"f\n\x1dInvitationDeletedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"*\n(SubscribeToInvitationUpdatedNotification\"\xd2\x01\n\x1dInvitationUpdatedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\x12j\n\x1aprevious_invitation_status\x18\x02 \x01(\x0e\x32,.olvid.daemon.datatypes.v1.Invitation.StatusR\x18previousInvitationStatusB\xe4\x01\n com.olvid.daemon.notification.v1B\x1cInvitationNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/invitation_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/invitation.proto\"\xa5\x01\n)SubscribeToInvitationReceivedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.InvitationFilterH\x01R\x06\x66ilter\x88\x01\x01\x42\x08\n\x06_countB\t\n\x07_filter\"g\n\x1eInvitationReceivedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"\xa1\x01\n%SubscribeToInvitationSentNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.InvitationFilterH\x01R\x06\x66ilter\x88\x01\x01\x42\x08\n\x06_countB\t\n\x07_filter\"c\n\x1aInvitationSentNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"\xcb\x01\n(SubscribeToInvitationDeletedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.InvitationFilterH\x01R\x06\x66ilter\x88\x01\x01\x12%\n\x0einvitation_ids\x18\x03 \x03(\x04R\rinvitationIdsB\x08\n\x06_countB\t\n\x07_filter\"f\n\x1dInvitationDeletedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\"\xcb\x01\n(SubscribeToInvitationUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.InvitationFilterH\x01R\x06\x66ilter\x88\x01\x01\x12%\n\x0einvitation_ids\x18\x03 \x03(\x04R\rinvitationIdsB\x08\n\x06_countB\t\n\x07_filter\"\xd2\x01\n\x1dInvitationUpdatedNotification\x12\x45\n\ninvitation\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.InvitationR\ninvitation\x12j\n\x1aprevious_invitation_status\x18\x02 \x01(\x0e\x32,.olvid.daemon.datatypes.v1.Invitation.StatusR\x18previousInvitationStatusB\xe4\x01\n com.olvid.daemon.notification.v1B\x1cInvitationNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,20 +33,20 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'olvid.daemon.notification.v
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n com.olvid.daemon.notification.v1B\034InvitationNotificationsProtoP\001Z\017olvid.io/daemon\242\002\003ODN\252\002\034Olvid.Daemon.Notification.V1\312\002\034Olvid\\Daemon\\Notification\\V1\342\002(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\352\002\037Olvid::Daemon::Notification::V1'
-  _globals['_SUBSCRIBETOINVITATIONRECEIVEDNOTIFICATION']._serialized_start=137
-  _globals['_SUBSCRIBETOINVITATIONRECEIVEDNOTIFICATION']._serialized_end=180
-  _globals['_INVITATIONRECEIVEDNOTIFICATION']._serialized_start=182
-  _globals['_INVITATIONRECEIVEDNOTIFICATION']._serialized_end=285
-  _globals['_SUBSCRIBETOINVITATIONSENTNOTIFICATION']._serialized_start=287
-  _globals['_SUBSCRIBETOINVITATIONSENTNOTIFICATION']._serialized_end=326
-  _globals['_INVITATIONSENTNOTIFICATION']._serialized_start=328
-  _globals['_INVITATIONSENTNOTIFICATION']._serialized_end=427
-  _globals['_SUBSCRIBETOINVITATIONDELETEDNOTIFICATION']._serialized_start=429
-  _globals['_SUBSCRIBETOINVITATIONDELETEDNOTIFICATION']._serialized_end=471
-  _globals['_INVITATIONDELETEDNOTIFICATION']._serialized_start=473
-  _globals['_INVITATIONDELETEDNOTIFICATION']._serialized_end=575
-  _globals['_SUBSCRIBETOINVITATIONUPDATEDNOTIFICATION']._serialized_start=577
-  _globals['_SUBSCRIBETOINVITATIONUPDATEDNOTIFICATION']._serialized_end=619
-  _globals['_INVITATIONUPDATEDNOTIFICATION']._serialized_start=622
-  _globals['_INVITATIONUPDATEDNOTIFICATION']._serialized_end=832
+  _globals['_SUBSCRIBETOINVITATIONRECEIVEDNOTIFICATION']._serialized_start=138
+  _globals['_SUBSCRIBETOINVITATIONRECEIVEDNOTIFICATION']._serialized_end=303
+  _globals['_INVITATIONRECEIVEDNOTIFICATION']._serialized_start=305
+  _globals['_INVITATIONRECEIVEDNOTIFICATION']._serialized_end=408
+  _globals['_SUBSCRIBETOINVITATIONSENTNOTIFICATION']._serialized_start=411
+  _globals['_SUBSCRIBETOINVITATIONSENTNOTIFICATION']._serialized_end=572
+  _globals['_INVITATIONSENTNOTIFICATION']._serialized_start=574
+  _globals['_INVITATIONSENTNOTIFICATION']._serialized_end=673
+  _globals['_SUBSCRIBETOINVITATIONDELETEDNOTIFICATION']._serialized_start=676
+  _globals['_SUBSCRIBETOINVITATIONDELETEDNOTIFICATION']._serialized_end=879
+  _globals['_INVITATIONDELETEDNOTIFICATION']._serialized_start=881
+  _globals['_INVITATIONDELETEDNOTIFICATION']._serialized_end=983
+  _globals['_SUBSCRIBETOINVITATIONUPDATEDNOTIFICATION']._serialized_start=986
+  _globals['_SUBSCRIBETOINVITATIONUPDATEDNOTIFICATION']._serialized_end=1189
+  _globals['_INVITATIONUPDATEDNOTIFICATION']._serialized_start=1192
+  _globals['_INVITATIONUPDATEDNOTIFICATION']._serialized_end=1402
 # @@protoc_insertion_point(module_scope)

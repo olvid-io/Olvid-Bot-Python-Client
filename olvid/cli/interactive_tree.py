@@ -17,6 +17,8 @@ from .handler.discussion_tree import *
 # noinspection PyUnresolvedReferences
 from .handler.message_tree import *
 # noinspection PyUnresolvedReferences
+from .handler.call_tree import *
+# noinspection PyUnresolvedReferences
 from .handler.attachment_tree import *
 # noinspection PyUnresolvedReferences
 from .handler.invitation_tree import *

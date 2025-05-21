@@ -23,9 +23,10 @@ _sym_db = _symbol_database.Default()
 
 
 from .....olvid.daemon.datatypes.v1 import attachment_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_attachment__pb2
+from .....olvid.daemon.datatypes.v1 import message_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/attachment_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/attachment.proto\"+\n)SubscribeToAttachmentReceivedNotification\"g\n\x1e\x41ttachmentReceivedNotification\x12\x45\n\nattachment\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.AttachmentR\nattachment\"+\n)SubscribeToAttachmentUploadedNotification\"g\n\x1e\x41ttachmentUploadedNotification\x12\x45\n\nattachment\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.AttachmentR\nattachmentB\xe4\x01\n com.olvid.daemon.notification.v1B\x1c\x41ttachmentNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/attachment_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/attachment.proto\x1a\'olvid/daemon/datatypes/v1/message.proto\"\xa5\x01\n)SubscribeToAttachmentReceivedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.AttachmentFilterH\x01R\x06\x66ilter\x88\x01\x01\x42\x08\n\x06_countB\t\n\x07_filter\"g\n\x1e\x41ttachmentReceivedNotification\x12\x45\n\nattachment\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.AttachmentR\nattachment\"\xbc\x02\n)SubscribeToAttachmentUploadedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.AttachmentFilterH\x01R\x06\x66ilter\x88\x01\x01\x12\x45\n\x0bmessage_ids\x18\x03 \x03(\x0b\x32$.olvid.daemon.datatypes.v1.MessageIdR\nmessageIds\x12N\n\x0e\x61ttachment_ids\x18\x04 \x03(\x0b\x32\'.olvid.daemon.datatypes.v1.AttachmentIdR\rattachmentIdsB\x08\n\x06_countB\t\n\x07_filter\"g\n\x1e\x41ttachmentUploadedNotification\x12\x45\n\nattachment\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.AttachmentR\nattachmentB\xe4\x01\n com.olvid.daemon.notification.v1B\x1c\x41ttachmentNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,12 +34,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'olvid.daemon.notification.v
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n com.olvid.daemon.notification.v1B\034AttachmentNotificationsProtoP\001Z\017olvid.io/daemon\242\002\003ODN\252\002\034Olvid.Daemon.Notification.V1\312\002\034Olvid\\Daemon\\Notification\\V1\342\002(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\352\002\037Olvid::Daemon::Notification::V1'
-  _globals['_SUBSCRIBETOATTACHMENTRECEIVEDNOTIFICATION']._serialized_start=137
-  _globals['_SUBSCRIBETOATTACHMENTRECEIVEDNOTIFICATION']._serialized_end=180
-  _globals['_ATTACHMENTRECEIVEDNOTIFICATION']._serialized_start=182
-  _globals['_ATTACHMENTRECEIVEDNOTIFICATION']._serialized_end=285
-  _globals['_SUBSCRIBETOATTACHMENTUPLOADEDNOTIFICATION']._serialized_start=287
-  _globals['_SUBSCRIBETOATTACHMENTUPLOADEDNOTIFICATION']._serialized_end=330
-  _globals['_ATTACHMENTUPLOADEDNOTIFICATION']._serialized_start=332
-  _globals['_ATTACHMENTUPLOADEDNOTIFICATION']._serialized_end=435
+  _globals['_SUBSCRIBETOATTACHMENTRECEIVEDNOTIFICATION']._serialized_start=179
+  _globals['_SUBSCRIBETOATTACHMENTRECEIVEDNOTIFICATION']._serialized_end=344
+  _globals['_ATTACHMENTRECEIVEDNOTIFICATION']._serialized_start=346
+  _globals['_ATTACHMENTRECEIVEDNOTIFICATION']._serialized_end=449
+  _globals['_SUBSCRIBETOATTACHMENTUPLOADEDNOTIFICATION']._serialized_start=452
+  _globals['_SUBSCRIBETOATTACHMENTUPLOADEDNOTIFICATION']._serialized_end=768
+  _globals['_ATTACHMENTUPLOADEDNOTIFICATION']._serialized_start=770
+  _globals['_ATTACHMENTUPLOADEDNOTIFICATION']._serialized_end=873
 # @@protoc_insertion_point(module_scope)

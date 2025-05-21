@@ -42,10 +42,11 @@ async def contact_new_cmd():
 @contact_tree.command("get", help="list current identity contacts")
 @click.option("-a", "--all", "get_all", is_flag=True)
 @click.option("-l", "--link", "show_invitation_link", is_flag=True)
+@click.option("-i", "--identifier", "show_contact_identifier", is_flag=True)
 @click.argument("contact_ids", nargs=-1, type=click.INT)
 @click.option("-f", "--fields", "fields", type=str)
 @click.option("--filter", "filter_", type=str)
-async def contact_get(get_all, show_invitation_link: bool, contact_ids, fields: str, filter_: str = ""):
+async def contact_get(get_all, show_invitation_link: bool, show_contact_identifier: bool, contact_ids, fields: str, filter_: str = ""):
 	# build filter
 	contact_filter: datatypes.ContactFilter = datatypes.ContactFilter()
 	if filter_:
@@ -64,6 +65,8 @@ async def contact_get(get_all, show_invitation_link: bool, contact_ids, fields: 
 	for contact in contacts:
 		if show_invitation_link:
 			print(f"{contact.id}: {await ClientSingleton.get_client().contact_get_invitation_link(contact_id=contact.id)}")
+		elif show_contact_identifier:
+			print(f"{contact.id}: {await ClientSingleton.get_client().contact_get_bytes_identifier(contact_id=contact.id)}")
 		else:
 			filter_fields_and_print_normal_message(contact, fields)
 

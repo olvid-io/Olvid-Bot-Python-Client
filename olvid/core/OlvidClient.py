@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-	from olvid.listeners.GenericNotificationListener import GenericNotificationListener
 	from typing import Optional, Coroutine, AsyncIterator
 
 	# for compatibility with python 3.10
@@ -197,9 +196,7 @@ class OlvidClient(CommandHolder):
 			self._running_clients.append(self)
 
 		# add listeners from overwritten "on_..." methods
-		listeners_to_add = self._get_listeners_to_add()
-		for listener in listeners_to_add:
-			self.add_listener(listener)
+		[self.add_listener(listener) for listener in self._get_listeners_to_add()]
 
 		# add commands
 		CommandHolder.__init__(self)
@@ -900,179 +897,215 @@ class OlvidClient(CommandHolder):
 		response: commands.DiscussionStorageUnsetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_unset(commands.DiscussionStorageUnsetRequest(client=self, discussion_id=discussion_id, key=key))
 		return response.previous_value
 	
+	# CallCommandService
+	async def call_start_discussion_call(self, discussion_id: int) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: CallStartDiscussionCall')
+		response: commands.CallStartDiscussionCallResponse = await self._stubs.callCommandStub.call_start_discussion_call(commands.CallStartDiscussionCallRequest(client=self, discussion_id=discussion_id))
+		return response.call_identifier
+	
+	async def call_start_custom_call(self, contact_ids: list[int] = (), discussion_id: int = 0) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: CallStartCustomCall')
+		response: commands.CallStartCustomCallResponse = await self._stubs.callCommandStub.call_start_custom_call(commands.CallStartCustomCallRequest(client=self, contact_ids=contact_ids, discussion_id=discussion_id))
+		return response.call_identifier
+	
 	# InvitationNotificationService
-	def _notif_invitation_received(self) -> AsyncIterator[notifications.InvitationReceivedNotification]:
+	def _notif_invitation_received(self, count: int = 0, filter: datatypes.InvitationFilter = None) -> AsyncIterator[notifications.InvitationReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationReceived')
-		return self._stubs.invitationNotificationStub.invitation_received(notifications.SubscribeToInvitationReceivedNotification(client=self))
+		return self._stubs.invitationNotificationStub.invitation_received(notifications.SubscribeToInvitationReceivedNotification(client=self, count=count, filter=filter))
 	
-	def _notif_invitation_sent(self) -> AsyncIterator[notifications.InvitationSentNotification]:
+	def _notif_invitation_sent(self, count: int = 0, filter: datatypes.InvitationFilter = None) -> AsyncIterator[notifications.InvitationSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationSent')
-		return self._stubs.invitationNotificationStub.invitation_sent(notifications.SubscribeToInvitationSentNotification(client=self))
+		return self._stubs.invitationNotificationStub.invitation_sent(notifications.SubscribeToInvitationSentNotification(client=self, count=count, filter=filter))
 	
-	def _notif_invitation_deleted(self) -> AsyncIterator[notifications.InvitationDeletedNotification]:
+	def _notif_invitation_deleted(self, count: int = 0, filter: datatypes.InvitationFilter = None, invitation_ids: list[int] = ()) -> AsyncIterator[notifications.InvitationDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationDeleted')
-		return self._stubs.invitationNotificationStub.invitation_deleted(notifications.SubscribeToInvitationDeletedNotification(client=self))
+		return self._stubs.invitationNotificationStub.invitation_deleted(notifications.SubscribeToInvitationDeletedNotification(client=self, count=count, filter=filter, invitation_ids=invitation_ids))
 	
-	def _notif_invitation_updated(self) -> AsyncIterator[notifications.InvitationUpdatedNotification]:
+	def _notif_invitation_updated(self, count: int = 0, filter: datatypes.InvitationFilter = None, invitation_ids: list[int] = ()) -> AsyncIterator[notifications.InvitationUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationUpdated')
-		return self._stubs.invitationNotificationStub.invitation_updated(notifications.SubscribeToInvitationUpdatedNotification(client=self))
+		return self._stubs.invitationNotificationStub.invitation_updated(notifications.SubscribeToInvitationUpdatedNotification(client=self, count=count, filter=filter, invitation_ids=invitation_ids))
 	
 	# ContactNotificationService
-	def _notif_contact_new(self) -> AsyncIterator[notifications.ContactNewNotification]:
+	def _notif_contact_new(self, count: int = 0, filter: datatypes.ContactFilter = None) -> AsyncIterator[notifications.ContactNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactNew')
-		return self._stubs.contactNotificationStub.contact_new(notifications.SubscribeToContactNewNotification(client=self))
+		return self._stubs.contactNotificationStub.contact_new(notifications.SubscribeToContactNewNotification(client=self, count=count, filter=filter))
 	
-	def _notif_contact_deleted(self) -> AsyncIterator[notifications.ContactDeletedNotification]:
+	def _notif_contact_deleted(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactDeleted')
-		return self._stubs.contactNotificationStub.contact_deleted(notifications.SubscribeToContactDeletedNotification(client=self))
+		return self._stubs.contactNotificationStub.contact_deleted(notifications.SubscribeToContactDeletedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
 	
-	def _notif_contact_details_updated(self) -> AsyncIterator[notifications.ContactDetailsUpdatedNotification]:
+	def _notif_contact_details_updated(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactDetailsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactDetailsUpdated')
-		return self._stubs.contactNotificationStub.contact_details_updated(notifications.SubscribeToContactDetailsUpdatedNotification(client=self))
+		return self._stubs.contactNotificationStub.contact_details_updated(notifications.SubscribeToContactDetailsUpdatedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
 	
-	def _notif_contact_photo_updated(self) -> AsyncIterator[notifications.ContactPhotoUpdatedNotification]:
+	def _notif_contact_photo_updated(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactPhotoUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactPhotoUpdated')
-		return self._stubs.contactNotificationStub.contact_photo_updated(notifications.SubscribeToContactPhotoUpdatedNotification(client=self))
+		return self._stubs.contactNotificationStub.contact_photo_updated(notifications.SubscribeToContactPhotoUpdatedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
 	
 	# GroupNotificationService
-	def _notif_group_new(self) -> AsyncIterator[notifications.GroupNewNotification]:
+	def _notif_group_new(self, count: int = 0, group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNew')
-		return self._stubs.groupNotificationStub.group_new(notifications.SubscribeToGroupNewNotification(client=self))
+		return self._stubs.groupNotificationStub.group_new(notifications.SubscribeToGroupNewNotification(client=self, count=count, group_filter=group_filter))
 	
-	def _notif_group_deleted(self) -> AsyncIterator[notifications.GroupDeletedNotification]:
+	def _notif_group_deleted(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupDeleted')
-		return self._stubs.groupNotificationStub.group_deleted(notifications.SubscribeToGroupDeletedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_deleted(notifications.SubscribeToGroupDeletedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter))
 	
-	def _notif_group_name_updated(self) -> AsyncIterator[notifications.GroupNameUpdatedNotification]:
+	def _notif_group_name_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, previous_name_search: str = "") -> AsyncIterator[notifications.GroupNameUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNameUpdated')
-		return self._stubs.groupNotificationStub.group_name_updated(notifications.SubscribeToGroupNameUpdatedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_name_updated(notifications.SubscribeToGroupNameUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, previous_name_search=previous_name_search))
 	
-	def _notif_group_photo_updated(self) -> AsyncIterator[notifications.GroupPhotoUpdatedNotification]:
+	def _notif_group_photo_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupPhotoUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPhotoUpdated')
-		return self._stubs.groupNotificationStub.group_photo_updated(notifications.SubscribeToGroupPhotoUpdatedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_photo_updated(notifications.SubscribeToGroupPhotoUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter))
 	
-	def _notif_group_description_updated(self) -> AsyncIterator[notifications.GroupDescriptionUpdatedNotification]:
+	def _notif_group_description_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, previous_description_search: str = "") -> AsyncIterator[notifications.GroupDescriptionUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupDescriptionUpdated')
-		return self._stubs.groupNotificationStub.group_description_updated(notifications.SubscribeToGroupDescriptionUpdatedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_description_updated(notifications.SubscribeToGroupDescriptionUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, previous_description_search=previous_description_search))
 	
-	def _notif_group_pending_member_added(self) -> AsyncIterator[notifications.GroupPendingMemberAddedNotification]:
+	def _notif_group_pending_member_added(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, pending_member_filter: datatypes.PendingGroupMemberFilter = None) -> AsyncIterator[notifications.GroupPendingMemberAddedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPendingMemberAdded')
-		return self._stubs.groupNotificationStub.group_pending_member_added(notifications.SubscribeToGroupPendingMemberAddedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_pending_member_added(notifications.SubscribeToGroupPendingMemberAddedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
 	
-	def _notif_group_pending_member_removed(self) -> AsyncIterator[notifications.GroupPendingMemberRemovedNotification]:
+	def _notif_group_pending_member_removed(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, pending_member_filter: datatypes.PendingGroupMemberFilter = None) -> AsyncIterator[notifications.GroupPendingMemberRemovedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPendingMemberRemoved')
-		return self._stubs.groupNotificationStub.group_pending_member_removed(notifications.SubscribeToGroupPendingMemberRemovedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_pending_member_removed(notifications.SubscribeToGroupPendingMemberRemovedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
 	
-	def _notif_group_member_joined(self) -> AsyncIterator[notifications.GroupMemberJoinedNotification]:
+	def _notif_group_member_joined(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberJoinedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberJoined')
-		return self._stubs.groupNotificationStub.group_member_joined(notifications.SubscribeToGroupMemberJoinedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_member_joined(notifications.SubscribeToGroupMemberJoinedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
 	
-	def _notif_group_member_left(self) -> AsyncIterator[notifications.GroupMemberLeftNotification]:
+	def _notif_group_member_left(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberLeftNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberLeft')
-		return self._stubs.groupNotificationStub.group_member_left(notifications.SubscribeToGroupMemberLeftNotification(client=self))
+		return self._stubs.groupNotificationStub.group_member_left(notifications.SubscribeToGroupMemberLeftNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
 	
-	def _notif_group_own_permissions_updated(self) -> AsyncIterator[notifications.GroupOwnPermissionsUpdatedNotification]:
+	def _notif_group_own_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, permissions_filter: datatypes.GroupPermissionFilter = None, previous_permissions_filter: datatypes.GroupPermissionFilter = None) -> AsyncIterator[notifications.GroupOwnPermissionsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupOwnPermissionsUpdated')
-		return self._stubs.groupNotificationStub.group_own_permissions_updated(notifications.SubscribeToGroupOwnPermissionsUpdatedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_own_permissions_updated(notifications.SubscribeToGroupOwnPermissionsUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, permissions_filter=permissions_filter, previous_permissions_filter=previous_permissions_filter))
 	
-	def _notif_group_member_permissions_updated(self) -> AsyncIterator[notifications.GroupMemberPermissionsUpdatedNotification]:
+	def _notif_group_member_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberPermissionsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberPermissionsUpdated')
-		return self._stubs.groupNotificationStub.group_member_permissions_updated(notifications.SubscribeToGroupMemberPermissionsUpdatedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_member_permissions_updated(notifications.SubscribeToGroupMemberPermissionsUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter, previous_permission_filter=previous_permission_filter))
 	
-	def _notif_group_update_in_progress(self) -> AsyncIterator[notifications.GroupUpdateInProgressNotification]:
+	def _notif_group_update_in_progress(self, count: int = 0, group_ids: list[int] = ()) -> AsyncIterator[notifications.GroupUpdateInProgressNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupUpdateInProgress')
-		return self._stubs.groupNotificationStub.group_update_in_progress(notifications.SubscribeToGroupUpdateInProgressNotification(client=self))
+		return self._stubs.groupNotificationStub.group_update_in_progress(notifications.SubscribeToGroupUpdateInProgressNotification(client=self, count=count, group_ids=group_ids))
 	
-	def _notif_group_update_finished(self) -> AsyncIterator[notifications.GroupUpdateFinishedNotification]:
+	def _notif_group_update_finished(self, count: int = 0, group_ids: list[int] = ()) -> AsyncIterator[notifications.GroupUpdateFinishedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupUpdateFinished')
-		return self._stubs.groupNotificationStub.group_update_finished(notifications.SubscribeToGroupUpdateFinishedNotification(client=self))
+		return self._stubs.groupNotificationStub.group_update_finished(notifications.SubscribeToGroupUpdateFinishedNotification(client=self, count=count, group_ids=group_ids))
 	
 	# DiscussionNotificationService
-	def _notif_discussion_new(self) -> AsyncIterator[notifications.DiscussionNewNotification]:
+	def _notif_discussion_new(self, count: int = 0, filter: datatypes.DiscussionFilter = None) -> AsyncIterator[notifications.DiscussionNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionNew')
-		return self._stubs.discussionNotificationStub.discussion_new(notifications.SubscribeToDiscussionNewNotification(client=self))
+		return self._stubs.discussionNotificationStub.discussion_new(notifications.SubscribeToDiscussionNewNotification(client=self, count=count, filter=filter))
 	
-	def _notif_discussion_locked(self) -> AsyncIterator[notifications.DiscussionLockedNotification]:
+	def _notif_discussion_locked(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionLockedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionLocked')
-		return self._stubs.discussionNotificationStub.discussion_locked(notifications.SubscribeToDiscussionLockedNotification(client=self))
+		return self._stubs.discussionNotificationStub.discussion_locked(notifications.SubscribeToDiscussionLockedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
 	
-	def _notif_discussion_title_updated(self) -> AsyncIterator[notifications.DiscussionTitleUpdatedNotification]:
+	def _notif_discussion_title_updated(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionTitleUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionTitleUpdated')
-		return self._stubs.discussionNotificationStub.discussion_title_updated(notifications.SubscribeToDiscussionTitleUpdatedNotification(client=self))
+		return self._stubs.discussionNotificationStub.discussion_title_updated(notifications.SubscribeToDiscussionTitleUpdatedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
 	
-	def _notif_discussion_settings_updated(self) -> AsyncIterator[notifications.DiscussionSettingsUpdatedNotification]:
+	def _notif_discussion_settings_updated(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionSettingsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionSettingsUpdated')
-		return self._stubs.discussionNotificationStub.discussion_settings_updated(notifications.SubscribeToDiscussionSettingsUpdatedNotification(client=self))
+		return self._stubs.discussionNotificationStub.discussion_settings_updated(notifications.SubscribeToDiscussionSettingsUpdatedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
 	
 	# MessageNotificationService
-	def _notif_message_received(self) -> AsyncIterator[notifications.MessageReceivedNotification]:
+	def _notif_message_received(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReceived')
-		return self._stubs.messageNotificationStub.message_received(notifications.SubscribeToMessageReceivedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_received(notifications.SubscribeToMessageReceivedNotification(client=self, count=count, filter=filter))
 	
-	def _notif_message_sent(self) -> AsyncIterator[notifications.MessageSentNotification]:
+	def _notif_message_sent(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageSent')
-		return self._stubs.messageNotificationStub.message_sent(notifications.SubscribeToMessageSentNotification(client=self))
+		return self._stubs.messageNotificationStub.message_sent(notifications.SubscribeToMessageSentNotification(client=self, count=count, filter=filter))
 	
-	def _notif_message_deleted(self) -> AsyncIterator[notifications.MessageDeletedNotification]:
+	def _notif_message_deleted(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageDeleted')
-		return self._stubs.messageNotificationStub.message_deleted(notifications.SubscribeToMessageDeletedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_deleted(notifications.SubscribeToMessageDeletedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_body_updated(self) -> AsyncIterator[notifications.MessageBodyUpdatedNotification]:
+	def _notif_message_body_updated(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageBodyUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageBodyUpdated')
-		return self._stubs.messageNotificationStub.message_body_updated(notifications.SubscribeToMessageBodyUpdatedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_body_updated(notifications.SubscribeToMessageBodyUpdatedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_uploaded(self) -> AsyncIterator[notifications.MessageUploadedNotification]:
+	def _notif_message_uploaded(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageUploadedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageUploaded')
-		return self._stubs.messageNotificationStub.message_uploaded(notifications.SubscribeToMessageUploadedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_uploaded(notifications.SubscribeToMessageUploadedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_delivered(self) -> AsyncIterator[notifications.MessageDeliveredNotification]:
+	def _notif_message_delivered(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageDeliveredNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageDelivered')
-		return self._stubs.messageNotificationStub.message_delivered(notifications.SubscribeToMessageDeliveredNotification(client=self))
+		return self._stubs.messageNotificationStub.message_delivered(notifications.SubscribeToMessageDeliveredNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_read(self) -> AsyncIterator[notifications.MessageReadNotification]:
+	def _notif_message_read(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageReadNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageRead')
-		return self._stubs.messageNotificationStub.message_read(notifications.SubscribeToMessageReadNotification(client=self))
+		return self._stubs.messageNotificationStub.message_read(notifications.SubscribeToMessageReadNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_location_received(self) -> AsyncIterator[notifications.MessageLocationReceivedNotification]:
+	def _notif_message_location_received(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationReceived')
-		return self._stubs.messageNotificationStub.message_location_received(notifications.SubscribeToMessageLocationReceivedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_location_received(notifications.SubscribeToMessageLocationReceivedNotification(client=self, count=count, filter=filter))
 	
-	def _notif_message_location_sent(self) -> AsyncIterator[notifications.MessageLocationSentNotification]:
+	def _notif_message_location_sent(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSent')
-		return self._stubs.messageNotificationStub.message_location_sent(notifications.SubscribeToMessageLocationSentNotification(client=self))
+		return self._stubs.messageNotificationStub.message_location_sent(notifications.SubscribeToMessageLocationSentNotification(client=self, count=count, filter=filter))
 	
-	def _notif_message_location_sharing_start(self) -> AsyncIterator[notifications.MessageLocationSharingStartNotification]:
+	def _notif_message_location_sharing_start(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingStartNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingStart')
-		return self._stubs.messageNotificationStub.message_location_sharing_start(notifications.SubscribeToMessageLocationSharingStartNotification(client=self))
+		return self._stubs.messageNotificationStub.message_location_sharing_start(notifications.SubscribeToMessageLocationSharingStartNotification(client=self, count=count, filter=filter))
 	
-	def _notif_message_location_sharing_update(self) -> AsyncIterator[notifications.MessageLocationSharingUpdateNotification]:
+	def _notif_message_location_sharing_update(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingUpdateNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingUpdate')
-		return self._stubs.messageNotificationStub.message_location_sharing_update(notifications.SubscribeToMessageLocationSharingUpdateNotification(client=self))
+		return self._stubs.messageNotificationStub.message_location_sharing_update(notifications.SubscribeToMessageLocationSharingUpdateNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_location_sharing_end(self) -> AsyncIterator[notifications.MessageLocationSharingEndNotification]:
+	def _notif_message_location_sharing_end(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingEndNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingEnd')
-		return self._stubs.messageNotificationStub.message_location_sharing_end(notifications.SubscribeToMessageLocationSharingEndNotification(client=self))
+		return self._stubs.messageNotificationStub.message_location_sharing_end(notifications.SubscribeToMessageLocationSharingEndNotification(client=self, count=count, message_ids=message_ids, filter=filter))
 	
-	def _notif_message_reaction_added(self) -> AsyncIterator[notifications.MessageReactionAddedNotification]:
+	def _notif_message_reaction_added(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionAddedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionAdded')
-		return self._stubs.messageNotificationStub.message_reaction_added(notifications.SubscribeToMessageReactionAddedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_reaction_added(notifications.SubscribeToMessageReactionAddedNotification(client=self, count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
 	
-	def _notif_message_reaction_updated(self) -> AsyncIterator[notifications.MessageReactionUpdatedNotification]:
+	def _notif_message_reaction_updated(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, message_filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None, previous_reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionUpdated')
-		return self._stubs.messageNotificationStub.message_reaction_updated(notifications.SubscribeToMessageReactionUpdatedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_reaction_updated(notifications.SubscribeToMessageReactionUpdatedNotification(client=self, count=count, message_ids=message_ids, message_filter=message_filter, reaction_filter=reaction_filter, previous_reaction_filter=previous_reaction_filter))
 	
-	def _notif_message_reaction_removed(self) -> AsyncIterator[notifications.MessageReactionRemovedNotification]:
+	def _notif_message_reaction_removed(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionRemovedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionRemoved')
-		return self._stubs.messageNotificationStub.message_reaction_removed(notifications.SubscribeToMessageReactionRemovedNotification(client=self))
+		return self._stubs.messageNotificationStub.message_reaction_removed(notifications.SubscribeToMessageReactionRemovedNotification(client=self, count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
 	
 	# AttachmentNotificationService
-	def _notif_attachment_received(self) -> AsyncIterator[notifications.AttachmentReceivedNotification]:
+	def _notif_attachment_received(self, count: int = 0, filter: datatypes.AttachmentFilter = None) -> AsyncIterator[notifications.AttachmentReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: AttachmentReceived')
-		return self._stubs.attachmentNotificationStub.attachment_received(notifications.SubscribeToAttachmentReceivedNotification(client=self))
+		return self._stubs.attachmentNotificationStub.attachment_received(notifications.SubscribeToAttachmentReceivedNotification(client=self, count=count, filter=filter))
 	
-	def _notif_attachment_uploaded(self) -> AsyncIterator[notifications.AttachmentUploadedNotification]:
+	def _notif_attachment_uploaded(self, count: int = 0, filter: datatypes.AttachmentFilter = None, message_ids: list[datatypes.MessageId] = None, attachment_ids: list[datatypes.AttachmentId] = None) -> AsyncIterator[notifications.AttachmentUploadedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: AttachmentUploaded')
-		return self._stubs.attachmentNotificationStub.attachment_uploaded(notifications.SubscribeToAttachmentUploadedNotification(client=self))
+		return self._stubs.attachmentNotificationStub.attachment_uploaded(notifications.SubscribeToAttachmentUploadedNotification(client=self, count=count, filter=filter, message_ids=message_ids, attachment_ids=attachment_ids))
+	
+	# CallNotificationService
+	def _notif_call_incoming_call(self, count: int = 0) -> AsyncIterator[notifications.CallIncomingCallNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallIncomingCall')
+		return self._stubs.callNotificationStub.call_incoming_call(notifications.SubscribeToCallIncomingCallNotification(client=self, count=count))
+	
+	def _notif_call_ringing(self, count: int = 0) -> AsyncIterator[notifications.CallRingingNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallRinging')
+		return self._stubs.callNotificationStub.call_ringing(notifications.SubscribeToCallRingingNotification(client=self, count=count))
+	
+	def _notif_call_accepted(self, count: int = 0) -> AsyncIterator[notifications.CallAcceptedNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallAccepted')
+		return self._stubs.callNotificationStub.call_accepted(notifications.SubscribeToCallAcceptedNotification(client=self, count=count))
+	
+	def _notif_call_declined(self, count: int = 0) -> AsyncIterator[notifications.CallDeclinedNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallDeclined')
+		return self._stubs.callNotificationStub.call_declined(notifications.SubscribeToCallDeclinedNotification(client=self, count=count))
+	
+	def _notif_call_busy(self, count: int = 0) -> AsyncIterator[notifications.CallBusyNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallBusy')
+		return self._stubs.callNotificationStub.call_busy(notifications.SubscribeToCallBusyNotification(client=self, count=count))
+	
+	def _notif_call_ended(self, count: int = 0) -> AsyncIterator[notifications.CallEndedNotification]:
+		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallEnded')
+		return self._stubs.callNotificationStub.call_ended(notifications.SubscribeToCallEndedNotification(client=self, count=count))
 
 	# InvitationNotificationService
 	async def on_invitation_received(self, invitation: datatypes.Invitation):
@@ -1150,7 +1183,7 @@ class OlvidClient(CommandHolder):
 	async def on_discussion_title_updated(self, discussion: datatypes.Discussion, previous_title: str):
 		pass
 
-	async def on_discussion_settings_updated(self, new_settings: datatypes.DiscussionSettings, previous_settings: datatypes.DiscussionSettings):
+	async def on_discussion_settings_updated(self, discussion: datatypes.Discussion, new_settings: datatypes.DiscussionSettings, previous_settings: datatypes.DiscussionSettings):
 		pass
 
 	# MessageNotificationService
@@ -1204,4 +1237,23 @@ class OlvidClient(CommandHolder):
 		pass
 
 	async def on_attachment_uploaded(self, attachment: datatypes.Attachment):
+		pass
+
+	# CallNotificationService
+	async def on_call_incoming_call(self, call_identifier: str, discussion_id: int, participant_id: datatypes.CallParticipantId, caller_display_name: str, participant_count: int):
+		pass
+
+	async def on_call_ringing(self, call_identifier: str, participant_id: datatypes.CallParticipantId):
+		pass
+
+	async def on_call_accepted(self, call_identifier: str, participant_id: datatypes.CallParticipantId):
+		pass
+
+	async def on_call_declined(self, call_identifier: str, participant_id: datatypes.CallParticipantId):
+		pass
+
+	async def on_call_busy(self, call_identifier: str, participant_id: datatypes.CallParticipantId):
+		pass
+
+	async def on_call_ended(self, call_identifier: str):
 		pass

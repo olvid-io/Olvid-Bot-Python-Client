@@ -34,19 +34,19 @@ class GenericNotificationListener:
 	NotificationHandlerType = Callable[[types.NotificationMessageType], Optional[Coroutine]]
 	CheckerType = Callable[[types.NotificationMessageType], Union[bool, Coroutine[Any, Any, bool]]]
 
-	def __init__(self, notification_type: NOTIFICATIONS, handler: NotificationHandlerType, checkers: list[CheckerType] = None, count: int = -1, priority: int = 0):
+	def __init__(self, notification_type: NOTIFICATIONS, handler: NotificationHandlerType, checkers: list[CheckerType] = None, count: int = -1, priority: int = 0, iterator_args: dict = None):
 		self._notification_type: NOTIFICATIONS = notification_type
 		self._handler = handler
 		self._checkers = checkers if checkers else []
 		if checkers:
-			warn("Listener.checkers will be deprecated in future release", PendingDeprecationWarning, stacklevel=10)
+			warn("Listener.checkers will be deprecated in future release, use filter parameter instead", PendingDeprecationWarning, stacklevel=20)
 		self._count: int = count
 		# we consider that 0 and -1 are endless listeners, -1 for legacy reasons and 0 because it will be normal value in future (notification filtering feature)
 		self._endless: bool = count <= 0
 		self._priority: int = priority
 		self._finished: bool = False
 
-		self._iterator_args: dict = {}
+		self._iterator_args: dict = iterator_args if iterator_args else {}
 
 		# we compute listener key after end of init to let child classes fill iterator args
 		self._listener_key: Optional[str] = None
@@ -111,8 +111,8 @@ class GenericNotificationListener:
 
 	def _generate_listener_key(self) -> str:
 		key: str = f"{self.notification_type.name}"
-		# if listener have iterator args (we ignore count arg) we create a unique key (daemon response stream might differ even with same parameters, for example if a count parameter is set)
-		if self._iterator_args.get("count") or len(self._iterator_args) > 1:
+		# if listener have iterator args we create a unique key (daemon response stream might differ even with same parameters, for example if a count parameter is set)
+		if len(self._iterator_args) >= 1:
 			for k, v in self._iterator_args.items():
 				key += f"_{k}-{v}"
 			key += f"_{base64.b64encode(os.urandom(12))}"

@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import discussion_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_discussion__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/discussion_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/discussion.proto\"&\n$SubscribeToDiscussionNewNotification\"b\n\x19\x44iscussionNewNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\")\n\'SubscribeToDiscussionLockedNotification\"e\n\x1c\x44iscussionLockedNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"/\n-SubscribeToDiscussionTitleUpdatedNotification\"\x92\x01\n\"DiscussionTitleUpdatedNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\x12%\n\x0eprevious_title\x18\x02 \x01(\tR\rpreviousTitle\"2\n0SubscribeToDiscussionSettingsUpdatedNotification\"\xd5\x01\n%DiscussionSettingsUpdatedNotification\x12P\n\x0cnew_settings\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x0bnewSettings\x12Z\n\x11previous_settings\x18\x02 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x10previousSettingsB\xe4\x01\n com.olvid.daemon.notification.v1B\x1c\x44iscussionNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n;olvid/daemon/notification/v1/discussion_notifications.proto\x12\x1colvid.daemon.notification.v1\x1a*olvid/daemon/datatypes/v1/discussion.proto\"\xa0\x01\n$SubscribeToDiscussionNewNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x01R\x06\x66ilter\x88\x01\x01\x42\x08\n\x06_countB\t\n\x07_filter\"b\n\x19\x44iscussionNewNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"\xca\x01\n\'SubscribeToDiscussionLockedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x01R\x06\x66ilter\x88\x01\x01\x12%\n\x0e\x64iscussion_ids\x18\x03 \x03(\x04R\rdiscussionIdsB\x08\n\x06_countB\t\n\x07_filter\"e\n\x1c\x44iscussionLockedNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\"\xd0\x01\n-SubscribeToDiscussionTitleUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x01R\x06\x66ilter\x88\x01\x01\x12%\n\x0e\x64iscussion_ids\x18\x03 \x03(\x04R\rdiscussionIdsB\x08\n\x06_countB\t\n\x07_filter\"\x92\x01\n\"DiscussionTitleUpdatedNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\x12%\n\x0eprevious_title\x18\x02 \x01(\tR\rpreviousTitle\"\xd3\x01\n0SubscribeToDiscussionSettingsUpdatedNotification\x12\x19\n\x05\x63ount\x18\x01 \x01(\x04H\x00R\x05\x63ount\x88\x01\x01\x12H\n\x06\x66ilter\x18\x02 \x01(\x0b\x32+.olvid.daemon.datatypes.v1.DiscussionFilterH\x01R\x06\x66ilter\x88\x01\x01\x12%\n\x0e\x64iscussion_ids\x18\x03 \x03(\x04R\rdiscussionIdsB\x08\n\x06_countB\t\n\x07_filter\"\x9c\x02\n%DiscussionSettingsUpdatedNotification\x12\x45\n\ndiscussion\x18\x01 \x01(\x0b\x32%.olvid.daemon.datatypes.v1.DiscussionR\ndiscussion\x12P\n\x0cnew_settings\x18\x02 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x0bnewSettings\x12Z\n\x11previous_settings\x18\x03 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.DiscussionSettingsR\x10previousSettingsB\xe4\x01\n com.olvid.daemon.notification.v1B\x1c\x44iscussionNotificationsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODN\xaa\x02\x1cOlvid.Daemon.Notification.V1\xca\x02\x1cOlvid\\Daemon\\Notification\\V1\xe2\x02(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\xea\x02\x1fOlvid::Daemon::Notification::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,20 +33,20 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'olvid.daemon.notification.v
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n com.olvid.daemon.notification.v1B\034DiscussionNotificationsProtoP\001Z\017olvid.io/daemon\242\002\003ODN\252\002\034Olvid.Daemon.Notification.V1\312\002\034Olvid\\Daemon\\Notification\\V1\342\002(Olvid\\Daemon\\Notification\\V1\\GPBMetadata\352\002\037Olvid::Daemon::Notification::V1'
-  _globals['_SUBSCRIBETODISCUSSIONNEWNOTIFICATION']._serialized_start=137
-  _globals['_SUBSCRIBETODISCUSSIONNEWNOTIFICATION']._serialized_end=175
-  _globals['_DISCUSSIONNEWNOTIFICATION']._serialized_start=177
-  _globals['_DISCUSSIONNEWNOTIFICATION']._serialized_end=275
-  _globals['_SUBSCRIBETODISCUSSIONLOCKEDNOTIFICATION']._serialized_start=277
-  _globals['_SUBSCRIBETODISCUSSIONLOCKEDNOTIFICATION']._serialized_end=318
-  _globals['_DISCUSSIONLOCKEDNOTIFICATION']._serialized_start=320
-  _globals['_DISCUSSIONLOCKEDNOTIFICATION']._serialized_end=421
-  _globals['_SUBSCRIBETODISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_start=423
-  _globals['_SUBSCRIBETODISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_end=470
-  _globals['_DISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_start=473
-  _globals['_DISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_end=619
-  _globals['_SUBSCRIBETODISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_start=621
-  _globals['_SUBSCRIBETODISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_end=671
-  _globals['_DISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_start=674
-  _globals['_DISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_end=887
+  _globals['_SUBSCRIBETODISCUSSIONNEWNOTIFICATION']._serialized_start=138
+  _globals['_SUBSCRIBETODISCUSSIONNEWNOTIFICATION']._serialized_end=298
+  _globals['_DISCUSSIONNEWNOTIFICATION']._serialized_start=300
+  _globals['_DISCUSSIONNEWNOTIFICATION']._serialized_end=398
+  _globals['_SUBSCRIBETODISCUSSIONLOCKEDNOTIFICATION']._serialized_start=401
+  _globals['_SUBSCRIBETODISCUSSIONLOCKEDNOTIFICATION']._serialized_end=603
+  _globals['_DISCUSSIONLOCKEDNOTIFICATION']._serialized_start=605
+  _globals['_DISCUSSIONLOCKEDNOTIFICATION']._serialized_end=706
+  _globals['_SUBSCRIBETODISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_start=709
+  _globals['_SUBSCRIBETODISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_end=917
+  _globals['_DISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_start=920
+  _globals['_DISCUSSIONTITLEUPDATEDNOTIFICATION']._serialized_end=1066
+  _globals['_SUBSCRIBETODISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_start=1069
+  _globals['_SUBSCRIBETODISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_end=1280
+  _globals['_DISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_start=1283
+  _globals['_DISCUSSIONSETTINGSUPDATEDNOTIFICATION']._serialized_end=1567
 # @@protoc_insertion_point(module_scope)

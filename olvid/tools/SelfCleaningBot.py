@@ -24,8 +24,8 @@ class SelfCleaningBot(OlvidClient):
 		self.is_message_for_cleaning: Callable[[datatypes.Message], Union[Coroutine[Any, Any, bool]]] = self._is_message_for_cleaning_wrapper(is_message_for_cleaning) if is_message_for_cleaning else None
 		if self.is_message_for_cleaning and (clean_inbound_messages is not None or clean_outbound_messages is not None):
 			raise ValueError("Cannot set is_message_for_cleaning and clean_inbound_messages or clean_outbound_messages")
-		self.clean_inbound_messages: bool = clean_inbound_messages if clean_inbound_messages is not None else True
-		self.clean_outbound_messages: bool = clean_outbound_messages if clean_outbound_messages is not None else True
+		self.clean_inbound_messages: bool = clean_inbound_messages if clean_inbound_messages is not None else True if not is_message_for_cleaning else False
+		self.clean_outbound_messages: bool = clean_outbound_messages if clean_outbound_messages is not None else True if not is_message_for_cleaning else False
 
 		self.add_listener(listener=MessageReceivedListener(handler=self.message_received_handler))
 		self.add_listener(listener=MessageSentListener(handler=self.message_sent_handler))

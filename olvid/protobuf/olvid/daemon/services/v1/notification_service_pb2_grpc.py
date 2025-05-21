@@ -3,6 +3,7 @@
 import grpc
 
 from .....olvid.daemon.notification.v1 import attachment_notifications_pb2 as olvid_dot_daemon_dot_notification_dot_v1_dot_attachment__notifications__pb2
+from .....olvid.daemon.notification.v1 import call_notifications_pb2 as olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2
 from .....olvid.daemon.notification.v1 import contact_notifications_pb2 as olvid_dot_daemon_dot_notification_dot_v1_dot_contact__notifications__pb2
 from .....olvid.daemon.notification.v1 import discussion_notifications_pb2 as olvid_dot_daemon_dot_notification_dot_v1_dot_discussion__notifications__pb2
 from .....olvid.daemon.notification.v1 import group_notifications_pb2 as olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2
@@ -2024,6 +2025,296 @@ class AttachmentNotificationService(object):
             '/olvid.daemon.services.v1.AttachmentNotificationService/AttachmentUploaded',
             olvid_dot_daemon_dot_notification_dot_v1_dot_attachment__notifications__pb2.SubscribeToAttachmentUploadedNotification.SerializeToString,
             olvid_dot_daemon_dot_notification_dot_v1_dot_attachment__notifications__pb2.AttachmentUploadedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class CallNotificationServiceStub(object):
+    """Call
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.CallIncomingCall = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallIncomingCall',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallIncomingCallNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallIncomingCallNotification.FromString,
+                _registered_method=True)
+        self.CallRinging = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallRinging',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallRingingNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallRingingNotification.FromString,
+                _registered_method=True)
+        self.CallAccepted = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallAccepted',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallAcceptedNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallAcceptedNotification.FromString,
+                _registered_method=True)
+        self.CallDeclined = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallDeclined',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallDeclinedNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallDeclinedNotification.FromString,
+                _registered_method=True)
+        self.CallBusy = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallBusy',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallBusyNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallBusyNotification.FromString,
+                _registered_method=True)
+        self.CallEnded = channel.unary_stream(
+                '/olvid.daemon.services.v1.CallNotificationService/CallEnded',
+                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallEndedNotification.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallEndedNotification.FromString,
+                _registered_method=True)
+
+
+class CallNotificationServiceServicer(object):
+    """Call
+    """
+
+    def CallIncomingCall(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallRinging(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallAccepted(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallDeclined(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallBusy(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CallEnded(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_CallNotificationServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'CallIncomingCall': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallIncomingCall,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallIncomingCallNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallIncomingCallNotification.SerializeToString,
+            ),
+            'CallRinging': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallRinging,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallRingingNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallRingingNotification.SerializeToString,
+            ),
+            'CallAccepted': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallAccepted,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallAcceptedNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallAcceptedNotification.SerializeToString,
+            ),
+            'CallDeclined': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallDeclined,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallDeclinedNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallDeclinedNotification.SerializeToString,
+            ),
+            'CallBusy': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallBusy,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallBusyNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallBusyNotification.SerializeToString,
+            ),
+            'CallEnded': grpc.unary_stream_rpc_method_handler(
+                    servicer.CallEnded,
+                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallEndedNotification.FromString,
+                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallEndedNotification.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'olvid.daemon.services.v1.CallNotificationService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('olvid.daemon.services.v1.CallNotificationService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class CallNotificationService(object):
+    """Call
+    """
+
+    @staticmethod
+    def CallIncomingCall(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallIncomingCall',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallIncomingCallNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallIncomingCallNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallRinging(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallRinging',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallRingingNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallRingingNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallAccepted(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallAccepted',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallAcceptedNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallAcceptedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallDeclined(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallDeclined',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallDeclinedNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallDeclinedNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallBusy(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallBusy',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallBusyNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallBusyNotification.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CallEnded(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/olvid.daemon.services.v1.CallNotificationService/CallEnded',
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.SubscribeToCallEndedNotification.SerializeToString,
+            olvid_dot_daemon_dot_notification_dot_v1_dot_call__notifications__pb2.CallEndedNotification.FromString,
             options,
             channel_credentials,
             insecure,

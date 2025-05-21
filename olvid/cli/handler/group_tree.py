@@ -9,11 +9,11 @@ from ..tools.cli_tools import filter_fields, print_error_message, print_normal_m
 from ..tools.click_wrappers import WrapperGroup
 
 # default permissions
-DEFAULT_ADMIN_PERMISSIONS = datatypes.GroupMemberPermissions(admin=True, remote_delete_anything=True,
+DEFAULT_ADMIN_PERMISSIONS = datatypes.GroupMemberPermissions(admin=True, remote_delete_anything=False,
 																edit_or_remote_delete_own_messages=True,
 																change_settings=True,
 																send_message=True)
-DEFAULT_MEMBER_PERMISSIONS = datatypes.GroupMemberPermissions(admin=False, remote_delete_anything=True,
+DEFAULT_MEMBER_PERMISSIONS = datatypes.GroupMemberPermissions(admin=False, remote_delete_anything=False,
 																edit_or_remote_delete_own_messages=True,
 																change_settings=False, send_message=True)
 

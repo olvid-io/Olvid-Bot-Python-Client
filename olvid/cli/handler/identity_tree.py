@@ -134,10 +134,11 @@ async def identity_new(first_opt: str, last_opt: str, position_opt: str, company
 @identity_tree.command("get", help="list identities on this daemon")
 @click.option("-a", "--all", "get_all", is_flag=True)
 @click.option("-l", "--link", "show_invitation_link", is_flag=True)
+@click.option("-i", "--identifier", "show_identity_identifier", is_flag=True)
 @click.option("-f", "--fields", "fields", type=str)
 @click.argument("identity_ids", nargs=-1, type=click.INT)
 @click.option("--filter", "filter_", type=str)
-async def identity_get(get_all: bool, show_invitation_link: bool, identity_ids: tuple[int], fields: str, filter_: str = ""):
+async def identity_get(get_all: bool, show_invitation_link: bool, show_identity_identifier: bool, identity_ids: tuple[int], fields: str, filter_: str = ""):
 	# normal case
 	if ClientSingleton.is_client_admin():
 		# build filter
@@ -165,7 +166,15 @@ async def identity_get(get_all: bool, show_invitation_link: bool, identity_ids: 
 	for identity in identities:
 		identity.invitation_url = ""
 		if show_invitation_link:
+			original_current_identity_id = ClientSingleton.get_current_identity_id()
+			ClientSingleton.set_current_identity_id(identity.id)
 			print(f"{identity.id}: {await ClientSingleton.get_client().identity_get_invitation_link()}")
+			ClientSingleton.set_current_identity_id(original_current_identity_id)
+		elif show_identity_identifier:
+			original_current_identity_id = ClientSingleton.get_current_identity_id()
+			ClientSingleton.set_current_identity_id(identity.id)
+			print(f"{identity.id}: {await ClientSingleton.get_client().identity_get_bytes_identifier()}")
+			ClientSingleton.set_current_identity_id(original_current_identity_id)
 		else:
 			filter_fields_and_print_normal_message(identity, fields)
 
