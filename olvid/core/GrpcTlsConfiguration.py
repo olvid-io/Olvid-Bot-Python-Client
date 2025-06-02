@@ -38,6 +38,18 @@ class GrpcTlsConfiguration:
 		raise NotImplementedError()
 
 
+# Use to connect to a daemon using https
+class GrpcSslConfiguration(GrpcTlsConfiguration):
+	# create grpc channel credentials from current instance
+	def get_channel_credentials(self) -> grpc.ChannelCredentials:
+		return grpc.ssl_channel_credentials()
+
+	# try to load a tls configuration using env and default file names
+	@staticmethod
+	def load_implicit_configuration() -> Optional:
+		return
+
+
 class GrpcSimpleTlsConfiguration(GrpcTlsConfiguration):
 	_SERVER_CERTIFICATE_PATH_VARIABLE_NAME: str = "OLVID_SERVER_CERTIFICATE_PATH"
 	_SERVER_CERTIFICATE_DEFAULT_PATH: str = ".server.pem"

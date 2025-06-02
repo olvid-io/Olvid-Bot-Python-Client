@@ -26,7 +26,7 @@ from ..listeners.Command import Command, CommandHolder
 from ..listeners.GenericNotificationListener import GenericNotificationListener
 from ..listeners import ListenersImplementation as listeners
 from .StubHolder import StubHolder
-from .GrpcTlsConfiguration import GrpcTlsConfiguration, GrpcSimpleTlsConfiguration, GrpcMutualAuthTlsConfiguration
+from .GrpcTlsConfiguration import GrpcTlsConfiguration, GrpcSimpleTlsConfiguration, GrpcMutualAuthTlsConfiguration, GrpcSslConfiguration
 from ..listeners.Notifications import NOTIFICATIONS
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
@@ -96,6 +96,7 @@ class OlvidClient(CommandHolder):
 	# we store running clients to notify them if we receive a stop signal
 	_running_clients: list[Self] = []
 
+	GrpcSslConfiguration: type[GrpcSslConfiguration] = GrpcSslConfiguration
 	GrpcSimpleTlsConfiguration: type[GrpcSimpleTlsConfiguration] = GrpcSimpleTlsConfiguration
 	GrpcMutualAuthTlsConfiguration: type[GrpcMutualAuthTlsConfiguration] = GrpcMutualAuthTlsConfiguration
 
@@ -155,7 +156,7 @@ class OlvidClient(CommandHolder):
 			core_logger.debug(f"{self.__class__.__name__}: re-used parent configuration")
 		# normal case
 		else:
-			# if tls configuration was not passed try to load one
+			# if tls configuration was not passed, try to load one
 			if tls_configuration is not None:
 				channel_credential: Optional[grpc.ChannelCredentials] = tls_configuration.get_channel_credentials()
 				core_logger.debug(f"{self.__class__.__name__}: using {type(tls_configuration).__name__} parameter")
@@ -169,10 +170,23 @@ class OlvidClient(CommandHolder):
 				channel_credential: Optional[grpc.ChannelCredentials] = None
 				core_logger.debug(f"{self.__class__.__name__}: tls disabled")
 
-			if channel_credential is None:
-				self._channel: grpc.aio.Channel = grpc.aio.insecure_channel(target=self._server_target)
+			# handle http:// and https:// target prefix
+			# http: just remove prefix
+			if self._server_target.startswith("http://"):
+				target: str = self._server_target.removeprefix("http://")
+			# https: add ssl channel credentials
+			elif self._server_target.startswith("https://"):
+				target: str = self._server_target.removeprefix("https://")
+				if not tls_configuration:
+					# if there is no tls configuration, we create a simple channel credentials to connect to serer using ssl
+					channel_credential = grpc.ssl_channel_credentials()
 			else:
-				self._channel: grpc.aio.Channel = grpc.aio.secure_channel(target=self._server_target, credentials=channel_credential)
+				target: str = self._server_target
+
+			if channel_credential is None:
+				self._channel: grpc.aio.Channel = grpc.aio.insecure_channel(target=target)
+			else:
+				self._channel: grpc.aio.Channel = grpc.aio.secure_channel(target=target, credentials=channel_credential)
 
 		# create or re-use grpc stubs
 		self._stubs = StubHolder(client=self, channel=self._channel, parent=self._parent_client)
