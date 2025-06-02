@@ -29,15 +29,32 @@ class AutoInvitationBot(OlvidClient):
 		await self.accept_invitation_if_necessary(invitation=invitation)
 
 	async def accept_invitation_if_necessary(self, invitation: datatypes.Invitation):
-		if self.accept_introductions and invitation.status == datatypes.Invitation.Status.STATUS_INTRODUCTION_WAIT_YOU_TO_ACCEPT:
-			tools_logger.info(f"{self.__class__.__name__}: introduction accepted: {invitation.id}: {invitation.status}")
-			await self.invitation_accept(invitation_id=invitation.id)
-		if self.accept_group_invitations and invitation.status == datatypes.Invitation.Status.STATUS_GROUP_INVITATION_WAIT_YOU_TO_ACCEPT:
-			tools_logger.info(f"{self.__class__.__name__}: group invitation accepted: {invitation.id}: {invitation.status}")
-			await self.invitation_accept(invitation_id=invitation.id)
-		if self.accept_one_to_one_invitations and invitation.status == datatypes.Invitation.Status.STATUS_ONE_TO_ONE_INVITATION_WAIT_YOU_TO_ACCEPT:
-			tools_logger.info(f"{self.__class__.__name__}: one to one invitation accepted: {invitation.id}: {invitation.status}")
-			await self.invitation_accept(invitation_id=invitation.id)
-		if self.accept_sas_invitations and datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_TO_ACCEPT:
-			tools_logger.info(f"{self.__class__.__name__}: sas invitation accepted: {invitation.id}: {invitation.status}")
-			await self.invitation_accept(invitation_id=invitation.id)
+		# introductions
+		if invitation.status == datatypes.Invitation.Status.STATUS_INTRODUCTION_WAIT_YOU_TO_ACCEPT:
+			if self.accept_introductions:
+				tools_logger.info(f"{self.__class__.__name__}: introduction accepted: {invitation.id}: {invitation.status}")
+				await self.invitation_accept(invitation_id=invitation.id)
+
+		# sas invitation
+		elif invitation.status == datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_TO_ACCEPT:
+			if self.accept_sas_invitations:
+				tools_logger.info(f"{self.__class__.__name__}: sas invitation accepted: {invitation.id}: {invitation.status}")
+				await self.invitation_accept(invitation_id=invitation.id)
+
+		# group
+		elif invitation.status == datatypes.Invitation.Status.STATUS_GROUP_INVITATION_WAIT_YOU_TO_ACCEPT:
+			if self.accept_group_invitations:
+				tools_logger.info(f"{self.__class__.__name__}: group invitation accepted: {invitation.id}: {invitation.status}")
+				await self.invitation_accept(invitation_id=invitation.id)
+			else:
+				tools_logger.info(f"{self.__class__.__name__}: group invitation declined: {invitation.id}: {invitation.status}")
+				await self.invitation_decline(invitation_id=invitation.id)
+
+		# one to one
+		elif invitation.status == datatypes.Invitation.Status.STATUS_ONE_TO_ONE_INVITATION_WAIT_YOU_TO_ACCEPT:
+			if self.accept_one_to_one_invitations:
+				tools_logger.info(f"{self.__class__.__name__}: one to one invitation accepted: {invitation.id}: {invitation.status}")
+				await self.invitation_accept(invitation_id=invitation.id)
+			else:
+				tools_logger.info(f"{self.__class__.__name__}: one to one invitation declined: {invitation.id}: {invitation.status}")
+				await self.invitation_accept(invitation_id=invitation.id)
