@@ -12,6 +12,82 @@ from .....olvid.daemon.command.v1 import invitation_commands_pb2 as olvid_dot_da
 from .....olvid.daemon.command.v1 import keycloak_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2
 from .....olvid.daemon.command.v1 import message_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2
 from .....olvid.daemon.command.v1 import storage_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_storage__commands__pb2
+from .....olvid.daemon.command.v1 import tool_commands_pb2 as olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2
+
+
+class ToolCommandServiceStub(object):
+    """Tools
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Ping = channel.unary_unary(
+                '/olvid.daemon.services.v1.ToolCommandService/Ping',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingResponse.FromString,
+                _registered_method=True)
+
+
+class ToolCommandServiceServicer(object):
+    """Tools
+    """
+
+    def Ping(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ToolCommandServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Ping': grpc.unary_unary_rpc_method_handler(
+                    servicer.Ping,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'olvid.daemon.services.v1.ToolCommandService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('olvid.daemon.services.v1.ToolCommandService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ToolCommandService(object):
+    """Tools
+    """
+
+    @staticmethod
+    def Ping(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.ToolCommandService/Ping',
+            olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_tool__commands__pb2.PingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
 
 class IdentityCommandServiceStub(object):

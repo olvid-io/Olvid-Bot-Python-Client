@@ -7,6 +7,7 @@ from .olvid.daemon.services.v1.notification_service_pb2_grpc import DiscussionNo
 from .olvid.daemon.services.v1.notification_service_pb2_grpc import MessageNotificationServiceStub
 from .olvid.daemon.services.v1.notification_service_pb2_grpc import AttachmentNotificationServiceStub
 from .olvid.daemon.services.v1.notification_service_pb2_grpc import CallNotificationServiceStub
+from .olvid.daemon.services.v1.command_service_pb2_grpc import ToolCommandServiceStub
 from .olvid.daemon.services.v1.command_service_pb2_grpc import IdentityCommandServiceStub
 from .olvid.daemon.services.v1.command_service_pb2_grpc import InvitationCommandServiceStub
 from .olvid.daemon.services.v1.command_service_pb2_grpc import ContactCommandServiceStub

@@ -39,6 +39,8 @@ class StubHolder:
 			"discussionStorageCommandStub", commands.DiscussionStorageCommandServiceStub)
 		self.callCommandStub: commands.CallCommandServiceStub = self._get_or_create_stub(
 			"callCommandStub", commands.CallCommandServiceStub)
+		self.toolCommandStub: commands.ToolCommandServiceStub = self._get_or_create_stub(
+			"toolCommandStub", commands.ToolCommandServiceStub)
 
 		# create notification stubs
 		self.invitationNotificationStub: notifications.InvitationNotificationServiceStub = self._get_or_create_stub(

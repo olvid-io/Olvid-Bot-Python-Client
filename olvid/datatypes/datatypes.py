@@ -4177,7 +4177,7 @@ class Contact(Contact):
 		await self._client.contact_introduction(first_contact_id=self.id, second_contact_id=contact_id)
 
 	async def invite_one_to_one(self) -> None:
-		if not not self.has_one_to_one_discussion:
+		if self.has_one_to_one_discussion:
 			raise ValueError("Contact is already one to one")
 		await self._client.contact_downgrade_one_to_one_discussion(contact_id=self.id)
 

@@ -24,13 +24,15 @@ def tools_tree():
 # tools listen
 #####
 @tools_tree.command(name="listen", help="listen notifications received for a specific or every notifications")
+@click.option("--filter", "filter_", type=str)
+@click.option("--count", "-c", "count", type=int, default=0)
 @click.option("-i", "--identity", "identity_id", default=-1, type=click.INT, help="Specify a specific identity to listen")
 @click.option("-q", "--quiet", "quiet", is_flag=True, help="Hide notification content")
 @click.option("-n", "--notifications", "notifications", type=str, help="Coma separated list of notifications to listen (upper snake case: MESSAGE_SEND,MESSAGE_RECEIVED)")
-async def listen_cmd(identity_id: int = -1, quiet: bool = False, notifications: str = ""):
+async def listen_cmd(identity_id: int = -1, quiet: bool = False, notifications: str = "", filter_=None, count=0):
 	if identity_id == -1:
 		identity_id = ClientSingleton.get_current_identity_id()
-	await listen(identity_id, quiet=quiet, notifications_to_listen=notifications)
+	await listen(identity_id, quiet=quiet, notifications_to_listen=notifications, filter_=filter_, count=count)
 	exit(0)
 
 

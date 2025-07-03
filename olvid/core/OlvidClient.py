@@ -499,6 +499,11 @@ class OlvidClient(CommandHolder):
 	####################################################################################################################
 	##### WARNING: DO NOT EDIT: this code is automatically generated, see overlay_generator/generate_olvid_client_code.py
 	####################################################################################################################
+	# ToolCommandService
+	async def ping(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: Ping')
+		await self._stubs.toolCommandStub.ping(commands.PingRequest(client=self))
+	
 	# IdentityCommandService
 	async def identity_get(self) -> datatypes.Identity:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityGet')

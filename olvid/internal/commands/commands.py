@@ -12219,6 +12219,158 @@ class DiscussionStorageUnsetResponse:
 		return True
 
 
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class PingRequest:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, ping_request: PingRequest) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "PingRequest":
+		return PingRequest(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.tool_commands_pb2.PingRequest, client: OlvidClient = None) -> "PingRequest":
+		return PingRequest(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.tool_commands_pb2.PingRequest], client: OlvidClient = None) -> list["PingRequest"]:
+		return [PingRequest._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.tool_commands_pb2.PingRequest], client: OlvidClient = None) -> "PingRequest":
+		try:
+			native_message = await promise
+			return PingRequest._from_native(native_message, client=client)
+		except errors.AioRpcError as error:
+			raise errors.OlvidError._from_aio_rpc_error(error) from error
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["PingRequest"]):
+		if messages is None:
+			return []
+		return [PingRequest._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["PingRequest"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.tool_commands_pb2.PingRequest()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, PingRequest):
+			return False
+		return True
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, PingRequest):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class PingResponse:
+	def __init__(self, client: OlvidClient = None):
+		self._client: OlvidClient = client
+
+	def _update_content(self, ping_response: PingResponse) -> None:
+		pass
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "PingResponse":
+		return PingResponse(client=self._client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.command.v1.tool_commands_pb2.PingResponse, client: OlvidClient = None) -> "PingResponse":
+		return PingResponse(client)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.command.v1.tool_commands_pb2.PingResponse], client: OlvidClient = None) -> list["PingResponse"]:
+		return [PingResponse._from_native(native_message, client=client) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.command.v1.tool_commands_pb2.PingResponse], client: OlvidClient = None) -> "PingResponse":
+		try:
+			native_message = await promise
+			return PingResponse._from_native(native_message, client=client)
+		except errors.AioRpcError as error:
+			raise errors.OlvidError._from_aio_rpc_error(error) from error
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["PingResponse"]):
+		if messages is None:
+			return []
+		return [PingResponse._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["PingResponse"]):
+		if message is None:
+			return None
+		return olvid.daemon.command.v1.tool_commands_pb2.PingResponse()
+
+	def __str__(self):
+		s: str = ''
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, PingResponse):
+			return False
+		return True
+
+	def __bool__(self):
+		return False
+
+	def __hash__(self):
+		return hash(())
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, PingResponse):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+
+		return True
+
+
+class ToolCommandServiceStub:
+	def __init__(self, client: OlvidClient, channel: Channel):
+		self.__stub: olvid.daemon.services.v1.command_service_pb2_grpc.ToolCommandServiceStub = olvid.daemon.services.v1.command_service_pb2_grpc.ToolCommandServiceStub(channel=channel)
+		self._client: OlvidClient = client
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember,PyUnusedLocal
+	def ping(self, ping_request: PingRequest) -> Coroutine[Any, Any, PingResponse]:
+		try:
+			overlay_object = ping_request
+			return PingResponse._from_native_promise(self.__stub.Ping(olvid.daemon.command.v1.tool_commands_pb2.PingRequest(), metadata=self._client.grpc_metadata), client=self._client)
+		except errors.AioRpcError as e:
+			raise errors.OlvidError._from_aio_rpc_error(e) from e
+
+
 class IdentityCommandServiceStub:
 	def __init__(self, client: OlvidClient, channel: Channel):
 		self.__stub: olvid.daemon.services.v1.command_service_pb2_grpc.IdentityCommandServiceStub = olvid.daemon.services.v1.command_service_pb2_grpc.IdentityCommandServiceStub(channel=channel)
