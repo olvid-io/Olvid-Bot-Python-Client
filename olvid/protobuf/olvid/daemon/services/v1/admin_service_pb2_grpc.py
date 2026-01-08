@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from .....olvid.daemon.admin.v1 import backup_admin_pb2 as olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2
 from .....olvid.daemon.admin.v1 import client_key_admin_pb2 as olvid_dot_daemon_dot_admin_dot_v1_dot_client__key__admin__pb2
 from .....olvid.daemon.admin.v1 import identity_admin_pb2 as olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2
 
@@ -575,6 +576,339 @@ class IdentityAdminService(object):
             '/olvid.daemon.services.v1.IdentityAdminService/IdentityKeycloakNew',
             olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityKeycloakNewRequest.SerializeToString,
             olvid_dot_daemon_dot_admin_dot_v1_dot_identity__admin__pb2.IdentityKeycloakNewResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class BackupAdminServiceStub(object):
+    """Backup
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.BackupKeyGet = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupKeyGet',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetResponse.FromString,
+                _registered_method=True)
+        self.BackupKeyRenew = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupKeyRenew',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewResponse.FromString,
+                _registered_method=True)
+        self.BackupGet = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupGet',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetResponse.FromString,
+                _registered_method=True)
+        self.BackupNow = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupNow',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowResponse.FromString,
+                _registered_method=True)
+        self.BackupRestoreDaemon = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreDaemon',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonResponse.FromString,
+                _registered_method=True)
+        self.BackupRestoreAdminBackup = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreAdminBackup',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupResponse.FromString,
+                _registered_method=True)
+        self.BackupRestoreProfileSnapshot = channel.unary_unary(
+                '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreProfileSnapshot',
+                request_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotResponse.FromString,
+                _registered_method=True)
+
+
+class BackupAdminServiceServicer(object):
+    """Backup
+    """
+
+    def BackupKeyGet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupKeyRenew(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupGet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupNow(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupRestoreDaemon(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupRestoreAdminBackup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BackupRestoreProfileSnapshot(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_BackupAdminServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'BackupKeyGet': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupKeyGet,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetResponse.SerializeToString,
+            ),
+            'BackupKeyRenew': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupKeyRenew,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewResponse.SerializeToString,
+            ),
+            'BackupGet': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupGet,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetResponse.SerializeToString,
+            ),
+            'BackupNow': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupNow,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowResponse.SerializeToString,
+            ),
+            'BackupRestoreDaemon': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupRestoreDaemon,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonResponse.SerializeToString,
+            ),
+            'BackupRestoreAdminBackup': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupRestoreAdminBackup,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupResponse.SerializeToString,
+            ),
+            'BackupRestoreProfileSnapshot': grpc.unary_unary_rpc_method_handler(
+                    servicer.BackupRestoreProfileSnapshot,
+                    request_deserializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'olvid.daemon.services.v1.BackupAdminService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('olvid.daemon.services.v1.BackupAdminService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class BackupAdminService(object):
+    """Backup
+    """
+
+    @staticmethod
+    def BackupKeyGet(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupKeyGet',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupKeyRenew(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupKeyRenew',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupKeyRenewResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupGet(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupGet',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupGetResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupNow(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupNow',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupNowResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupRestoreDaemon(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreDaemon',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreDaemonResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupRestoreAdminBackup(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreAdminBackup',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreAdminBackupResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BackupRestoreProfileSnapshot(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.BackupAdminService/BackupRestoreProfileSnapshot',
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotRequest.SerializeToString,
+            olvid_dot_daemon_dot_admin_dot_v1_dot_backup__admin__pb2.BackupRestoreProfileSnapshotResponse.FromString,
             options,
             channel_credentials,
             insecure,

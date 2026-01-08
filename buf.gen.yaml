@@ -7,8 +7,8 @@ inputs:
   - directory: protobuf
 plugins:
   # protobuf for python-client
-  - remote: buf.build/protocolbuffers/python:v28.2
+  - remote: buf.build/protocolbuffers/python:v33.2
     out: ./olvid/protobuf
   # grpc for python-client
-  - remote: buf.build/grpc/python:v1.66.2
+  - remote: buf.build/grpc/python:v1.76.0
     out: ./olvid/protobuf

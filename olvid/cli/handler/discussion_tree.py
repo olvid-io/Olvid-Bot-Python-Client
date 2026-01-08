@@ -1,3 +1,5 @@
+import os
+
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
@@ -53,50 +55,50 @@ async def discussion_get(get_all, by_contact: bool, by_group: bool, discussion_i
 #####
 @discussion_tree.command("empty", help="delete all messages in a discussion")
 @click.argument("discussion_ids", nargs=-1, type=click.INT, required=True)
-@click.option("-e", "--everywhere", "delete_everywhere", is_flag=True, default=False)
-async def discussion_rm(discussion_ids: tuple[int], delete_everywhere: bool = False):
+async def discussion_rm(discussion_ids: tuple[int]):
 	for discussion_id in discussion_ids:
-		await ClientSingleton.get_client().discussion_empty(discussion_id=discussion_id,
-															delete_everywhere=delete_everywhere)
+		await ClientSingleton.get_client().discussion_empty(discussion_id=discussion_id)
 		print_command_result(f"Discussion emptied: {discussion_id}")
 
 
 #####
-# discussion settings
+# discussion photo
 #####
-@discussion_tree.group("settings", help="manage discussion settings", cls=WrapperGroup)
-def settings_tree():
+@discussion_tree.group("photo", help="get discussion photos", cls=WrapperGroup)
+def discussion_photo_tree():
 	pass
 
-
 #####
-# discussion settings get
+# discussion photo save
 #####
-@settings_tree.command("get", help="get a ")
-@click.argument("discussion_id", nargs=1, type=click.INT, required=True)
-@click.option("-f", "--fields", "fields", type=str)
-async def discussion_settings_get(discussion_id: int, fields: str):
-	settings = await ClientSingleton.get_client().discussion_settings_get(discussion_id=discussion_id)
-	filter_fields_and_print_normal_message(settings, fields)
+@discussion_photo_tree.command("save", help="Save discussion photos to local files.")
+@click.argument("discussion_ids", required=False, nargs=-1, type=click.INT)
+@click.option("-a", "--all", "save_all", is_flag=True, help="Save all discussion photos")
+@click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)
+@click.option("-f", "--filename", "filename", help="specify file name to use (ignored if saving more than one image)", nargs=1, type=click.STRING, required=False)
+async def discussion_photo_set(path: str, filename: str, save_all: bool, discussion_ids: list[int]):
+	# use default save directory if necessary
+	if not path:
+		path = "./photos"
+	# create save directory
+	os.makedirs(path, exist_ok=True)
 
+	if not discussion_ids or save_all:
+		discussion_ids = [g.id async for g in ClientSingleton.get_client().discussion_list()]
 
-#####
-# discussion settings set
-#####
-@settings_tree.command("set")
-@click.option("-o", "--once", "read_once", is_flag=True)
-@click.option("-e", "--existence", "existence_duration", type=click.INT, default=0)
-@click.option("-v", "--visibility", "visibility_duration", type=click.INT, default=0)
-@click.argument("discussion_id", nargs=1, type=click.INT)
-async def discussion_settings_set(discussion_id: int, read_once: bool, existence_duration: int,
-									visibility_duration: int):
-	settings = datatypes.DiscussionSettings(discussion_id=discussion_id,
-											read_once=read_once,
-											existence_duration=existence_duration,
-											visibility_duration=visibility_duration)
-	new_settings = await ClientSingleton.get_client().discussion_settings_set(settings=settings)
-	print_normal_message(new_settings, new_settings)
+	# save every requested photo
+	for discussion_id in discussion_ids:
+		photo_bytes: bytes = await ClientSingleton.get_client().discussion_download_photo(discussion_id=discussion_id)
 
+		# specified filename flag
+		if len(discussion_ids) == 1 and filename:
+			filepath: str = os.path.join(path, filename)
+		# default filename
+		else:
+			filepath: str = os.path.join(path, f"discussion_{discussion_id}.jpeg")
+		with open(filepath, "wb") as photo:
+			photo.write(photo_bytes)
+		print_normal_message(f"Photo saved in: {filepath}", filepath)
 
 #####
 # discussion locked

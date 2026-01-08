@@ -43,7 +43,7 @@ class ChatBot(OlvidClient):
 
 		# help command
 		self._help_command: Optional[Command] = Command(regexp_filter="!?help", handler=self._help_command_handler)
-		self.add_command(self._help_command)
+		self.add_listener(self._help_command)
 		self._on_message_listener: MessageReceivedListener = MessageReceivedListener(handler=self._message_received_handler)
 		self.add_listener(self._on_message_listener)
 
@@ -58,13 +58,13 @@ class ChatBot(OlvidClient):
 		self._help_message_factory = None
 		return self
 
-	def help_set_message_factory(self, factory: HELP_MESSAGE_FACTORY) -> Self:
+	def help_set_message_factory(self, factory: Optional[HELP_MESSAGE_FACTORY]) -> Self:
 		self._help_message = None
 		self._help_message_factory = factory
 		return self
 
 	def help_disable_command(self) -> Self:
-		self.remove_command(command=self._help_command)
+		self.remove_listener(self._help_command)
 		self._help_command = None
 		return self
 
@@ -80,14 +80,9 @@ class ChatBot(OlvidClient):
 		self._help_always_send_in_to_one = False
 		return self
 
-	def help_add_custom_checker(self, checker: MessageReceivedListener.CheckerType) -> Self:
-		self._on_message_listener.add_checker(checker)
-		self._help_command.add_checker(checker)
-		return self
-
 	async def _message_received_handler(self, message: datatypes.Message):
 		# if message is a valid command do nothing
-		if self.tool_is_message_a_valid_command(message):
+		if self.is_message_body_a_valid_command(message.body):
 			return
 
 		# check if we send help on invalid command, and if this was supposed to be a command
@@ -111,7 +106,7 @@ class ChatBot(OlvidClient):
 		self._welcome_message_factory = None
 		return self
 
-	def welcome_set_message_factory(self, factory: WELCOME_MESSAGE_FACTORY) -> Self:
+	def welcome_set_message_factory(self, factory: Optional[WELCOME_MESSAGE_FACTORY]) -> Self:
 		self._welcome_message = None
 		self._welcome_message_factory = factory
 		return self
@@ -153,7 +148,7 @@ class ChatBot(OlvidClient):
 	# This can be overwritten to build more complex welcome message
 	async def send_welcome_message(self, discussion: datatypes.Discussion):
 		if self._welcome_message:
-			await discussion.post_message(body=self._welcome_message)
+			await discussion.post_message(client=self, body=self._welcome_message)
 		elif self._welcome_message_factory:
 			promise = self._welcome_message_factory(discussion)
 			if asyncio.iscoroutine(promise):
@@ -161,7 +156,7 @@ class ChatBot(OlvidClient):
 			else:
 				welcome_message: str = promise
 			if welcome_message:
-				await discussion.post_message(body=welcome_message)
+				await discussion.post_message(client=self, body=welcome_message)
 			if self._welcome_send_help:
 				await self.send_help_message(discussion.id)
 
@@ -210,7 +205,7 @@ class ChatBot(OlvidClient):
 			name = contact.details.first_name if contact.details.first_name else contact.display_name
 		else:
 			group: datatypes.Group = await self.group_get(group_id=discussion.group_id)
-			if group.members == 1:
+			if len(group.members) == 1:
 				contact: datatypes.Contact = await self.contact_get(contact_id=group.members[0].contact_id)
 				name = contact.details.first_name if contact.details.first_name else contact.display_name
 			else:
@@ -219,10 +214,3 @@ class ChatBot(OlvidClient):
 		return f"""
 {greetings} {name} 👋
 		""".strip()
-
-	@staticmethod
-	async def tool_ignore_location_message_checker(message: datatypes.Message):
-		return message.message_location.type == datatypes.MessageLocation.LocationType.LOCATION_TYPE_UNSPECIFIED
-
-	def tool_is_message_a_valid_command(self, message: datatypes.Message):
-		return any([isinstance(listener, Command) and listener.match(message) for listener in self._listeners_set])

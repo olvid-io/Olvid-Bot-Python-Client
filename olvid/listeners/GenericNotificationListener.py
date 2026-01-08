@@ -1,15 +1,14 @@
 import asyncio
 import base64
-from warnings import warn
 import os
-from typing import Callable, Optional, Coroutine, Union, Any, AsyncIterator, TYPE_CHECKING
+from typing import Callable, Optional, Coroutine, AsyncIterator, TYPE_CHECKING
 
 if TYPE_CHECKING:
 	from ..core.OlvidClient import OlvidClient
+	from ..internal.types import NotificationMessageType
 
 from ..core.logger import core_logger
 from .Notifications import NOTIFICATIONS
-from ..internal import types
 
 
 class GenericNotificationListener:
@@ -31,20 +30,9 @@ class GenericNotificationListener:
 	For example MessageReceivedListener.handler will receive a datatypes.Message item, not a MessageReceivedNotification
 	as a GenericNotificationListener will receive if listening to MessageReceivedNotification.
 	"""
-	NotificationHandlerType = Callable[[types.NotificationMessageType], Optional[Coroutine]]
-	CheckerType = Callable[[types.NotificationMessageType], Union[bool, Coroutine[Any, Any, bool]]]
-
-	def __init__(self, notification_type: NOTIFICATIONS, handler: NotificationHandlerType, checkers: list[CheckerType] = None, count: int = -1, priority: int = 0, iterator_args: dict = None):
+	def __init__(self, notification_type: NOTIFICATIONS, handler: Callable[[type["NotificationMessageType"]], Optional[Coroutine]], iterator_args: dict = None):
 		self._notification_type: NOTIFICATIONS = notification_type
 		self._handler = handler
-		self._checkers = checkers if checkers else []
-		if checkers:
-			warn("Listener.checkers will be deprecated in future release, use filter parameter instead", PendingDeprecationWarning, stacklevel=20)
-		self._count: int = count
-		# we consider that 0 and -1 are endless listeners, -1 for legacy reasons and 0 because it will be normal value in future (notification filtering feature)
-		self._endless: bool = count <= 0
-		self._priority: int = priority
-		self._finished: bool = False
 
 		self._iterator_args: dict = iterator_args if iterator_args else {}
 
@@ -56,55 +44,18 @@ class GenericNotificationListener:
 		return self._notification_type
 
 	@property
-	def priority(self) -> int:
-		return self._priority
-
-	@property
 	def listener_key(self) -> str:
 		if self._listener_key is None:
 			self._listener_key = self._generate_listener_key()
 		return self._listener_key
 
-	@property
-	def count(self) -> int:
-		return self._count
-
-	def add_checker(self, checker: CheckerType):
-		self._checkers.append(checker)
-
-	@property
-	def is_finished(self) -> bool:
-		return self._finished
-
-	def mark_as_finished(self):
-		self._finished = True
-
-	async def handle_notification(self, notification_message: types.NotificationMessageType, remove_listener_callback: Callable[[
-		"GenericNotificationListener"], None]):
-		for checker in self._checkers:
-			ret = checker(notification_message)
-			if asyncio.iscoroutine(ret):
-				ret = await ret
-			if not ret:
-				return
-
-		# check this was not marked as finished before start (not supposed to happen)
-		if self._finished:
-			return
-
+	async def handle_notification(self, notification_message: type["NotificationMessageType"]):
 		try:
 			res = self._handler(notification_message)
 			if asyncio.iscoroutine(res):
 				await res
 		except Exception:
 			core_logger.exception(f"{self.__class__.__name__}: unexpected exception: {self}")
-		finally:
-			if not self._endless:
-				if self._count > 0:
-					self._count -= 1
-				if self._count == 0:
-					self.mark_as_finished()
-					remove_listener_callback(self)
 
 	def _create_iterator(self, client: "OlvidClient") -> AsyncIterator:
 		return getattr(client, f"_notif_{self.notification_type.name.lower()}")(**self._iterator_args)
@@ -119,7 +70,7 @@ class GenericNotificationListener:
 		return key
 
 	def __str__(self):
-		return f"{self.listener_key}: {self._handler.__name__} (count: {self.count})"
+		return f"{self.listener_key}: {self._handler.__name__} (arguments: {self._iterator_args})"
 
 	def __repr__(self):
 		return self.__str__()

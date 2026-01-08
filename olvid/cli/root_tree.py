@@ -48,9 +48,15 @@ async def root_tree(arguments: list[str], identity: int = 0, client_key: str = "
 				# run command
 				await interactive_tree.invoke(ctx)
 	except click.UsageError as e:
-		click.echo(click.style(e.format_message(), fg="red"))
-		if e.ctx is not None:
-			print(e.ctx.get_help())
+		# NoArgsIsHelpError error is raised for incomplete commands (`message`, `settings discussion`)
+		# in that case e.format_message already returns help message
+		if type(e).__name__ == "NoArgsIsHelpError":
+			print(e.format_message())
+		# for other error show error message in red and help message in white
+		else:
+			click.echo(click.style(e.format_message(), fg="red"))
+			if e.ctx is not None:
+				print(e.ctx.get_help())
 	# raised in some conditions for invalid commands (for example when you call a command group: `cli identity`)
 	except click.exceptions.Exit:
 		pass

@@ -1,5 +1,6 @@
 import asyncio
 import os
+from typing import Optional
 
 from google.protobuf.json_format import Parse, ParseError
 
@@ -68,12 +69,11 @@ async def identity_current(identity_id: int):
 @click.option("-p", "--position", "position_opt", default="", help="position")
 @click.option("-c", "--company", "company_opt", default="", help="company")
 @click.option("-s", "--server", "server_url", default="", help="custom server url (optional)")
-@click.option("-k", "--api-key", "api_key", default="", help="custom api key (optional)")
 @click.argument("firstName", required=False)
 @click.argument("lastName", required=False)
 @click.argument("position", required=False)
 @click.argument("company", required=False)
-async def identity_new(first_opt: str, last_opt: str, position_opt: str, company_opt: str, firstname: str, lastname: str, position: str, company: str, server_url: str, api_key: str):
+async def identity_new(first_opt: str, last_opt: str, position_opt: str, company_opt: str, firstname: str, lastname: str, position: str, company: str, server_url: str):
 	if not ClientSingleton.is_client_admin():
 		print_error_message("Cannot create an identity when impersonating a non admin key")
 		return
@@ -88,7 +88,7 @@ async def identity_new(first_opt: str, last_opt: str, position_opt: str, company
 	if (position_opt or position):
 		identity_details.position = position_opt if position_opt else position
 
-	identity = await ClientSingleton.get_client().admin_identity_new(identity_details=identity_details, server_url=server_url, api_key=api_key)
+	identity = await ClientSingleton.get_client().admin_identity_new(identity_details=identity_details, server_url=server_url)
 
 	if ClientSingleton.is_script_mode_enabled():
 		print(identity.id)
@@ -104,17 +104,15 @@ async def identity_new(first_opt: str, last_opt: str, position_opt: str, company
 		client_key: datatypes.ClientKey = await ClientSingleton.get_client().admin_client_key_new(name=f"identity-new-key-{identity.id}", identity_id=identity.id)
 		print_with_context(f"Here is your client key to connect to daemon with this identity:\n{click.style(client_key.key, underline=True)}", prompt=prompt, fg_color=fg_color)
 		await asyncio.sleep(0.5)
-		while not ask_question_with_context("Did you saved your client key ?", prompt=prompt, fg_color=fg_color):
-			continue
 
 		# ask to add this new identity as a contact
-		if not ask_question_with_context("Do you want to add this identity to your contacts ?", prompt=prompt, fg_color=fg_color):
+		if not await ask_question_with_context("Do you want to add this identity to your contacts ?", prompt=prompt, fg_color=fg_color):
 			ClientSingleton.set_current_identity_id(identity.id)
 			click.secho(f"Now using identity: {ClientSingleton.get_current_identity_id()}", fg="green")
 			return
 
 		# add this new identity as a contact
-		discussion: datatypes.Discussion = await contact_new(identity_id=identity.id, prompt=prompt, fg_color=fg_color)
+		discussion: Optional[datatypes.Discussion] = await contact_new(identity_id=identity.id, prompt=prompt, fg_color=fg_color)
 
 		ClientSingleton.set_current_identity_id(identity.id)
 		click.secho(f"Now using identity: {ClientSingleton.get_current_identity_id()}", fg="green")
@@ -184,8 +182,9 @@ async def identity_get(get_all: bool, show_invitation_link: bool, show_identity_
 #####
 @identity_tree.command("rm", help="delete identities")
 @click.option("-a", "--all", "delete_all", is_flag=True)
+@click.option("-e", "--everywhere", is_flag=True, help="delete identity on all your devices and notify contacts")
 @click.argument("identity_ids", nargs=-1, type=click.INT)
-async def identity_delete(delete_all: bool, identity_ids: tuple[int]):
+async def identity_delete(delete_all: bool, identity_ids: tuple[int], everywhere: bool):
 	if not ClientSingleton.is_client_admin():
 		print_error_message("Cannot delete an identity when impersonating a non admin key")
 		return
@@ -200,7 +199,7 @@ async def identity_delete(delete_all: bool, identity_ids: tuple[int]):
 			raise click.exceptions.BadArgumentUsage("No identity to delete")
 
 	for identity_id in identity_ids:
-		await ClientSingleton.get_client().admin_identity_delete(identity_id)
+		await ClientSingleton.get_client().admin_identity_delete(identity_id, delete_everywhere=everywhere)
 		print_command_result(f"Identity deleted: {identity_id}", identity_id)
 
 
@@ -237,10 +236,28 @@ async def identity_update_details(first_opt: str, last_opt: str, position_opt: s
 #####
 # identity key
 #####
-@identity_tree.command("key", help="set api key for current identity")
+@identity_tree.group("key", help="manage current identity Olvid api key", cls=WrapperGroup)
+def identity_key_tree():
+	pass
+
+#####
+# identity key get
+#####
+@identity_key_tree.command("get", help="get api key for current identity")
+async def identity_apikey_get():
+	result = await ClientSingleton.get_client().identity_get_api_key_status()
+	if result:
+		print_command_result(f"Current api key: {result}")
+	else:
+		print_command_result(f"Api key not set")
+
+#####
+# identity key set
+#####
+@identity_key_tree.command("set", help="set api key for current identity")
 @click.argument("apiKey", nargs=1, required=True)
 @click.option("-c", "--configuration", is_flag=True, required=False, help="Use a configuration link instead of a raw api key")
-async def identity_apikey(configuration: bool, apikey: str):
+async def identity_apikey_set(configuration: bool, apikey: str):
 	if configuration:
 		result = await ClientSingleton.get_client().identity_set_configuration_link(configuration_link=apikey)
 	else:
@@ -263,7 +280,7 @@ def identity_photo_tree():
 @click.argument("photo_path", required=True, type=click.STRING)
 async def identity_photo_set(photo_path):
 	try:
-		await ClientSingleton.get_client().identity_set_photo(photo_path)
+		await ClientSingleton.get_client().identity_set_photo_file(photo_path)
 		print_command_result("Identity photo set")
 	except IOError as e:
 		raise click.exceptions.BadArgumentUsage(str(e))
@@ -353,38 +370,8 @@ async def identity_kc_new(configuration_link):
 		client_key: datatypes.ClientKey = await ClientSingleton.get_client().admin_client_key_new(name=f"identity-new-key-{identity.id}", identity_id=identity.id)
 		print_with_context(f"Here is your client key to connect to daemon with this identity:\n{click.style(client_key.key, underline=True)}", prompt=prompt, fg_color=fg_color)
 		await asyncio.sleep(0.5)
-		while not ask_question_with_context("Did you saved your client key ?", prompt=prompt, fg_color=fg_color):
-			continue
 
 		ClientSingleton.set_current_identity_id(identity.id)
 		click.secho(f"Now using identity: {ClientSingleton.get_current_identity_id()}", fg="green")
 	except click.exceptions.Abort:
 		pass
-
-
-
-#####
-# identity kc bind
-#####
-@identity_kc_tree.command("bind", help="attach your current identity to a keycloak server using a keycloak bot configuration link")
-@click.argument("configuration_link", required=True, type=click.STRING)
-async def identity_kc_bind(configuration_link):
-	if not ClientSingleton.is_client_admin():
-		print_error_message("Cannot manage identities when impersonating a non admin key")
-		return
-
-	await ClientSingleton.get_client().identity_keycloak_bind(configuration_link=configuration_link)
-	print_command_result(f"Identity now linked to keycloak")
-
-
-#####
-# identity kc unbind
-#####
-@identity_kc_tree.command("unbind", help="remove keycloak server for current identity")
-async def identity_kc_unbind():
-	if not ClientSingleton.is_client_admin():
-		print_error_message("Cannot manage identities when impersonating a non admin key")
-		return
-
-	await ClientSingleton.get_client().identity_keycloak_unbind()
-	print_command_result(f"Identity is not linked to keycloak anymore")

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
@@ -29,11 +31,11 @@ async def invitation_send(invitation_url: str):
 	fg_color: str = "bright_yellow"
 
 	try:
-		if not ask_question_with_context("Do you want to complete invitation process interactively ?", prompt=prompt, fg_color=fg_color):
+		if not await ask_question_with_context("Do you want to complete invitation process interactively ?", prompt=prompt, fg_color=fg_color):
 			print(invitation)
 			return
 
-		discussion: datatypes.Discussion = await invitation_new(identity_id=ClientSingleton.get_current_identity_id(), invitation=invitation, prompt=prompt, fg_color=fg_color)
+		discussion: Optional[datatypes.Discussion] = await invitation_new(identity_id=ClientSingleton.get_current_identity_id(), invitation=invitation, prompt=prompt, fg_color=fg_color)
 		if discussion:
 			print(f"You can now send messages to {discussion.title} in discussion {discussion.id}")
 		else:

@@ -41,6 +41,8 @@ class StubHolder:
 			"callCommandStub", commands.CallCommandServiceStub)
 		self.toolCommandStub: commands.ToolCommandServiceStub = self._get_or_create_stub(
 			"toolCommandStub", commands.ToolCommandServiceStub)
+		self.settingsCommandStub: commands.SettingsCommandServiceStub = self._get_or_create_stub(
+			"settingsCommandStub", commands.SettingsCommandServiceStub)
 
 		# create notification stubs
 		self.invitationNotificationStub: notifications.InvitationNotificationServiceStub = self._get_or_create_stub(
@@ -61,14 +63,16 @@ class StubHolder:
 		# do not create admin stubs
 		self.clientKeyAdminStub: Optional[admin.ClientKeyAdminServiceStub] = None
 		self.identityAdminStub: Optional[admin.IdentityAdminServiceStub] = None
+		self.backupAdminStub: Optional[admin.BackupAdminServiceStub] = None
 
 	def create_admin_stubs(self):
 		self.clientKeyAdminStub: admin.ClientKeyAdminServiceStub = self._get_or_create_stub("clientKeyAdminStub", admin.ClientKeyAdminServiceStub)
 		self.identityAdminStub: admin.IdentityAdminServiceStub = self._get_or_create_stub("identityAdminStub", admin.IdentityAdminServiceStub)
+		self.backupAdminStub: admin.BackupAdminServiceStub = self._get_or_create_stub("backupAdminStub", admin.BackupAdminServiceStub)
 
-	def _get_or_create_stub(self, attribute_name: str, stub_factory: Callable[["OlvidClient", Channel], Any]):
+	def _get_or_create_stub(self, attribute_name: str, stub_class: Callable[[Callable[[], list[tuple[str, str]]], Channel], Any]):
 		if not self._parent:
-			return stub_factory(self._client, self._channel)
+			return stub_class(self._client.get_grpc_metadata, self._channel)
 		if not hasattr(self._parent._stubs, attribute_name):
-			return stub_factory(self._client, self._channel)
+			return stub_class(self._client.get_grpc_metadata, self._channel)
 		return getattr(self._parent._stubs, attribute_name)

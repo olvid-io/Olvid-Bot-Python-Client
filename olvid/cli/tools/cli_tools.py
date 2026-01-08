@@ -16,7 +16,7 @@ def _recursive_get_attr(item: object, attributes: list[str]):
 # return normal and script version
 def _filter_fields(item: object, fields: str) -> tuple[str, str]:
 	if not fields:
-		return item, item
+		return (str(item), str(item))
 	else:
 		try:
 			field_names = fields.split(",")

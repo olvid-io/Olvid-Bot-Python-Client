@@ -14,6 +14,7 @@ from .logger import tools_logger
 
 # if aiohttp is not installed we use urllib run in executor to avoid adding dependencies for olvid module
 try:
+	# noinspection PyUnusedImports
 	import aiohttp
 	tools_logger.debug("MonitoringBot: using aiohttp")
 except ImportError:

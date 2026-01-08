@@ -14,7 +14,7 @@ from ..core import errors
 def tokenize_command_line(cmd_line: str) -> list[str]:
 	tokens: list[str] = []
 	current_token: str = ''
-	in_quote: str = "" # contains current quoting character
+	in_quote: str = ""  # contains current quoting character
 	escape_next: bool = False
 
 	for char in cmd_line:
@@ -137,11 +137,17 @@ async def interactive_main():
 			except CancelCommandError:
 				continue
 			except click.UsageError as e:
-				click.echo(click.style(e.format_message(), fg="red"))
-				if e.ctx is not None:
-					print(e.ctx.get_help())
+				# NoArgsIsHelpError error is raised for incomplete commands (`message`, `settings discussion`)
+				# in that case e.format_message already returns help message
+				if type(e).__name__ == "NoArgsIsHelpError":
+					print(e.format_message())
+				# for other error show error message in red and help message in white
+				else:
+					click.echo(click.style(e.format_message(), fg="red"))
+					if e.ctx is not None:
+						print(e.ctx.get_help())
 			# clean line on ctrl + c
-			except (KeyboardInterrupt, asyncio.CancelledError) as e:
+			except (KeyboardInterrupt, asyncio.CancelledError):
 				break
 			# handle ctrl + d
 			except EOFError:

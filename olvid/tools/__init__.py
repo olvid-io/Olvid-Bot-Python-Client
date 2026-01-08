@@ -1,9 +1,6 @@
 from .logger import tools_logger
-from .AutoInvitationBot import AutoInvitationBot
-from .KeycloakAutoInvitationBot import KeycloakAutoInvitationBot
+from .KeycloakAdminApiClient import KeycloakAdminApiClient
 from .MonitoringBot import MonitoringBot
-from .SelfCleaningBot import SelfCleaningBot
-from .DiscussionRetentionPolicyBot import DiscussionRetentionPolicyBot
 from .DelayedTasksHolder import DelayedTasksHolder
 from .ChatBot import ChatBot
 

@@ -1,4 +1,6 @@
 import os
+from typing import Optional
+
 from google.protobuf.json_format import Parse, ParseError
 
 from ..interactive_tree import interactive_tree
@@ -27,7 +29,7 @@ async def contact_new_cmd():
 	fg_color: str = "bright_green"
 
 	try:
-		discussion: datatypes.Discussion = await contact_new(ClientSingleton.get_client().current_identity_id, prompt=prompt, fg_color=fg_color)
+		discussion: Optional[datatypes.Discussion] = await contact_new(ClientSingleton.get_client().current_identity_id, prompt=prompt, fg_color=fg_color)
 		if discussion:
 			print(f"You can now send messages to {discussion.title} in discussion {discussion.id}")
 		else:
@@ -161,49 +163,6 @@ async def contact_photo_set(path: str, filename: str, save_all: bool, contact_id
 		with open(filepath, "wb") as photo:
 			photo.write(photo_bytes)
 		print_normal_message(f"Photo saved in: {filepath}", filepath)
-
-
-#####
-# contact kc
-#####
-@contact_tree.group("kc", help="manage keycloak contacts", cls=WrapperGroup)
-def contact_kc_tree():
-	pass
-
-
-#####
-# contact kc get
-#####
-@contact_kc_tree.command("get", help="list keycloak users")
-@click.option("-t", "--timestamp", type=int, default=0, help="last list user timestamp")
-@click.option("-f", "--fields", "fields", type=str)
-@click.option("--filter", "filter_", type=str)
-async def contact_kc_get(filter_: str, fields: str, timestamp: int):
-	# build filter
-	keycloak_user_filter: datatypes.KeycloakUserFilter = datatypes.KeycloakUserFilter()
-	if filter_:
-		try:
-			parsed_message = Parse(filter_, datatypes.KeycloakUserFilter()._to_native(keycloak_user_filter))
-			keycloak_user_filter = datatypes.KeycloakUserFilter._from_native(parsed_message)
-		except ParseError as e:
-			print_error_message(f"Cannot parse filter: {e}")
-			return
-
-	last_list_timestamp = 0
-	async for users, last_list_timestamp in ClientSingleton.get_client().keycloak_user_list(filter=keycloak_user_filter, last_list_timestamp=timestamp if timestamp else None):
-		for user in users:
-			filter_fields_and_print_normal_message(user, fields)
-	print_normal_message(f"Last list timestamp: {last_list_timestamp}", last_list_timestamp)
-
-
-#####
-# contact kc add
-#####
-@contact_kc_tree.command("add", help="add a keycloak user as a contact")
-@click.argument("user_id", nargs=1, required=True, type=click.STRING)
-async def contact_kc_get(user_id: str):
-	await ClientSingleton.get_client().keycloak_add_user_as_contact(keycloak_id=user_id)
-	print_normal_message("Added contact", "")
 
 
 #####

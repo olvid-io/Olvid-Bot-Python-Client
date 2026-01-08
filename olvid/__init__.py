@@ -1,24 +1,23 @@
 # import core clients
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from .core import OlvidClient
-# noinspection PyUnresolvedReferences
-from .core import OlvidBot
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from .core import OlvidAdminClient
+# noinspection PyUnusedImports
 from .core import errors
 
 # import core elements
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from . import listeners
 
 # import overlay modules
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from . import datatypes
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from . import internal
 
 # import bots
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from . import tools
 
 # delete imported modules
@@ -29,7 +28,8 @@ if "protobuf" in locals() or "protobuf" in globals():
 	# noinspection PyUnresolvedReferences
 	del protobuf
 
-# noinspection PyUnresolvedReferences
+# noinspection PyUnusedImports
 from .version import __version__
+# noinspection PyUnusedImports
 from .version import __docker_version__
 del version

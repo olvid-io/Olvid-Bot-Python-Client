@@ -62,6 +62,7 @@ class ClientSingleton():
 	def get_client() -> OlvidAdminClient:
 		if not ClientSingleton.__client:
 			raise Exception("ClientSingleton was not initialized")
+		# noinspection PyTypeChecker
 		return ClientSingleton.__client
 
 	@staticmethod
@@ -71,6 +72,7 @@ class ClientSingleton():
 	@staticmethod
 	def set_current_identity_id(identity_id: int):
 		if ClientSingleton.is_client_admin():
+			# noinspection PyTypeChecker
 			client: OlvidAdminClient = ClientSingleton.__client
 			client.current_identity_id = identity_id
 			ClientSingleton.__current_identity_id = identity_id

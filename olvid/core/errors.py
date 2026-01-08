@@ -43,7 +43,7 @@ Exceptions triggered by Olvid Api
 """
 class NotFoundError(OlvidError):
 	"""
-	The element you requested does not exists.
+	The element you requested does not exist.
 	"""
 	pass
 

@@ -13,7 +13,6 @@ import grpc
 import asyncio
 import signal
 import os
-import sys
 from asyncio import Task
 from dotenv import dotenv_values
 
@@ -72,7 +71,7 @@ class OlvidClient(CommandHolder):
 
 	Every time ChatBot class is instantiated it will add a listener to message_received notification with the method as handler.
 
-	You can also add Command objects with add_command method. Command are specific listeners.
+	You can also add Command objects with add_listener method. Command are specific listeners.
 	They subclass listeners.MessageReceivedListener, and they are created with a regexp filter that will filter notifications.
 	Only messages that match the regexp will raise a notification.
 	Commands can be added using OlvidClient.command decorator:
@@ -84,8 +83,6 @@ class OlvidClient(CommandHolder):
 			await message.reply("Help message")
 	"""
 	_KEY_VARIABLE_NAME: str = "OLVID_CLIENT_KEY"
-	# TODO v2.0.0 remove legacy method
-	_KEY_FILE_PATH = ".client_key"
 
 	_TARGET_VARIABLE_NAME: str = "OLVID_DAEMON_TARGET"
 	_TARGET_DEFAULT_VALUE: str = "localhost:50051"
@@ -117,10 +114,6 @@ class OlvidClient(CommandHolder):
 			self._client_key: str = client_key
 		elif parent_client:
 			self._client_key: str = parent_client.client_key
-		# TODO v2.0.0 remove legacy method
-		elif os.path.isfile(self._KEY_FILE_PATH):
-			print(f"{self._KEY_FILE_PATH} files are marked as deprecated, use environment or .env file instead", file=sys.stderr)
-			self._client_key: str = open(self._KEY_FILE_PATH).read().strip()
 		elif config.get(self._KEY_VARIABLE_NAME):
 			self._client_key: str = config.get(self._KEY_VARIABLE_NAME)
 		else:
@@ -131,10 +124,6 @@ class OlvidClient(CommandHolder):
 			self._server_target: str = server_target
 		elif parent_client:
 			self._server_target: str = parent_client.server_target
-		# TODO v2.0.0 remove legacy method
-		elif os.environ.get("DAEMON_HOSTNAME") or os.environ.get("DAEMON_PORT"):
-			print(f"DAEMON_HOSTNAME and DAEMON_PORT env variables are marked as deprecated, use {self._TARGET_VARIABLE_NAME} instead", file=sys.stderr)
-			self._server_target: str = os.getenv("DAEMON_HOSTNAME", "localhost").strip() + ":" + os.getenv("DAEMON_PORT", "50051")
 		else:
 			self._server_target: str = config.get(self._TARGET_VARIABLE_NAME)
 
@@ -206,6 +195,7 @@ class OlvidClient(CommandHolder):
 			if len(self._running_clients) == 0:
 				# if this is the first running client, register the signal handler
 				for s in (signal.SIGTERM, ):
+					# noinspection PyTypeChecker
 					asyncio.get_event_loop().add_signal_handler(s, self.__stop_signal_handler)
 			self._running_clients.append(self)
 
@@ -248,7 +238,8 @@ class OlvidClient(CommandHolder):
 		self._registered_child.append(child_client)
 
 	def are_listeners_finished(self) -> bool:
-		self._listeners_set = set([listener for listener in self._listeners_set if not listener.is_finished])
+		# actualize registered listeners (remove listeners that were removed in holder but not removed here)
+		self._listeners_set = set([listener for listener in self._listeners_set if listener in self._listener_holder._registered_listeners[listener.listener_key]])
 		return len(self._listeners_set) == 0
 
 	async def wait_for_listeners_end(self):
@@ -291,6 +282,7 @@ class OlvidClient(CommandHolder):
 	@staticmethod
 	def __stop_signal_handler():
 		core_logger.info("Received a stop signal, stopping every running clients")
+		# noinspection PyTypeChecker
 		for client in OlvidClient._running_clients:
 			client.add_background_task(client.stop(), f"force-stop-client")
 
@@ -343,7 +335,7 @@ class OlvidClient(CommandHolder):
 
 		listeners_copy = self._listeners_set.copy()
 		for listener in listeners_copy:
-			self._listener_holder.remove_listener(listener)
+			self.remove_listener(listener)
 
 		# log
 		core_logger.debug(f"{self.__class__.__name__}: removed all listeners")
@@ -351,12 +343,6 @@ class OlvidClient(CommandHolder):
 	#####
 	# CommandHolder interface implementation
 	#####
-	def add_command(self, command: Command):
-		self.add_listener(command)
-
-	def remove_command(self, command: Command):
-		self.remove_listener(command)
-
 	def is_message_body_a_valid_command(self, body: str) -> bool:
 		return any([isinstance(listener, Command) and listener.match_str(body) for listener in self._listeners_set])
 
@@ -385,12 +371,10 @@ class OlvidClient(CommandHolder):
 		# listener was not overwritten
 		return False
 
-
 	#####
 	# GrpcMetadata property
 	####
-	@property
-	def grpc_metadata(self) -> list[tuple[str, str]]:
+	def get_grpc_metadata(self) -> list[tuple[str, str]]:
 		return [("daemon-client-key", self._client_key)]
 
 	#####
@@ -406,14 +390,14 @@ class OlvidClient(CommandHolder):
 					yield element
 
 		return iterator(self._stubs.attachmentCommandStub.attachment_list(
-			commands.AttachmentListRequest(client=self, filter=datatypes.AttachmentFilter(message_id=message_id))))
+			commands.AttachmentListRequest(filter=datatypes.AttachmentFilter(message_id=message_id))))
 
 	#####
 	# request stream api (manually implemented)
 	#####
 
 	# IdentityCommandService
-	async def identity_set_photo(self, file_path: str) -> commands.IdentitySetPhotoResponse:
+	async def identity_set_photo_file(self, file_path: str) -> commands.IdentitySetPhotoResponse:
 		if not os.path.isfile(file_path) or not os.access(file_path, os.R_OK):
 			raise IOError(f"Cannot open: {file_path}")
 
@@ -429,8 +413,22 @@ class OlvidClient(CommandHolder):
 		command_logger.info(f'{self.__class__.__name__}: command: IdentitySetPhoto')
 		return await self._stubs.identityCommandStub.identity_set_photo(identity_set_photo_iterator())
 
+	async def identity_set_photo(self, filename: str, payload: bytes) -> commands.IdentitySetPhotoResponse:
+		async def identity_set_photo_iterator(buffer: bytes) -> AsyncIterator:
+			yield commands.IdentitySetPhotoRequest(
+				metadata=commands.IdentitySetPhotoRequestMetadata(filename=filename,
+															file_size=len(payload)))
+			while len(buffer) > 0:
+				yield commands.IdentitySetPhotoRequest(payload=buffer)
+				buffer = buffer[self._CHUNK_LENGTH:]
+		command_logger.info(f'{self.__class__.__name__}: command: IdentitySetPhoto')
+		return await self._stubs.identityCommandStub.identity_set_photo(identity_set_photo_iterator(payload))
+
 	# GroupCommandService
-	async def group_set_photo(self, group_id: int, file_path: str) -> datatypes.Group:
+	async def group_set_photo_file(self, group_id: int, file_path: str) -> datatypes.Group:
+		if not os.path.isfile(file_path) or not os.access(file_path, os.R_OK):
+			raise IOError(f"Cannot open: {file_path}")
+
 		async def group_set_photo_iterator() -> AsyncIterator:
 			fd = open(file_path, "rb")
 			yield commands.GroupSetPhotoRequest(
@@ -443,6 +441,16 @@ class OlvidClient(CommandHolder):
 			fd.close()
 		command_logger.info(f'{self.__class__.__name__}: command: GroupSetPhoto')
 		return (await self._stubs.groupCommandStub.group_set_photo(group_set_photo_iterator())).group
+
+	async def group_set_photo(self, group_id: int, filename: str, payload: bytes) -> datatypes.Group:
+		async def group_set_photo_iterator(buffer: bytes) -> AsyncIterator:
+			yield commands.GroupSetPhotoRequest(
+				metadata=commands.GroupSetPhotoRequestMetadata(group_id=group_id, filename=filename, file_size=len(payload)))
+			while len(buffer) > 0:
+				yield commands.MessageSendWithAttachmentsRequest(payload=buffer[0:self._CHUNK_LENGTH])
+				buffer = buffer[self._CHUNK_LENGTH:]
+		command_logger.info(f'{self.__class__.__name__}: command: GroupSetPhoto')
+		return (await self._stubs.groupCommandStub.group_set_photo(group_set_photo_iterator(payload))).group
 
 	# MessageCommandService
 	async def message_send_with_attachments_files(self, discussion_id: int, file_paths: list[str], body: str = "", reply_id: datatypes.MessageId = None, ephemerality: datatypes.MessageEphemerality = None, disable_link_preview: bool = False) -> tuple[datatypes.Message, list[datatypes.Attachment]]:
@@ -497,60 +505,70 @@ class OlvidClient(CommandHolder):
 
 	# response stream and non stream api, generated code
 	####################################################################################################################
-	##### WARNING: DO NOT EDIT: this code is automatically generated, see overlay_generator/generate_olvid_client_code.py
+	# WARNING: DO NOT EDIT: this code is automatically generated, see overlay_generator/generate_olvid_client_code.py
 	####################################################################################################################
 	# ToolCommandService
 	async def ping(self) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: Ping')
-		await self._stubs.toolCommandStub.ping(commands.PingRequest(client=self))
+		await self._stubs.toolCommandStub.ping(commands.PingRequest())
+	
+	async def daemon_version(self) -> str:
+		command_logger.info(f'{self.__class__.__name__}: command: DaemonVersion')
+		response: commands.DaemonVersionResponse = await self._stubs.toolCommandStub.daemon_version(commands.DaemonVersionRequest())
+		return response.version
+	
+	async def authentication_test(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: AuthenticationTest')
+		await self._stubs.toolCommandStub.authentication_test(commands.AuthenticationTestRequest())
+	
+	async def authentication_admin_test(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: AuthenticationAdminTest')
+		await self._stubs.toolCommandStub.authentication_admin_test(commands.AuthenticationAdminTestRequest())
 	
 	# IdentityCommandService
 	async def identity_get(self) -> datatypes.Identity:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityGet')
-		response: commands.IdentityGetResponse = await self._stubs.identityCommandStub.identity_get(commands.IdentityGetRequest(client=self))
+		response: commands.IdentityGetResponse = await self._stubs.identityCommandStub.identity_get(commands.IdentityGetRequest())
 		return response.identity
 	
 	async def identity_get_bytes_identifier(self) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetBytesIdentifier')
-		response: commands.IdentityGetBytesIdentifierResponse = await self._stubs.identityCommandStub.identity_get_bytes_identifier(commands.IdentityGetBytesIdentifierRequest(client=self))
+		response: commands.IdentityGetBytesIdentifierResponse = await self._stubs.identityCommandStub.identity_get_bytes_identifier(commands.IdentityGetBytesIdentifierRequest())
 		return response.identifier
 	
 	async def identity_get_invitation_link(self) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetInvitationLink')
-		response: commands.IdentityGetInvitationLinkResponse = await self._stubs.identityCommandStub.identity_get_invitation_link(commands.IdentityGetInvitationLinkRequest(client=self))
+		response: commands.IdentityGetInvitationLinkResponse = await self._stubs.identityCommandStub.identity_get_invitation_link(commands.IdentityGetInvitationLinkRequest())
 		return response.invitation_link
 	
 	async def identity_update_details(self, new_details: datatypes.IdentityDetails) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityUpdateDetails')
-		await self._stubs.identityCommandStub.identity_update_details(commands.IdentityUpdateDetailsRequest(client=self, new_details=new_details))
+		await self._stubs.identityCommandStub.identity_update_details(commands.IdentityUpdateDetailsRequest(new_details=new_details))
 	
 	async def identity_remove_photo(self) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityRemovePhoto')
-		await self._stubs.identityCommandStub.identity_remove_photo(commands.IdentityRemovePhotoRequest(client=self))
+		await self._stubs.identityCommandStub.identity_remove_photo(commands.IdentityRemovePhotoRequest())
 	
 	# identity_set_photo: cannot generate request stream rpc code
 	
 	async def identity_download_photo(self) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityDownloadPhoto')
-		response: commands.IdentityDownloadPhotoResponse = await self._stubs.identityCommandStub.identity_download_photo(commands.IdentityDownloadPhotoRequest(client=self))
+		response: commands.IdentityDownloadPhotoResponse = await self._stubs.identityCommandStub.identity_download_photo(commands.IdentityDownloadPhotoRequest())
 		return response.photo
 	
-	async def identity_keycloak_bind(self, configuration_link: str) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: IdentityKeycloakBind')
-		await self._stubs.identityCommandStub.identity_keycloak_bind(commands.IdentityKeycloakBindRequest(client=self, configuration_link=configuration_link))
-	
-	async def identity_keycloak_unbind(self) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: IdentityKeycloakUnbind')
-		await self._stubs.identityCommandStub.identity_keycloak_unbind(commands.IdentityKeycloakUnbindRequest(client=self))
+	async def identity_get_api_key_status(self) -> datatypes.Identity.ApiKey:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetApiKeyStatus')
+		response: commands.IdentityGetApiKeyStatusResponse = await self._stubs.identityCommandStub.identity_get_api_key_status(commands.IdentityGetApiKeyStatusRequest())
+		return response.api_key
 	
 	async def identity_set_api_key(self, api_key: str) -> datatypes.Identity.ApiKey:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentitySetApiKey')
-		response: commands.IdentitySetApiKeyResponse = await self._stubs.identityCommandStub.identity_set_api_key(commands.IdentitySetApiKeyRequest(client=self, api_key=api_key))
+		response: commands.IdentitySetApiKeyResponse = await self._stubs.identityCommandStub.identity_set_api_key(commands.IdentitySetApiKeyRequest(api_key=api_key))
 		return response.api_key
 	
 	async def identity_set_configuration_link(self, configuration_link: str) -> datatypes.Identity.ApiKey:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentitySetConfigurationLink')
-		response: commands.IdentitySetConfigurationLinkResponse = await self._stubs.identityCommandStub.identity_set_configuration_link(commands.IdentitySetConfigurationLinkRequest(client=self, configuration_link=configuration_link))
+		response: commands.IdentitySetConfigurationLinkResponse = await self._stubs.identityCommandStub.identity_set_configuration_link(commands.IdentitySetConfigurationLinkRequest(configuration_link=configuration_link))
 		return response.api_key
 	
 	# InvitationCommandService
@@ -561,33 +579,33 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.invitations:
 					yield element
-		return iterator(self._stubs.invitationCommandStub.invitation_list(commands.InvitationListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.invitationCommandStub.invitation_list(commands.InvitationListRequest(filter=filter)))
 	
 	async def invitation_get(self, invitation_id: int) -> datatypes.Invitation:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationGet')
-		response: commands.InvitationGetResponse = await self._stubs.invitationCommandStub.invitation_get(commands.InvitationGetRequest(client=self, invitation_id=invitation_id))
+		response: commands.InvitationGetResponse = await self._stubs.invitationCommandStub.invitation_get(commands.InvitationGetRequest(invitation_id=invitation_id))
 		return response.invitation
 	
 	async def invitation_new(self, invitation_url: str) -> datatypes.Invitation:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationNew')
-		response: commands.InvitationNewResponse = await self._stubs.invitationCommandStub.invitation_new(commands.InvitationNewRequest(client=self, invitation_url=invitation_url))
+		response: commands.InvitationNewResponse = await self._stubs.invitationCommandStub.invitation_new(commands.InvitationNewRequest(invitation_url=invitation_url))
 		return response.invitation
 	
 	async def invitation_accept(self, invitation_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationAccept')
-		await self._stubs.invitationCommandStub.invitation_accept(commands.InvitationAcceptRequest(client=self, invitation_id=invitation_id))
+		await self._stubs.invitationCommandStub.invitation_accept(commands.InvitationAcceptRequest(invitation_id=invitation_id))
 	
 	async def invitation_decline(self, invitation_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationDecline')
-		await self._stubs.invitationCommandStub.invitation_decline(commands.InvitationDeclineRequest(client=self, invitation_id=invitation_id))
+		await self._stubs.invitationCommandStub.invitation_decline(commands.InvitationDeclineRequest(invitation_id=invitation_id))
 	
 	async def invitation_sas(self, invitation_id: int, sas: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationSas')
-		await self._stubs.invitationCommandStub.invitation_sas(commands.InvitationSasRequest(client=self, invitation_id=invitation_id, sas=sas))
+		await self._stubs.invitationCommandStub.invitation_sas(commands.InvitationSasRequest(invitation_id=invitation_id, sas=sas))
 	
 	async def invitation_delete(self, invitation_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: InvitationDelete')
-		await self._stubs.invitationCommandStub.invitation_delete(commands.InvitationDeleteRequest(client=self, invitation_id=invitation_id))
+		await self._stubs.invitationCommandStub.invitation_delete(commands.InvitationDeleteRequest(invitation_id=invitation_id))
 	
 	# ContactCommandService
 	def contact_list(self, filter: datatypes.ContactFilter = None) -> AsyncIterator[datatypes.Contact]:
@@ -597,61 +615,74 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.contacts:
 					yield element
-		return iterator(self._stubs.contactCommandStub.contact_list(commands.ContactListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.contactCommandStub.contact_list(commands.ContactListRequest(filter=filter)))
 	
 	async def contact_get(self, contact_id: int) -> datatypes.Contact:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactGet')
-		response: commands.ContactGetResponse = await self._stubs.contactCommandStub.contact_get(commands.ContactGetRequest(client=self, contact_id=contact_id))
+		response: commands.ContactGetResponse = await self._stubs.contactCommandStub.contact_get(commands.ContactGetRequest(contact_id=contact_id))
 		return response.contact
 	
 	async def contact_get_bytes_identifier(self, contact_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactGetBytesIdentifier')
-		response: commands.ContactGetBytesIdentifierResponse = await self._stubs.contactCommandStub.contact_get_bytes_identifier(commands.ContactGetBytesIdentifierRequest(client=self, contact_id=contact_id))
+		response: commands.ContactGetBytesIdentifierResponse = await self._stubs.contactCommandStub.contact_get_bytes_identifier(commands.ContactGetBytesIdentifierRequest(contact_id=contact_id))
 		return response.identifier
 	
 	async def contact_get_invitation_link(self, contact_id: int) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactGetInvitationLink')
-		response: commands.ContactGetInvitationLinkResponse = await self._stubs.contactCommandStub.contact_get_invitation_link(commands.ContactGetInvitationLinkRequest(client=self, contact_id=contact_id))
+		response: commands.ContactGetInvitationLinkResponse = await self._stubs.contactCommandStub.contact_get_invitation_link(commands.ContactGetInvitationLinkRequest(contact_id=contact_id))
 		return response.invitation_link
 	
 	async def contact_delete(self, contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactDelete')
-		await self._stubs.contactCommandStub.contact_delete(commands.ContactDeleteRequest(client=self, contact_id=contact_id))
+		await self._stubs.contactCommandStub.contact_delete(commands.ContactDeleteRequest(contact_id=contact_id))
 	
 	async def contact_introduction(self, first_contact_id: int, second_contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactIntroduction')
-		await self._stubs.contactCommandStub.contact_introduction(commands.ContactIntroductionRequest(client=self, first_contact_id=first_contact_id, second_contact_id=second_contact_id))
+		await self._stubs.contactCommandStub.contact_introduction(commands.ContactIntroductionRequest(first_contact_id=first_contact_id, second_contact_id=second_contact_id))
 	
 	async def contact_download_photo(self, contact_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactDownloadPhoto')
-		response: commands.ContactDownloadPhotoResponse = await self._stubs.contactCommandStub.contact_download_photo(commands.ContactDownloadPhotoRequest(client=self, contact_id=contact_id))
+		response: commands.ContactDownloadPhotoResponse = await self._stubs.contactCommandStub.contact_download_photo(commands.ContactDownloadPhotoRequest(contact_id=contact_id))
 		return response.photo
 	
 	async def contact_recreate_channels(self, contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactRecreateChannels')
-		await self._stubs.contactCommandStub.contact_recreate_channels(commands.ContactRecreateChannelsRequest(client=self, contact_id=contact_id))
+		await self._stubs.contactCommandStub.contact_recreate_channels(commands.ContactRecreateChannelsRequest(contact_id=contact_id))
 	
 	async def contact_invite_to_one_to_one_discussion(self, contact_id: int) -> datatypes.Invitation:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactInviteToOneToOneDiscussion')
-		response: commands.ContactInviteToOneToOneDiscussionResponse = await self._stubs.contactCommandStub.contact_invite_to_one_to_one_discussion(commands.ContactInviteToOneToOneDiscussionRequest(client=self, contact_id=contact_id))
+		response: commands.ContactInviteToOneToOneDiscussionResponse = await self._stubs.contactCommandStub.contact_invite_to_one_to_one_discussion(commands.ContactInviteToOneToOneDiscussionRequest(contact_id=contact_id))
 		return response.invitation
 	
 	async def contact_downgrade_one_to_one_discussion(self, contact_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: ContactDowngradeOneToOneDiscussion')
-		await self._stubs.contactCommandStub.contact_downgrade_one_to_one_discussion(commands.ContactDowngradeOneToOneDiscussionRequest(client=self, contact_id=contact_id))
+		await self._stubs.contactCommandStub.contact_downgrade_one_to_one_discussion(commands.ContactDowngradeOneToOneDiscussionRequest(contact_id=contact_id))
 	
 	# KeycloakCommandService
+	async def keycloak_bind_identity(self, configuration_link: str) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: KeycloakBindIdentity')
+		await self._stubs.keycloakCommandStub.keycloak_bind_identity(commands.KeycloakBindIdentityRequest(configuration_link=configuration_link))
+	
+	async def keycloak_unbind_identity(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: KeycloakUnbindIdentity')
+		await self._stubs.keycloakCommandStub.keycloak_unbind_identity(commands.KeycloakUnbindIdentityRequest())
+	
 	def keycloak_user_list(self, filter: datatypes.KeycloakUserFilter = None, last_list_timestamp: int = 0) -> AsyncIterator[tuple[list[datatypes.KeycloakUser], int]]:
 		command_logger.info(f'{self.__class__.__name__}: command: KeycloakUserList')
 	
 		async def iterator(message_iterator: AsyncIterator[commands.KeycloakUserListResponse]) -> AsyncIterator[tuple[list[datatypes.KeycloakUser], int]]:
 			async for message in message_iterator:
 				yield message.users, message.last_list_timestamp
-		return iterator(self._stubs.keycloakCommandStub.keycloak_user_list(commands.KeycloakUserListRequest(client=self, filter=filter, last_list_timestamp=last_list_timestamp)))
+		return iterator(self._stubs.keycloakCommandStub.keycloak_user_list(commands.KeycloakUserListRequest(filter=filter, last_list_timestamp=last_list_timestamp)))
 	
 	async def keycloak_add_user_as_contact(self, keycloak_id: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: KeycloakAddUserAsContact')
-		await self._stubs.keycloakCommandStub.keycloak_add_user_as_contact(commands.KeycloakAddUserAsContactRequest(client=self, keycloak_id=keycloak_id))
+		await self._stubs.keycloakCommandStub.keycloak_add_user_as_contact(commands.KeycloakAddUserAsContactRequest(keycloak_id=keycloak_id))
+	
+	async def keycloak_get_api_credentials(self) -> datatypes.KeycloakApiCredentials:
+		command_logger.info(f'{self.__class__.__name__}: command: KeycloakGetApiCredentials')
+		response: commands.KeycloakGetApiCredentialsResponse = await self._stubs.keycloakCommandStub.keycloak_get_api_credentials(commands.KeycloakGetApiCredentialsRequest())
+		return response.credentials
 	
 	# GroupCommandService
 	def group_list(self, filter: datatypes.GroupFilter = None) -> AsyncIterator[datatypes.Group]:
@@ -661,63 +692,63 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.groups:
 					yield element
-		return iterator(self._stubs.groupCommandStub.group_list(commands.GroupListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.groupCommandStub.group_list(commands.GroupListRequest(filter=filter)))
 	
 	async def group_get(self, group_id: int) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupGet')
-		response: commands.GroupGetResponse = await self._stubs.groupCommandStub.group_get(commands.GroupGetRequest(client=self, group_id=group_id))
+		response: commands.GroupGetResponse = await self._stubs.groupCommandStub.group_get(commands.GroupGetRequest(group_id=group_id))
 		return response.group
 	
 	async def group_get_bytes_identifier(self, group_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupGetBytesIdentifier')
-		response: commands.GroupGetBytesIdentifierResponse = await self._stubs.groupCommandStub.group_get_bytes_identifier(commands.GroupGetBytesIdentifierRequest(client=self, group_id=group_id))
+		response: commands.GroupGetBytesIdentifierResponse = await self._stubs.groupCommandStub.group_get_bytes_identifier(commands.GroupGetBytesIdentifierRequest(group_id=group_id))
 		return response.identifier
 	
 	async def group_new_standard_group(self, name: str = "", description: str = "", admin_contact_ids: list[int] = ()) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupNewStandardGroup')
-		response: commands.GroupNewStandardGroupResponse = await self._stubs.groupCommandStub.group_new_standard_group(commands.GroupNewStandardGroupRequest(client=self, name=name, description=description, admin_contact_ids=admin_contact_ids))
+		response: commands.GroupNewStandardGroupResponse = await self._stubs.groupCommandStub.group_new_standard_group(commands.GroupNewStandardGroupRequest(name=name, description=description, admin_contact_ids=admin_contact_ids))
 		return response.group
 	
 	async def group_new_controlled_group(self, name: str = "", description: str = "", admin_contact_ids: list[int] = (), contact_ids: list[int] = ()) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupNewControlledGroup')
-		response: commands.GroupNewControlledGroupResponse = await self._stubs.groupCommandStub.group_new_controlled_group(commands.GroupNewControlledGroupRequest(client=self, name=name, description=description, admin_contact_ids=admin_contact_ids, contact_ids=contact_ids))
+		response: commands.GroupNewControlledGroupResponse = await self._stubs.groupCommandStub.group_new_controlled_group(commands.GroupNewControlledGroupRequest(name=name, description=description, admin_contact_ids=admin_contact_ids, contact_ids=contact_ids))
 		return response.group
 	
 	async def group_new_read_only_group(self, name: str = "", description: str = "", admin_contact_ids: list[int] = (), contact_ids: list[int] = ()) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupNewReadOnlyGroup')
-		response: commands.GroupNewReadOnlyGroupResponse = await self._stubs.groupCommandStub.group_new_read_only_group(commands.GroupNewReadOnlyGroupRequest(client=self, name=name, description=description, admin_contact_ids=admin_contact_ids, contact_ids=contact_ids))
+		response: commands.GroupNewReadOnlyGroupResponse = await self._stubs.groupCommandStub.group_new_read_only_group(commands.GroupNewReadOnlyGroupRequest(name=name, description=description, admin_contact_ids=admin_contact_ids, contact_ids=contact_ids))
 		return response.group
 	
 	async def group_new_advanced_group(self, name: str = "", description: str = "", advanced_configuration: datatypes.Group.AdvancedConfiguration = None, members: list[datatypes.GroupMember] = None) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupNewAdvancedGroup')
-		response: commands.GroupNewAdvancedGroupResponse = await self._stubs.groupCommandStub.group_new_advanced_group(commands.GroupNewAdvancedGroupRequest(client=self, name=name, description=description, advanced_configuration=advanced_configuration, members=members))
+		response: commands.GroupNewAdvancedGroupResponse = await self._stubs.groupCommandStub.group_new_advanced_group(commands.GroupNewAdvancedGroupRequest(name=name, description=description, advanced_configuration=advanced_configuration, members=members))
 		return response.group
 	
 	async def group_disband(self, group_id: int) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupDisband')
-		response: commands.GroupDisbandResponse = await self._stubs.groupCommandStub.group_disband(commands.GroupDisbandRequest(client=self, group_id=group_id))
+		response: commands.GroupDisbandResponse = await self._stubs.groupCommandStub.group_disband(commands.GroupDisbandRequest(group_id=group_id))
 		return response.group
 	
 	async def group_leave(self, group_id: int) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupLeave')
-		response: commands.GroupLeaveResponse = await self._stubs.groupCommandStub.group_leave(commands.GroupLeaveRequest(client=self, group_id=group_id))
+		response: commands.GroupLeaveResponse = await self._stubs.groupCommandStub.group_leave(commands.GroupLeaveRequest(group_id=group_id))
 		return response.group
 	
 	async def group_update(self, group: datatypes.Group) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupUpdate')
-		response: commands.GroupUpdateResponse = await self._stubs.groupCommandStub.group_update(commands.GroupUpdateRequest(client=self, group=group))
+		response: commands.GroupUpdateResponse = await self._stubs.groupCommandStub.group_update(commands.GroupUpdateRequest(group=group))
 		return response.group
 	
 	async def group_unset_photo(self, group_id: int) -> datatypes.Group:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupUnsetPhoto')
-		response: commands.GroupUnsetPhotoResponse = await self._stubs.groupCommandStub.group_unset_photo(commands.GroupUnsetPhotoRequest(client=self, group_id=group_id))
+		response: commands.GroupUnsetPhotoResponse = await self._stubs.groupCommandStub.group_unset_photo(commands.GroupUnsetPhotoRequest(group_id=group_id))
 		return response.group
 	
 	# group_set_photo: cannot generate request stream rpc code
 	
 	async def group_download_photo(self, group_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupDownloadPhoto')
-		response: commands.GroupDownloadPhotoResponse = await self._stubs.groupCommandStub.group_download_photo(commands.GroupDownloadPhotoRequest(client=self, group_id=group_id))
+		response: commands.GroupDownloadPhotoResponse = await self._stubs.groupCommandStub.group_download_photo(commands.GroupDownloadPhotoRequest(group_id=group_id))
 		return response.photo
 	
 	# DiscussionCommandService
@@ -728,41 +759,36 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.discussions:
 					yield element
-		return iterator(self._stubs.discussionCommandStub.discussion_list(commands.DiscussionListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.discussionCommandStub.discussion_list(commands.DiscussionListRequest(filter=filter)))
 	
 	async def discussion_get(self, discussion_id: int) -> datatypes.Discussion:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGet')
-		response: commands.DiscussionGetResponse = await self._stubs.discussionCommandStub.discussion_get(commands.DiscussionGetRequest(client=self, discussion_id=discussion_id))
+		response: commands.DiscussionGetResponse = await self._stubs.discussionCommandStub.discussion_get(commands.DiscussionGetRequest(discussion_id=discussion_id))
 		return response.discussion
 	
 	async def discussion_get_bytes_identifier(self, discussion_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGetBytesIdentifier')
-		response: commands.DiscussionGetBytesIdentifierResponse = await self._stubs.discussionCommandStub.discussion_get_bytes_identifier(commands.DiscussionGetBytesIdentifierRequest(client=self, discussion_id=discussion_id))
+		response: commands.DiscussionGetBytesIdentifierResponse = await self._stubs.discussionCommandStub.discussion_get_bytes_identifier(commands.DiscussionGetBytesIdentifierRequest(discussion_id=discussion_id))
 		return response.identifier
 	
 	async def discussion_get_by_contact(self, contact_id: int) -> datatypes.Discussion:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGetByContact')
-		response: commands.DiscussionGetByContactResponse = await self._stubs.discussionCommandStub.discussion_get_by_contact(commands.DiscussionGetByContactRequest(client=self, contact_id=contact_id))
+		response: commands.DiscussionGetByContactResponse = await self._stubs.discussionCommandStub.discussion_get_by_contact(commands.DiscussionGetByContactRequest(contact_id=contact_id))
 		return response.discussion
 	
 	async def discussion_get_by_group(self, group_id: int) -> datatypes.Discussion:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionGetByGroup')
-		response: commands.DiscussionGetByGroupResponse = await self._stubs.discussionCommandStub.discussion_get_by_group(commands.DiscussionGetByGroupRequest(client=self, group_id=group_id))
+		response: commands.DiscussionGetByGroupResponse = await self._stubs.discussionCommandStub.discussion_get_by_group(commands.DiscussionGetByGroupRequest(group_id=group_id))
 		return response.discussion
 	
-	async def discussion_empty(self, discussion_id: int, delete_everywhere: bool = False) -> None:
+	async def discussion_empty(self, discussion_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionEmpty')
-		await self._stubs.discussionCommandStub.discussion_empty(commands.DiscussionEmptyRequest(client=self, discussion_id=discussion_id, delete_everywhere=delete_everywhere))
+		await self._stubs.discussionCommandStub.discussion_empty(commands.DiscussionEmptyRequest(discussion_id=discussion_id))
 	
-	async def discussion_settings_get(self, discussion_id: int) -> datatypes.DiscussionSettings:
-		command_logger.info(f'{self.__class__.__name__}: command: DiscussionSettingsGet')
-		response: commands.DiscussionSettingsGetResponse = await self._stubs.discussionCommandStub.discussion_settings_get(commands.DiscussionSettingsGetRequest(client=self, discussion_id=discussion_id))
-		return response.settings
-	
-	async def discussion_settings_set(self, settings: datatypes.DiscussionSettings) -> datatypes.DiscussionSettings:
-		command_logger.info(f'{self.__class__.__name__}: command: DiscussionSettingsSet')
-		response: commands.DiscussionSettingsSetResponse = await self._stubs.discussionCommandStub.discussion_settings_set(commands.DiscussionSettingsSetRequest(client=self, settings=settings))
-		return response.new_settings
+	async def discussion_download_photo(self, discussion_id: int) -> bytes:
+		command_logger.info(f'{self.__class__.__name__}: command: DiscussionDownloadPhoto')
+		response: commands.DiscussionDownloadPhotoResponse = await self._stubs.discussionCommandStub.discussion_download_photo(commands.DiscussionDownloadPhotoRequest(discussion_id=discussion_id))
+		return response.photo
 	
 	def discussion_locked_list(self) -> AsyncIterator[datatypes.Discussion]:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionLockedList')
@@ -771,11 +797,11 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.discussions:
 					yield element
-		return iterator(self._stubs.discussionCommandStub.discussion_locked_list(commands.DiscussionLockedListRequest(client=self)))
+		return iterator(self._stubs.discussionCommandStub.discussion_locked_list(commands.DiscussionLockedListRequest()))
 	
 	async def discussion_locked_delete(self, discussion_id: int) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionLockedDelete')
-		await self._stubs.discussionCommandStub.discussion_locked_delete(commands.DiscussionLockedDeleteRequest(client=self, discussion_id=discussion_id))
+		await self._stubs.discussionCommandStub.discussion_locked_delete(commands.DiscussionLockedDeleteRequest(discussion_id=discussion_id))
 	
 	# MessageCommandService
 	def message_list(self, filter: datatypes.MessageFilter = None, unread: bool = False) -> AsyncIterator[datatypes.Message]:
@@ -785,59 +811,55 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.messages:
 					yield element
-		return iterator(self._stubs.messageCommandStub.message_list(commands.MessageListRequest(client=self, filter=filter, unread=unread)))
+		return iterator(self._stubs.messageCommandStub.message_list(commands.MessageListRequest(filter=filter, unread=unread)))
 	
 	async def message_get(self, message_id: datatypes.MessageId) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageGet')
-		response: commands.MessageGetResponse = await self._stubs.messageCommandStub.message_get(commands.MessageGetRequest(client=self, message_id=message_id))
+		response: commands.MessageGetResponse = await self._stubs.messageCommandStub.message_get(commands.MessageGetRequest(message_id=message_id))
 		return response.message
 	
 	async def message_refresh(self) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageRefresh')
-		await self._stubs.messageCommandStub.message_refresh(commands.MessageRefreshRequest(client=self))
+		await self._stubs.messageCommandStub.message_refresh(commands.MessageRefreshRequest())
 	
 	async def message_delete(self, message_id: datatypes.MessageId, delete_everywhere: bool = False) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageDelete')
-		await self._stubs.messageCommandStub.message_delete(commands.MessageDeleteRequest(client=self, message_id=message_id, delete_everywhere=delete_everywhere))
+		await self._stubs.messageCommandStub.message_delete(commands.MessageDeleteRequest(message_id=message_id, delete_everywhere=delete_everywhere))
 	
 	async def message_send(self, discussion_id: int, body: str, reply_id: datatypes.MessageId = None, ephemerality: datatypes.MessageEphemerality = None, disable_link_preview: bool = False) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSend')
-		response: commands.MessageSendResponse = await self._stubs.messageCommandStub.message_send(commands.MessageSendRequest(client=self, discussion_id=discussion_id, body=body, reply_id=reply_id, ephemerality=ephemerality, disable_link_preview=disable_link_preview))
+		response: commands.MessageSendResponse = await self._stubs.messageCommandStub.message_send(commands.MessageSendRequest(discussion_id=discussion_id, body=body, reply_id=reply_id, ephemerality=ephemerality, disable_link_preview=disable_link_preview))
 		return response.message
 	
 	# message_send_with_attachments: cannot generate request stream rpc code
 	
 	async def message_send_location(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: datatypes.MessageEphemerality = None) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSendLocation')
-		response: commands.MessageSendLocationResponse = await self._stubs.messageCommandStub.message_send_location(commands.MessageSendLocationRequest(client=self, discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision, address=address, preview_filename=preview_filename, preview_payload=preview_payload, ephemerality=ephemerality))
+		response: commands.MessageSendLocationResponse = await self._stubs.messageCommandStub.message_send_location(commands.MessageSendLocationRequest(discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision, address=address, preview_filename=preview_filename, preview_payload=preview_payload, ephemerality=ephemerality))
 		return response.message
 	
 	async def message_start_location_sharing(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageStartLocationSharing')
-		response: commands.MessageStartLocationSharingResponse = await self._stubs.messageCommandStub.message_start_location_sharing(commands.MessageStartLocationSharingRequest(client=self, discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
+		response: commands.MessageStartLocationSharingResponse = await self._stubs.messageCommandStub.message_start_location_sharing(commands.MessageStartLocationSharingRequest(discussion_id=discussion_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
 		return response.message
 	
 	async def message_update_location_sharing(self, message_id: datatypes.MessageId, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageUpdateLocationSharing')
-		response: commands.MessageUpdateLocationSharingResponse = await self._stubs.messageCommandStub.message_update_location_sharing(commands.MessageUpdateLocationSharingRequest(client=self, message_id=message_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
+		response: commands.MessageUpdateLocationSharingResponse = await self._stubs.messageCommandStub.message_update_location_sharing(commands.MessageUpdateLocationSharingRequest(message_id=message_id, latitude=latitude, longitude=longitude, altitude=altitude, precision=precision))
 		return response.message
 	
 	async def message_end_location_sharing(self, message_id: datatypes.MessageId) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageEndLocationSharing')
-		response: commands.MessageEndLocationSharingResponse = await self._stubs.messageCommandStub.message_end_location_sharing(commands.MessageEndLocationSharingRequest(client=self, message_id=message_id))
+		response: commands.MessageEndLocationSharingResponse = await self._stubs.messageCommandStub.message_end_location_sharing(commands.MessageEndLocationSharingRequest(message_id=message_id))
 		return response.message
 	
-	async def message_react(self, message_id: datatypes.MessageId, reaction: str) -> None:
+	async def message_react(self, message_id: datatypes.MessageId, reaction: str = "") -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageReact')
-		await self._stubs.messageCommandStub.message_react(commands.MessageReactRequest(client=self, message_id=message_id, reaction=reaction))
+		await self._stubs.messageCommandStub.message_react(commands.MessageReactRequest(message_id=message_id, reaction=reaction))
 	
 	async def message_update_body(self, message_id: datatypes.MessageId, updated_body: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageUpdateBody')
-		await self._stubs.messageCommandStub.message_update_body(commands.MessageUpdateBodyRequest(client=self, message_id=message_id, updated_body=updated_body))
-	
-	async def message_send_voip(self, discussion_id: int) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: MessageSendVoip')
-		await self._stubs.messageCommandStub.message_send_voip(commands.MessageSendVoipRequest(client=self, discussion_id=discussion_id))
+		await self._stubs.messageCommandStub.message_update_body(commands.MessageUpdateBodyRequest(message_id=message_id, updated_body=updated_body))
 	
 	# AttachmentCommandService
 	def attachment_list(self, filter: datatypes.AttachmentFilter = None) -> AsyncIterator[datatypes.Attachment]:
@@ -847,16 +869,16 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.attachments:
 					yield element
-		return iterator(self._stubs.attachmentCommandStub.attachment_list(commands.AttachmentListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.attachmentCommandStub.attachment_list(commands.AttachmentListRequest(filter=filter)))
 	
 	async def attachment_get(self, attachment_id: datatypes.AttachmentId) -> datatypes.Attachment:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentGet')
-		response: commands.AttachmentGetResponse = await self._stubs.attachmentCommandStub.attachment_get(commands.AttachmentGetRequest(client=self, attachment_id=attachment_id))
+		response: commands.AttachmentGetResponse = await self._stubs.attachmentCommandStub.attachment_get(commands.AttachmentGetRequest(attachment_id=attachment_id))
 		return response.attachment
 	
 	async def attachment_delete(self, attachment_id: datatypes.AttachmentId, delete_everywhere: bool = False) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentDelete')
-		await self._stubs.attachmentCommandStub.attachment_delete(commands.AttachmentDeleteRequest(client=self, attachment_id=attachment_id, delete_everywhere=delete_everywhere))
+		await self._stubs.attachmentCommandStub.attachment_delete(commands.AttachmentDeleteRequest(attachment_id=attachment_id, delete_everywhere=delete_everywhere))
 	
 	def attachment_download(self, attachment_id: datatypes.AttachmentId) -> AsyncIterator[bytes]:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentDownload')
@@ -864,7 +886,7 @@ class OlvidClient(CommandHolder):
 		async def iterator(message_iterator: AsyncIterator[commands.AttachmentDownloadResponse]) -> AsyncIterator[bytes]:
 			async for message in message_iterator:
 				yield message.chunk
-		return iterator(self._stubs.attachmentCommandStub.attachment_download(commands.AttachmentDownloadRequest(client=self, attachment_id=attachment_id)))
+		return iterator(self._stubs.attachmentCommandStub.attachment_download(commands.AttachmentDownloadRequest(attachment_id=attachment_id)))
 	
 	# StorageCommandService
 	def storage_list(self, filter: datatypes.StorageElementFilter = None) -> AsyncIterator[datatypes.StorageElement]:
@@ -874,21 +896,21 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.elements:
 					yield element
-		return iterator(self._stubs.storageCommandStub.storage_list(commands.StorageListRequest(client=self, filter=filter)))
+		return iterator(self._stubs.storageCommandStub.storage_list(commands.StorageListRequest(filter=filter)))
 	
 	async def storage_get(self, key: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: StorageGet')
-		response: commands.StorageGetResponse = await self._stubs.storageCommandStub.storage_get(commands.StorageGetRequest(client=self, key=key))
+		response: commands.StorageGetResponse = await self._stubs.storageCommandStub.storage_get(commands.StorageGetRequest(key=key))
 		return response.value
 	
 	async def storage_set(self, key: str, value: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: StorageSet')
-		response: commands.StorageSetResponse = await self._stubs.storageCommandStub.storage_set(commands.StorageSetRequest(client=self, key=key, value=value))
+		response: commands.StorageSetResponse = await self._stubs.storageCommandStub.storage_set(commands.StorageSetRequest(key=key, value=value))
 		return response.previous_value
 	
 	async def storage_unset(self, key: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: StorageUnset')
-		response: commands.StorageUnsetResponse = await self._stubs.storageCommandStub.storage_unset(commands.StorageUnsetRequest(client=self, key=key))
+		response: commands.StorageUnsetResponse = await self._stubs.storageCommandStub.storage_unset(commands.StorageUnsetRequest(key=key))
 		return response.previous_value
 	
 	# DiscussionStorageCommandService
@@ -899,232 +921,245 @@ class OlvidClient(CommandHolder):
 			async for message in message_iterator:
 				for element in message.elements:
 					yield element
-		return iterator(self._stubs.discussionStorageCommandStub.discussion_storage_list(commands.DiscussionStorageListRequest(client=self, discussion_id=discussion_id, filter=filter)))
+		return iterator(self._stubs.discussionStorageCommandStub.discussion_storage_list(commands.DiscussionStorageListRequest(discussion_id=discussion_id, filter=filter)))
 	
 	async def discussion_storage_get(self, discussion_id: int, key: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionStorageGet')
-		response: commands.DiscussionStorageGetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_get(commands.DiscussionStorageGetRequest(client=self, discussion_id=discussion_id, key=key))
+		response: commands.DiscussionStorageGetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_get(commands.DiscussionStorageGetRequest(discussion_id=discussion_id, key=key))
 		return response.value
 	
 	async def discussion_storage_set(self, discussion_id: int, key: str, value: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionStorageSet')
-		response: commands.DiscussionStorageSetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_set(commands.DiscussionStorageSetRequest(client=self, discussion_id=discussion_id, key=key, value=value))
+		response: commands.DiscussionStorageSetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_set(commands.DiscussionStorageSetRequest(discussion_id=discussion_id, key=key, value=value))
 		return response.previous_value
 	
 	async def discussion_storage_unset(self, discussion_id: int, key: str) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: DiscussionStorageUnset')
-		response: commands.DiscussionStorageUnsetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_unset(commands.DiscussionStorageUnsetRequest(client=self, discussion_id=discussion_id, key=key))
+		response: commands.DiscussionStorageUnsetResponse = await self._stubs.discussionStorageCommandStub.discussion_storage_unset(commands.DiscussionStorageUnsetRequest(discussion_id=discussion_id, key=key))
 		return response.previous_value
 	
 	# CallCommandService
 	async def call_start_discussion_call(self, discussion_id: int) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: CallStartDiscussionCall')
-		response: commands.CallStartDiscussionCallResponse = await self._stubs.callCommandStub.call_start_discussion_call(commands.CallStartDiscussionCallRequest(client=self, discussion_id=discussion_id))
+		response: commands.CallStartDiscussionCallResponse = await self._stubs.callCommandStub.call_start_discussion_call(commands.CallStartDiscussionCallRequest(discussion_id=discussion_id))
 		return response.call_identifier
 	
 	async def call_start_custom_call(self, contact_ids: list[int] = (), discussion_id: int = 0) -> str:
 		command_logger.info(f'{self.__class__.__name__}: command: CallStartCustomCall')
-		response: commands.CallStartCustomCallResponse = await self._stubs.callCommandStub.call_start_custom_call(commands.CallStartCustomCallRequest(client=self, contact_ids=contact_ids, discussion_id=discussion_id))
+		response: commands.CallStartCustomCallResponse = await self._stubs.callCommandStub.call_start_custom_call(commands.CallStartCustomCallRequest(contact_ids=contact_ids, discussion_id=discussion_id))
 		return response.call_identifier
+	
+	# SettingsCommandService
+	async def settings_identity_get(self) -> datatypes.IdentitySettings:
+		command_logger.info(f'{self.__class__.__name__}: command: SettingsIdentityGet')
+		response: commands.SettingsIdentityGetResponse = await self._stubs.settingsCommandStub.settings_identity_get(commands.SettingsIdentityGetRequest())
+		return response.identity_settings
+	
+	async def settings_identity_set(self, identity_settings: datatypes.IdentitySettings) -> datatypes.IdentitySettings:
+		command_logger.info(f'{self.__class__.__name__}: command: SettingsIdentitySet')
+		response: commands.SettingsIdentitySetResponse = await self._stubs.settingsCommandStub.settings_identity_set(commands.SettingsIdentitySetRequest(identity_settings=identity_settings))
+		return response.identity_settings
+	
+	async def settings_discussion_get(self, discussion_id: int) -> datatypes.DiscussionSettings:
+		command_logger.info(f'{self.__class__.__name__}: command: SettingsDiscussionGet')
+		response: commands.SettingsDiscussionGetResponse = await self._stubs.settingsCommandStub.settings_discussion_get(commands.SettingsDiscussionGetRequest(discussion_id=discussion_id))
+		return response.discussion_settings
+	
+	async def settings_discussion_set(self, discussion_settings: datatypes.DiscussionSettings) -> datatypes.DiscussionSettings:
+		command_logger.info(f'{self.__class__.__name__}: command: SettingsDiscussionSet')
+		response: commands.SettingsDiscussionSetResponse = await self._stubs.settingsCommandStub.settings_discussion_set(commands.SettingsDiscussionSetRequest(discussion_settings=discussion_settings))
+		return response.discussion_settings
 	
 	# InvitationNotificationService
 	def _notif_invitation_received(self, count: int = 0, filter: datatypes.InvitationFilter = None) -> AsyncIterator[notifications.InvitationReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationReceived')
-		return self._stubs.invitationNotificationStub.invitation_received(notifications.SubscribeToInvitationReceivedNotification(client=self, count=count, filter=filter))
+		return self._stubs.invitationNotificationStub.invitation_received(notifications.SubscribeToInvitationReceivedNotification(count=count, filter=filter))
 	
 	def _notif_invitation_sent(self, count: int = 0, filter: datatypes.InvitationFilter = None) -> AsyncIterator[notifications.InvitationSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationSent')
-		return self._stubs.invitationNotificationStub.invitation_sent(notifications.SubscribeToInvitationSentNotification(client=self, count=count, filter=filter))
+		return self._stubs.invitationNotificationStub.invitation_sent(notifications.SubscribeToInvitationSentNotification(count=count, filter=filter))
 	
 	def _notif_invitation_deleted(self, count: int = 0, filter: datatypes.InvitationFilter = None, invitation_ids: list[int] = ()) -> AsyncIterator[notifications.InvitationDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationDeleted')
-		return self._stubs.invitationNotificationStub.invitation_deleted(notifications.SubscribeToInvitationDeletedNotification(client=self, count=count, filter=filter, invitation_ids=invitation_ids))
+		return self._stubs.invitationNotificationStub.invitation_deleted(notifications.SubscribeToInvitationDeletedNotification(count=count, filter=filter, invitation_ids=invitation_ids))
 	
 	def _notif_invitation_updated(self, count: int = 0, filter: datatypes.InvitationFilter = None, invitation_ids: list[int] = ()) -> AsyncIterator[notifications.InvitationUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: InvitationUpdated')
-		return self._stubs.invitationNotificationStub.invitation_updated(notifications.SubscribeToInvitationUpdatedNotification(client=self, count=count, filter=filter, invitation_ids=invitation_ids))
+		return self._stubs.invitationNotificationStub.invitation_updated(notifications.SubscribeToInvitationUpdatedNotification(count=count, filter=filter, invitation_ids=invitation_ids))
 	
 	# ContactNotificationService
 	def _notif_contact_new(self, count: int = 0, filter: datatypes.ContactFilter = None) -> AsyncIterator[notifications.ContactNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactNew')
-		return self._stubs.contactNotificationStub.contact_new(notifications.SubscribeToContactNewNotification(client=self, count=count, filter=filter))
+		return self._stubs.contactNotificationStub.contact_new(notifications.SubscribeToContactNewNotification(count=count, filter=filter))
 	
 	def _notif_contact_deleted(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactDeleted')
-		return self._stubs.contactNotificationStub.contact_deleted(notifications.SubscribeToContactDeletedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
+		return self._stubs.contactNotificationStub.contact_deleted(notifications.SubscribeToContactDeletedNotification(count=count, filter=filter, contact_ids=contact_ids))
 	
 	def _notif_contact_details_updated(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactDetailsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactDetailsUpdated')
-		return self._stubs.contactNotificationStub.contact_details_updated(notifications.SubscribeToContactDetailsUpdatedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
+		return self._stubs.contactNotificationStub.contact_details_updated(notifications.SubscribeToContactDetailsUpdatedNotification(count=count, filter=filter, contact_ids=contact_ids))
 	
 	def _notif_contact_photo_updated(self, count: int = 0, filter: datatypes.ContactFilter = None, contact_ids: list[int] = ()) -> AsyncIterator[notifications.ContactPhotoUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: ContactPhotoUpdated')
-		return self._stubs.contactNotificationStub.contact_photo_updated(notifications.SubscribeToContactPhotoUpdatedNotification(client=self, count=count, filter=filter, contact_ids=contact_ids))
+		return self._stubs.contactNotificationStub.contact_photo_updated(notifications.SubscribeToContactPhotoUpdatedNotification(count=count, filter=filter, contact_ids=contact_ids))
 	
 	# GroupNotificationService
 	def _notif_group_new(self, count: int = 0, group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNew')
-		return self._stubs.groupNotificationStub.group_new(notifications.SubscribeToGroupNewNotification(client=self, count=count, group_filter=group_filter))
+		return self._stubs.groupNotificationStub.group_new(notifications.SubscribeToGroupNewNotification(count=count, group_filter=group_filter))
 	
 	def _notif_group_deleted(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupDeleted')
-		return self._stubs.groupNotificationStub.group_deleted(notifications.SubscribeToGroupDeletedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter))
+		return self._stubs.groupNotificationStub.group_deleted(notifications.SubscribeToGroupDeletedNotification(count=count, group_ids=group_ids, group_filter=group_filter))
 	
 	def _notif_group_name_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, previous_name_search: str = "") -> AsyncIterator[notifications.GroupNameUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupNameUpdated')
-		return self._stubs.groupNotificationStub.group_name_updated(notifications.SubscribeToGroupNameUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, previous_name_search=previous_name_search))
+		return self._stubs.groupNotificationStub.group_name_updated(notifications.SubscribeToGroupNameUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, previous_name_search=previous_name_search))
 	
 	def _notif_group_photo_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None) -> AsyncIterator[notifications.GroupPhotoUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPhotoUpdated')
-		return self._stubs.groupNotificationStub.group_photo_updated(notifications.SubscribeToGroupPhotoUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter))
+		return self._stubs.groupNotificationStub.group_photo_updated(notifications.SubscribeToGroupPhotoUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter))
 	
 	def _notif_group_description_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, previous_description_search: str = "") -> AsyncIterator[notifications.GroupDescriptionUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupDescriptionUpdated')
-		return self._stubs.groupNotificationStub.group_description_updated(notifications.SubscribeToGroupDescriptionUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, previous_description_search=previous_description_search))
+		return self._stubs.groupNotificationStub.group_description_updated(notifications.SubscribeToGroupDescriptionUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, previous_description_search=previous_description_search))
 	
 	def _notif_group_pending_member_added(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, pending_member_filter: datatypes.PendingGroupMemberFilter = None) -> AsyncIterator[notifications.GroupPendingMemberAddedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPendingMemberAdded')
-		return self._stubs.groupNotificationStub.group_pending_member_added(notifications.SubscribeToGroupPendingMemberAddedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
+		return self._stubs.groupNotificationStub.group_pending_member_added(notifications.SubscribeToGroupPendingMemberAddedNotification(count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
 	
 	def _notif_group_pending_member_removed(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, pending_member_filter: datatypes.PendingGroupMemberFilter = None) -> AsyncIterator[notifications.GroupPendingMemberRemovedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupPendingMemberRemoved')
-		return self._stubs.groupNotificationStub.group_pending_member_removed(notifications.SubscribeToGroupPendingMemberRemovedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
+		return self._stubs.groupNotificationStub.group_pending_member_removed(notifications.SubscribeToGroupPendingMemberRemovedNotification(count=count, group_ids=group_ids, group_filter=group_filter, pending_member_filter=pending_member_filter))
 	
 	def _notif_group_member_joined(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberJoinedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberJoined')
-		return self._stubs.groupNotificationStub.group_member_joined(notifications.SubscribeToGroupMemberJoinedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
+		return self._stubs.groupNotificationStub.group_member_joined(notifications.SubscribeToGroupMemberJoinedNotification(count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
 	
 	def _notif_group_member_left(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberLeftNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberLeft')
-		return self._stubs.groupNotificationStub.group_member_left(notifications.SubscribeToGroupMemberLeftNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
+		return self._stubs.groupNotificationStub.group_member_left(notifications.SubscribeToGroupMemberLeftNotification(count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter))
 	
 	def _notif_group_own_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, permissions_filter: datatypes.GroupPermissionFilter = None, previous_permissions_filter: datatypes.GroupPermissionFilter = None) -> AsyncIterator[notifications.GroupOwnPermissionsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupOwnPermissionsUpdated')
-		return self._stubs.groupNotificationStub.group_own_permissions_updated(notifications.SubscribeToGroupOwnPermissionsUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, permissions_filter=permissions_filter, previous_permissions_filter=previous_permissions_filter))
+		return self._stubs.groupNotificationStub.group_own_permissions_updated(notifications.SubscribeToGroupOwnPermissionsUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, permissions_filter=permissions_filter, previous_permissions_filter=previous_permissions_filter))
 	
 	def _notif_group_member_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberPermissionsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberPermissionsUpdated')
-		return self._stubs.groupNotificationStub.group_member_permissions_updated(notifications.SubscribeToGroupMemberPermissionsUpdatedNotification(client=self, count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter, previous_permission_filter=previous_permission_filter))
-	
-	def _notif_group_update_in_progress(self, count: int = 0, group_ids: list[int] = ()) -> AsyncIterator[notifications.GroupUpdateInProgressNotification]:
-		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupUpdateInProgress')
-		return self._stubs.groupNotificationStub.group_update_in_progress(notifications.SubscribeToGroupUpdateInProgressNotification(client=self, count=count, group_ids=group_ids))
-	
-	def _notif_group_update_finished(self, count: int = 0, group_ids: list[int] = ()) -> AsyncIterator[notifications.GroupUpdateFinishedNotification]:
-		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupUpdateFinished')
-		return self._stubs.groupNotificationStub.group_update_finished(notifications.SubscribeToGroupUpdateFinishedNotification(client=self, count=count, group_ids=group_ids))
+		return self._stubs.groupNotificationStub.group_member_permissions_updated(notifications.SubscribeToGroupMemberPermissionsUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter, previous_permission_filter=previous_permission_filter))
 	
 	# DiscussionNotificationService
 	def _notif_discussion_new(self, count: int = 0, filter: datatypes.DiscussionFilter = None) -> AsyncIterator[notifications.DiscussionNewNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionNew')
-		return self._stubs.discussionNotificationStub.discussion_new(notifications.SubscribeToDiscussionNewNotification(client=self, count=count, filter=filter))
+		return self._stubs.discussionNotificationStub.discussion_new(notifications.SubscribeToDiscussionNewNotification(count=count, filter=filter))
 	
 	def _notif_discussion_locked(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionLockedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionLocked')
-		return self._stubs.discussionNotificationStub.discussion_locked(notifications.SubscribeToDiscussionLockedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
+		return self._stubs.discussionNotificationStub.discussion_locked(notifications.SubscribeToDiscussionLockedNotification(count=count, filter=filter, discussion_ids=discussion_ids))
 	
 	def _notif_discussion_title_updated(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionTitleUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionTitleUpdated')
-		return self._stubs.discussionNotificationStub.discussion_title_updated(notifications.SubscribeToDiscussionTitleUpdatedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
+		return self._stubs.discussionNotificationStub.discussion_title_updated(notifications.SubscribeToDiscussionTitleUpdatedNotification(count=count, filter=filter, discussion_ids=discussion_ids))
 	
 	def _notif_discussion_settings_updated(self, count: int = 0, filter: datatypes.DiscussionFilter = None, discussion_ids: list[int] = ()) -> AsyncIterator[notifications.DiscussionSettingsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: DiscussionSettingsUpdated')
-		return self._stubs.discussionNotificationStub.discussion_settings_updated(notifications.SubscribeToDiscussionSettingsUpdatedNotification(client=self, count=count, filter=filter, discussion_ids=discussion_ids))
+		return self._stubs.discussionNotificationStub.discussion_settings_updated(notifications.SubscribeToDiscussionSettingsUpdatedNotification(count=count, filter=filter, discussion_ids=discussion_ids))
 	
 	# MessageNotificationService
 	def _notif_message_received(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReceived')
-		return self._stubs.messageNotificationStub.message_received(notifications.SubscribeToMessageReceivedNotification(client=self, count=count, filter=filter))
+		return self._stubs.messageNotificationStub.message_received(notifications.SubscribeToMessageReceivedNotification(count=count, filter=filter))
 	
 	def _notif_message_sent(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageSent')
-		return self._stubs.messageNotificationStub.message_sent(notifications.SubscribeToMessageSentNotification(client=self, count=count, filter=filter))
+		return self._stubs.messageNotificationStub.message_sent(notifications.SubscribeToMessageSentNotification(count=count, filter=filter))
 	
 	def _notif_message_deleted(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageDeletedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageDeleted')
-		return self._stubs.messageNotificationStub.message_deleted(notifications.SubscribeToMessageDeletedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_deleted(notifications.SubscribeToMessageDeletedNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_body_updated(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageBodyUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageBodyUpdated')
-		return self._stubs.messageNotificationStub.message_body_updated(notifications.SubscribeToMessageBodyUpdatedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_body_updated(notifications.SubscribeToMessageBodyUpdatedNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_uploaded(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageUploadedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageUploaded')
-		return self._stubs.messageNotificationStub.message_uploaded(notifications.SubscribeToMessageUploadedNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_uploaded(notifications.SubscribeToMessageUploadedNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_delivered(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageDeliveredNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageDelivered')
-		return self._stubs.messageNotificationStub.message_delivered(notifications.SubscribeToMessageDeliveredNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_delivered(notifications.SubscribeToMessageDeliveredNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_read(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageReadNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageRead')
-		return self._stubs.messageNotificationStub.message_read(notifications.SubscribeToMessageReadNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_read(notifications.SubscribeToMessageReadNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_location_received(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationReceived')
-		return self._stubs.messageNotificationStub.message_location_received(notifications.SubscribeToMessageLocationReceivedNotification(client=self, count=count, filter=filter))
+		return self._stubs.messageNotificationStub.message_location_received(notifications.SubscribeToMessageLocationReceivedNotification(count=count, filter=filter))
 	
 	def _notif_message_location_sent(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSentNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSent')
-		return self._stubs.messageNotificationStub.message_location_sent(notifications.SubscribeToMessageLocationSentNotification(client=self, count=count, filter=filter))
+		return self._stubs.messageNotificationStub.message_location_sent(notifications.SubscribeToMessageLocationSentNotification(count=count, filter=filter))
 	
 	def _notif_message_location_sharing_start(self, count: int = 0, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingStartNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingStart')
-		return self._stubs.messageNotificationStub.message_location_sharing_start(notifications.SubscribeToMessageLocationSharingStartNotification(client=self, count=count, filter=filter))
+		return self._stubs.messageNotificationStub.message_location_sharing_start(notifications.SubscribeToMessageLocationSharingStartNotification(count=count, filter=filter))
 	
 	def _notif_message_location_sharing_update(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingUpdateNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingUpdate')
-		return self._stubs.messageNotificationStub.message_location_sharing_update(notifications.SubscribeToMessageLocationSharingUpdateNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_location_sharing_update(notifications.SubscribeToMessageLocationSharingUpdateNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_location_sharing_end(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None) -> AsyncIterator[notifications.MessageLocationSharingEndNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageLocationSharingEnd')
-		return self._stubs.messageNotificationStub.message_location_sharing_end(notifications.SubscribeToMessageLocationSharingEndNotification(client=self, count=count, message_ids=message_ids, filter=filter))
+		return self._stubs.messageNotificationStub.message_location_sharing_end(notifications.SubscribeToMessageLocationSharingEndNotification(count=count, message_ids=message_ids, filter=filter))
 	
 	def _notif_message_reaction_added(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionAddedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionAdded')
-		return self._stubs.messageNotificationStub.message_reaction_added(notifications.SubscribeToMessageReactionAddedNotification(client=self, count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
+		return self._stubs.messageNotificationStub.message_reaction_added(notifications.SubscribeToMessageReactionAddedNotification(count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
 	
 	def _notif_message_reaction_updated(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, message_filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None, previous_reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionUpdated')
-		return self._stubs.messageNotificationStub.message_reaction_updated(notifications.SubscribeToMessageReactionUpdatedNotification(client=self, count=count, message_ids=message_ids, message_filter=message_filter, reaction_filter=reaction_filter, previous_reaction_filter=previous_reaction_filter))
+		return self._stubs.messageNotificationStub.message_reaction_updated(notifications.SubscribeToMessageReactionUpdatedNotification(count=count, message_ids=message_ids, message_filter=message_filter, reaction_filter=reaction_filter, previous_reaction_filter=previous_reaction_filter))
 	
 	def _notif_message_reaction_removed(self, count: int = 0, message_ids: list[datatypes.MessageId] = None, filter: datatypes.MessageFilter = None, reaction_filter: datatypes.ReactionFilter = None) -> AsyncIterator[notifications.MessageReactionRemovedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: MessageReactionRemoved')
-		return self._stubs.messageNotificationStub.message_reaction_removed(notifications.SubscribeToMessageReactionRemovedNotification(client=self, count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
+		return self._stubs.messageNotificationStub.message_reaction_removed(notifications.SubscribeToMessageReactionRemovedNotification(count=count, message_ids=message_ids, filter=filter, reaction_filter=reaction_filter))
 	
 	# AttachmentNotificationService
 	def _notif_attachment_received(self, count: int = 0, filter: datatypes.AttachmentFilter = None) -> AsyncIterator[notifications.AttachmentReceivedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: AttachmentReceived')
-		return self._stubs.attachmentNotificationStub.attachment_received(notifications.SubscribeToAttachmentReceivedNotification(client=self, count=count, filter=filter))
+		return self._stubs.attachmentNotificationStub.attachment_received(notifications.SubscribeToAttachmentReceivedNotification(count=count, filter=filter))
 	
 	def _notif_attachment_uploaded(self, count: int = 0, filter: datatypes.AttachmentFilter = None, message_ids: list[datatypes.MessageId] = None, attachment_ids: list[datatypes.AttachmentId] = None) -> AsyncIterator[notifications.AttachmentUploadedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: AttachmentUploaded')
-		return self._stubs.attachmentNotificationStub.attachment_uploaded(notifications.SubscribeToAttachmentUploadedNotification(client=self, count=count, filter=filter, message_ids=message_ids, attachment_ids=attachment_ids))
+		return self._stubs.attachmentNotificationStub.attachment_uploaded(notifications.SubscribeToAttachmentUploadedNotification(count=count, filter=filter, message_ids=message_ids, attachment_ids=attachment_ids))
 	
 	# CallNotificationService
 	def _notif_call_incoming_call(self, count: int = 0) -> AsyncIterator[notifications.CallIncomingCallNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallIncomingCall')
-		return self._stubs.callNotificationStub.call_incoming_call(notifications.SubscribeToCallIncomingCallNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_incoming_call(notifications.SubscribeToCallIncomingCallNotification(count=count))
 	
 	def _notif_call_ringing(self, count: int = 0) -> AsyncIterator[notifications.CallRingingNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallRinging')
-		return self._stubs.callNotificationStub.call_ringing(notifications.SubscribeToCallRingingNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_ringing(notifications.SubscribeToCallRingingNotification(count=count))
 	
 	def _notif_call_accepted(self, count: int = 0) -> AsyncIterator[notifications.CallAcceptedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallAccepted')
-		return self._stubs.callNotificationStub.call_accepted(notifications.SubscribeToCallAcceptedNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_accepted(notifications.SubscribeToCallAcceptedNotification(count=count))
 	
 	def _notif_call_declined(self, count: int = 0) -> AsyncIterator[notifications.CallDeclinedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallDeclined')
-		return self._stubs.callNotificationStub.call_declined(notifications.SubscribeToCallDeclinedNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_declined(notifications.SubscribeToCallDeclinedNotification(count=count))
 	
 	def _notif_call_busy(self, count: int = 0) -> AsyncIterator[notifications.CallBusyNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallBusy')
-		return self._stubs.callNotificationStub.call_busy(notifications.SubscribeToCallBusyNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_busy(notifications.SubscribeToCallBusyNotification(count=count))
 	
 	def _notif_call_ended(self, count: int = 0) -> AsyncIterator[notifications.CallEndedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: CallEnded')
-		return self._stubs.callNotificationStub.call_ended(notifications.SubscribeToCallEndedNotification(client=self, count=count))
+		return self._stubs.callNotificationStub.call_ended(notifications.SubscribeToCallEndedNotification(count=count))
 
 	# InvitationNotificationService
 	async def on_invitation_received(self, invitation: datatypes.Invitation):
@@ -1184,12 +1219,6 @@ class OlvidClient(CommandHolder):
 		pass
 
 	async def on_group_member_permissions_updated(self, group: datatypes.Group, member: datatypes.GroupMember, previous_permissions: datatypes.GroupMemberPermissions):
-		pass
-
-	async def on_group_update_in_progress(self, group_id: int):
-		pass
-
-	async def on_group_update_finished(self, group_id: int):
 		pass
 
 	# DiscussionNotificationService

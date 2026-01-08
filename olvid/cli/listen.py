@@ -6,7 +6,7 @@ from olvid import OlvidAdminClient, OlvidClient, datatypes, listeners, errors
 from olvid.cli.tools.cli_tools import print_error_message
 
 
-async def listen(identity_id: int = 0, quiet: bool = False, notifications_to_listen: str = "", filter_=None, count=0):
+async def listen(identity_id: int = 0, verbose: bool = False, quiet: bool = False, notifications_to_listen: str = "", filter_=None, count=0):
 	admin_client: OlvidAdminClient = OlvidAdminClient(identity_id=0)
 	# create clients, one per identity
 	clients: list[OlvidClient] = []
@@ -57,18 +57,20 @@ async def listen(identity_id: int = 0, quiet: bool = False, notifications_to_lis
 			listener_class_name = f"{''.join(s.title() for s in notification.name.split('_'))}Listener"
 			listener_class = getattr(listeners, listener_class_name)
 			if protobuf_filter:
-				client.add_listener(listener_class(handler=await get_notification_handler(identity, notification, quiet), filter=protobuf_filter, count=count))
+				client.add_listener(listener_class(handler=await get_notification_handler(identity, notification, verbose, quiet), filter=protobuf_filter, count=count))
 			else:
-				client.add_listener(listener_class(handler=await get_notification_handler(identity, notification, quiet), count=count))
+				client.add_listener(listener_class(handler=await get_notification_handler(identity, notification, verbose, quiet), count=count))
 
 	for client in clients:
 		await client.wait_for_listeners_end()
 
 
-async def get_notification_handler(identity: datatypes.Identity, notification_type: listeners.NOTIFICATIONS, quiet: bool) -> Callable:
+async def get_notification_handler(identity: datatypes.Identity, notification_type: listeners.NOTIFICATIONS, verbose: bool, quiet: bool) -> Callable:
 	def notification_handler(*fields):
 		if quiet:
 			print(f"{identity.id:2}: {notification_type.name}")
+		elif verbose:
+			print(f"{identity.id:2}: {notification_type.name:20}: {', '.join([str(field) for field in fields])}")
 		else:
 			print(f"{identity.id:2}: {notification_type.name:20}: {', '.join([field_to_str(field) for field in fields])}")
 	return notification_handler

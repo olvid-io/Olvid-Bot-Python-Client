@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING
 import re
 import inspect
 
+from . import GenericNotificationListener
 from .ListenersImplementation import MessageReceivedListener
+from ..datatypes import datatypes
 
 if TYPE_CHECKING:
 	from typing import Callable, Optional, Coroutine
@@ -33,8 +35,8 @@ class Command(MessageReceivedListener):
 	async def second_command(message: datatypes.Message):
 		print("Second command")
 
-	# use add_command method
-	bot.add_command(Command(regexp_filter="^!cmd", handler=lambda message: print(message)))
+	# use add_listener method
+	bot.add_listener(Command(regexp_filter="^!cmd", handler=lambda message: print(message)))
 	```
 
 	Command attributes:
@@ -44,14 +46,17 @@ class Command(MessageReceivedListener):
 	- usage: str (optional): can be used to create help messages
 	"""
 	def __init__(self, regexp_filter: str, handler: Callable[[datatypes.Message], Optional[Coroutine]], name: str = None, usage: str = None, ignore_case: bool = True):
-		# TODO use a filter on body instead of a checker
-		super().__init__(handler=self._handler_wrapper(handler), checkers=[self.match])
-
+		# treat ignore_case and regexp_filter before subscribing to notifications
 		self._regexp_filter: str = regexp_filter
+		self._ignore_case = ignore_case
+		if ignore_case and not self._regexp_filter.startswith("(?i)"):
+			self._regexp_filter = "(?i)" + self._regexp_filter
+
+		super().__init__(handler=self._handler_wrapper(handler), filter=datatypes.MessageFilter(body_search=self.regexp_filter))
+
 		self._original_handler: Callable[[datatypes.Message], Optional[Coroutine]] = handler
 		self._name = name if name is not None else regexp_filter
 		self._usage: Optional[str] = usage
-		self._ignore_case = ignore_case
 
 	def match(self, message: datatypes.Message) -> bool:
 		return self.match_str(message.body)
@@ -214,14 +219,14 @@ class CommandHolder:
 
 	def __init__(self):
 		for c in self.__class__.command.get_commands(self):
-			self.add_command(c)
+			self.add_listener(c)
 		self.command = InstanceCommandDecorator(self)
 
-	def add_command(self, command: Command):
-		raise NotImplementedError(f"{self.__class__.__name__}: CommandHolder: add_command not implemented")
+	def add_listener(self, listener: GenericNotificationListener):
+		raise NotImplementedError(f"{self.__class__.__name__}: CommandHolder: add_listener not implemented")
 
-	def remove_command(self, command: Command):
-		raise NotImplementedError(f"{self.__class__.__name__}: CommandHolder: remove_command not implemented")
+	def remove_listener(self, listener: GenericNotificationListener):
+		raise NotImplementedError(f"{self.__class__.__name__}: CommandHolder: remove_listener not implemented")
 
 
 class InstanceCommandDecorator(CommandDecorator):
@@ -250,13 +255,13 @@ class InstanceCommandDecorator(CommandDecorator):
 
 		if not filtered_commands:
 			self._command_list.append(new_command)
-			self._holder_instance.add_command(new_command)
+			self._holder_instance.add_listener(new_command)
 		# overriding existing command
 		else:
 			previous_command = filtered_commands[0]
 			self._command_list.remove(previous_command)
-			self._holder_instance.remove_command(previous_command)
-			self._holder_instance.add_command(new_command)
+			self._holder_instance.remove_listener(previous_command)
+			self._holder_instance.add_listener(new_command)
 
 	def get_commands(self, instance: "CommandHolder") -> list[Command]:
 		return self._command_list

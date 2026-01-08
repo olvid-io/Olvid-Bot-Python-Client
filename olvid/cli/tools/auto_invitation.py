@@ -27,7 +27,7 @@ async def invitation_task(identity_1: datatypes.Identity, identity_2: datatypes.
 
 	# wait for invitation to arrive
 	invitation_store_2: list[datatypes.Invitation] = []
-	listener = listeners.InvitationReceivedListener(lambda i: invitation_store_2.append(i), checkers=[lambda i: i.display_name == f"{identity_1.details.first_name} {identity_1.details.last_name}".strip()], count=1)
+	listener = listeners.InvitationReceivedListener(lambda i: invitation_store_2.append(i), filter=datatypes.InvitationFilter(display_name_search=f"{identity_1.details.first_name} {identity_1.details.last_name}".strip()), count=1)
 	client_2.add_listener(listener)
 	await client_2.wait_for_listeners_end()
 	invitation_2: datatypes.Invitation = invitation_store_2[0]
@@ -37,11 +37,11 @@ async def invitation_task(identity_1: datatypes.Identity, identity_2: datatypes.
 
 	# wait for invitation to be ready to set sas
 	invitation_store_1: list[datatypes.Invitation] = []
-	listener_1 = listeners.InvitationUpdatedListener(handler=lambda i, p: invitation_store_1.append(i), checkers=[lambda i, p: i.id == invitation_1.id and i.status == datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE], count=1)
+	listener_1 = listeners.InvitationUpdatedListener(handler=lambda i, p: invitation_store_1.append(i), invitation_ids=[invitation_1.id], filter=datatypes.InvitationFilter(status=datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE), count=1)
 	client_1.add_listener(listener_1)
 
 	invitation_store_2: list[datatypes.Invitation] = []
-	listener_2 = listeners.InvitationUpdatedListener(handler=lambda i, p: invitation_store_2.append(i), checkers=[lambda i, p: i.id == invitation_2.id and i.status == datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE], count=1)
+	listener_2 = listeners.InvitationUpdatedListener(handler=lambda i, p: invitation_store_2.append(i), invitation_ids=[invitation_2.id], filter=datatypes.InvitationFilter(status=datatypes.Invitation.Status.STATUS_INVITATION_WAIT_YOU_FOR_SAS_EXCHANGE), count=1)
 	client_2.add_listener(listener_2)
 
 	await client_1.wait_for_listeners_end()
@@ -71,7 +71,6 @@ async def auto_invite(identity_id: int, admin_client: OlvidAdminClient, full: bo
 		total_count = round(len_identities * ((len_identities - 1) / 2))
 	else:
 		total_count = len_identities - 1
-
 
 	# full mode
 	if full:

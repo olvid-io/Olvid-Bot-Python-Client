@@ -2,7 +2,7 @@ import os
 import asyncclick as click
 from google.protobuf.json_format import Parse, ParseError
 
-from olvid import datatypes
+from olvid import datatypes, OlvidClient
 from ..interactive_tree import interactive_tree
 from ..tools.ClientSingleton import ClientSingleton
 from ..tools.cli_tools import filter_fields, print_error_message, print_normal_message
@@ -52,11 +52,10 @@ async def group_get(get_all: bool, group_ids: list[int], fields: str, filter_: s
 	else:
 		groups = [await ClientSingleton.get_client().group_get(group_id=group_id) for group_id in group_ids]
 
-	group_as_strings: list[str] = []
 	if fields:
 		print("\n".join([filter_fields(group, fields) for group in groups]))
 	else:
-		print(("-" * 20 + "\n").join([await group_to_string(g) for g in groups]))
+		print(("-" * 20 + "\n").join([await group_to_string(ClientSingleton.get_client(), g) for g in groups]))
 
 
 #####
@@ -80,7 +79,7 @@ async def group_new_standard(admin_contact_ids: tuple[int], group_name: str, gro
 		description=group_description,
 		admin_contact_ids=list(admin_contact_ids)
 	)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -98,7 +97,7 @@ async def group_new_controlled(contacts_id: tuple[int], admin_contact_ids: tuple
 		contact_ids=list(contacts_id),
 		admin_contact_ids=list(admin_contact_ids)
 	)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -116,7 +115,7 @@ async def group_new_read_only(contacts_id: tuple[int], admin_contact_ids: tuple[
 		contact_ids=list(contacts_id),
 		admin_contact_ids=list(admin_contact_ids)
 	)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -170,7 +169,7 @@ async def group_new_advanced(contacts_id: tuple[int], read_only: bool, do_not_re
 		advanced_configuration=advanced_configuration,
 		members=members,
 	)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -180,7 +179,7 @@ async def group_new_advanced(contacts_id: tuple[int], read_only: bool, do_not_re
 @click.argument("group_id", type=click.INT)
 async def group_disband(group_id):
 	group = await ClientSingleton.get_client().group_disband(group_id)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -190,7 +189,7 @@ async def group_disband(group_id):
 @click.argument("group_id", type=click.INT)
 async def group_leave(group_id):
 	group = await ClientSingleton.get_client().group_leave(group_id)
-	print(await group_to_string(group))
+	print(await group_to_string(ClientSingleton.get_client(), group))
 
 
 #####
@@ -223,7 +222,7 @@ async def group_update(group_id: int, group_name: str, group_description: str, a
 	group.members = list(filter(lambda m: m.contact_id not in delete_members, group.members))
 
 	updated_group = await ClientSingleton.get_client().group_update(group=group)
-	print(await group_to_string(updated_group))
+	print(await group_to_string(ClientSingleton.get_client(), updated_group))
 
 
 #####
@@ -252,7 +251,7 @@ async def group_update(group_id: int, admins_to_add: tuple[int], admins_to_remov
 			pending.permissions = DEFAULT_MEMBER_PERMISSIONS
 
 	updated_group = await ClientSingleton.get_client().group_update(group=group)
-	print(await group_to_string(updated_group))
+	print(await group_to_string(ClientSingleton.get_client(), updated_group))
 
 
 #####
@@ -284,7 +283,7 @@ async def group_update(group_id: int, contact_id: int, admin: bool, remote_delet
 		raise click.exceptions.BadArgumentUsage("Member not found")
 
 	updated_group = await ClientSingleton.get_client().group_update(group=group)
-	print(await group_to_string(updated_group))
+	print(await group_to_string(ClientSingleton.get_client(), updated_group))
 
 
 #####
@@ -307,8 +306,8 @@ async def group_photo_set(group_id: int, photo_path: str):
 	except IOError:
 		raise click.exceptions.FileError("File not found: " + photo_path)
 
-	updated_group = await ClientSingleton.get_client().group_set_photo(group_id, photo_path)
-	print(await group_to_string(updated_group))
+	updated_group = await ClientSingleton.get_client().group_set_photo_file(group_id, photo_path)
+	print(await group_to_string(ClientSingleton.get_client(), updated_group))
 
 
 #####
@@ -351,13 +350,13 @@ async def group_photo_set(path: str, filename: str, save_all: bool, group_ids: l
 @click.argument("group_id", required=True, type=click.INT)
 async def group_photo_unset(group_id: int):
 	updated_group = await ClientSingleton.get_client().group_unset_photo(group_id=group_id)
-	print(await group_to_string(updated_group))
+	print(await group_to_string(ClientSingleton.get_client(), updated_group))
 
 
 #####
 # tools
 #####
-async def group_to_string(group: datatypes.Group) -> str:
+async def group_to_string(client: OlvidClient, group: datatypes.Group) -> str:
 	def permission_to_string(permission: datatypes.GroupMemberPermissions) -> str:
 		permissions: list[str] = []
 		if permission.admin:
@@ -380,7 +379,7 @@ async def group_to_string(group: datatypes.Group) -> str:
 		s += "Members:\n"
 	for member in group.members:
 		# noinspection PyProtectedMember
-		s += f"\t{member.contact_id}: {(await group._client.contact_get(contact_id=member.contact_id)).display_name}: {permission_to_string(member.permissions)}\n"
+		s += f"\t{member.contact_id}: {(await client.contact_get(contact_id=member.contact_id)).display_name}: {permission_to_string(member.permissions)}\n"
 	if group.pending_members:
 		s += "Pending Members:\n"
 	for pending_member in group.pending_members:

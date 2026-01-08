@@ -35,10 +35,6 @@ class ClientListenerHolder:
 			self._iterators_tasks.get(notif).cancel()
 
 	def add_listener(self, listener: GenericNotificationListener):
-		# check listener count is valid (if count == 0 on start it will stay active forever)
-		if listener.count == 0:
-			return
-
 		# add listener to registered_listeners
 		if not self._registered_listeners.get(listener.listener_key):
 			self._registered_listeners[listener.listener_key] = set()
@@ -53,8 +49,6 @@ class ClientListenerHolder:
 		if self._registered_listeners.get(listener.listener_key) \
 					and listener in self._registered_listeners.get(listener.listener_key):
 			self._registered_listeners[listener.listener_key].remove(listener)
-			# mark listener as finished
-			listener.mark_as_finished()
 			# notify any waiting client that a listener finished, they will check if their listeners list was updated
 			# we set and clear event because we only need to wake up methods waiting for this event, and this event might be used multiple times
 			self._listener_removed_event.set()
@@ -124,12 +118,10 @@ class ClientListenerHolder:
 		registered_listeners = list(self._registered_listeners.get(listener_key))
 		notification_logger.info(f"{self._client.__class__.__name__}: notification received: {listener_key}")
 		notification_logger.debug(f"{self._client.__class__.__name__}: notification content:  {listener_key}: {notification_message}")
-		# sort by priority higher priority first
-		registered_listeners.sort(key=lambda listen: listen.priority, reverse=True)
 		for listener in registered_listeners:
 			try:
 				# clone original notification else a listener can modify notification content for next listeners ...
 				# noinspection PyProtectedMember
-				self._client.add_background_task(listener.handle_notification(notification_message._clone(), self.remove_listener))
+				self._client.add_background_task(listener.handle_notification(notification_message._clone()))
 			except Exception as e:
 				core_logger.exception(f"ClientListenerHolder: cannot create listener task (this is not supposed to happen !!): {e}")

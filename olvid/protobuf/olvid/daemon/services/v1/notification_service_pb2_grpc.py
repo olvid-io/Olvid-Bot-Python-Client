@@ -508,16 +508,6 @@ class GroupNotificationServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupMemberPermissionsUpdatedNotification.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupMemberPermissionsUpdatedNotification.FromString,
                 _registered_method=True)
-        self.GroupUpdateInProgress = channel.unary_stream(
-                '/olvid.daemon.services.v1.GroupNotificationService/GroupUpdateInProgress',
-                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateInProgressNotification.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateInProgressNotification.FromString,
-                _registered_method=True)
-        self.GroupUpdateFinished = channel.unary_stream(
-                '/olvid.daemon.services.v1.GroupNotificationService/GroupUpdateFinished',
-                request_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateFinishedNotification.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateFinishedNotification.FromString,
-                _registered_method=True)
 
 
 class GroupNotificationServiceServicer(object):
@@ -590,18 +580,6 @@ class GroupNotificationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GroupUpdateInProgress(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GroupUpdateFinished(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_GroupNotificationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -659,16 +637,6 @@ def add_GroupNotificationServiceServicer_to_server(servicer, server):
                     servicer.GroupMemberPermissionsUpdated,
                     request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupMemberPermissionsUpdatedNotification.FromString,
                     response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupMemberPermissionsUpdatedNotification.SerializeToString,
-            ),
-            'GroupUpdateInProgress': grpc.unary_stream_rpc_method_handler(
-                    servicer.GroupUpdateInProgress,
-                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateInProgressNotification.FromString,
-                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateInProgressNotification.SerializeToString,
-            ),
-            'GroupUpdateFinished': grpc.unary_stream_rpc_method_handler(
-                    servicer.GroupUpdateFinished,
-                    request_deserializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateFinishedNotification.FromString,
-                    response_serializer=olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateFinishedNotification.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -969,60 +937,6 @@ class GroupNotificationService(object):
             '/olvid.daemon.services.v1.GroupNotificationService/GroupMemberPermissionsUpdated',
             olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupMemberPermissionsUpdatedNotification.SerializeToString,
             olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupMemberPermissionsUpdatedNotification.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GroupUpdateInProgress(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/olvid.daemon.services.v1.GroupNotificationService/GroupUpdateInProgress',
-            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateInProgressNotification.SerializeToString,
-            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateInProgressNotification.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GroupUpdateFinished(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/olvid.daemon.services.v1.GroupNotificationService/GroupUpdateFinished',
-            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.SubscribeToGroupUpdateFinishedNotification.SerializeToString,
-            olvid_dot_daemon_dot_notification_dot_v1_dot_group__notifications__pb2.GroupUpdateFinishedNotification.FromString,
             options,
             channel_credentials,
             insecure,
