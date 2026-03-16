@@ -442,7 +442,7 @@ class Backup:
 			# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 			@staticmethod
 			def _from_native(native_message: olvid.daemon.datatypes.v1.backup_pb2.Backup.ProfileBackup.Snapshot) -> "Backup.ProfileBackup.Snapshot":
-				return Backup.ProfileBackup.Snapshot(id=native_message.id, timestamp=native_message.timestamp, from_device_name=native_message.from_device_name, contact_count=native_message.contact_count, group_count=native_message.group_count, client_key_count=native_message.client_key_count, storage_elements_count=native_message.storage_elements_count, identity_settings=IdentitySettings._from_native(native_message.identitySettings))
+				return Backup.ProfileBackup.Snapshot(id=native_message.id, timestamp=native_message.timestamp, from_device_name=native_message.from_device_name, contact_count=native_message.contact_count, group_count=native_message.group_count, client_key_count=native_message.client_key_count, storage_elements_count=native_message.storage_elements_count, identity_settings=IdentitySettings._from_native(native_message.identity_settings))
 		
 			# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 			@staticmethod
@@ -470,7 +470,7 @@ class Backup:
 			def _to_native(message: Optional["Backup.ProfileBackup.Snapshot"]):
 				if message is None:
 					return None
-				return olvid.daemon.datatypes.v1.backup_pb2.Backup.ProfileBackup.Snapshot(id=message.id if message.id else None, timestamp=message.timestamp if message.timestamp else None, from_device_name=message.from_device_name if message.from_device_name else None, contact_count=message.contact_count if message.contact_count else None, group_count=message.group_count if message.group_count else None, client_key_count=message.client_key_count if message.client_key_count else None, storage_elements_count=message.storage_elements_count if message.storage_elements_count else None, identitySettings=IdentitySettings._to_native(message.identity_settings if message.identity_settings else None))
+				return olvid.daemon.datatypes.v1.backup_pb2.Backup.ProfileBackup.Snapshot(id=message.id if message.id else None, timestamp=message.timestamp if message.timestamp else None, from_device_name=message.from_device_name if message.from_device_name else None, contact_count=message.contact_count if message.contact_count else None, group_count=message.group_count if message.group_count else None, client_key_count=message.client_key_count if message.client_key_count else None, storage_elements_count=message.storage_elements_count if message.storage_elements_count else None, identity_settings=IdentitySettings._to_native(message.identity_settings if message.identity_settings else None))
 		
 			def __str__(self):
 				s: str = ''
@@ -2914,12 +2914,13 @@ class Invitation:
 		def __bool__(self):
 			return self.value != 0
 
-	def __init__(self, id: int = 0, status: "Invitation.Status" = 0, display_name: str = "", timestamp: int = 0, sas: str = ""):
+	def __init__(self, id: int = 0, status: "Invitation.Status" = 0, display_name: str = "", timestamp: int = 0, sas: str = "", mediator_id: int = 0):
 		self.id: int = id
 		self.status: Invitation.Status = status
 		self.display_name: str = display_name
 		self.timestamp: int = timestamp
 		self.sas: str = sas
+		self.mediator_id: int = mediator_id
 
 	def _update_content(self, invitation: Invitation) -> None:
 		self.id: int = invitation.id
@@ -2927,15 +2928,16 @@ class Invitation:
 		self.display_name: str = invitation.display_name
 		self.timestamp: int = invitation.timestamp
 		self.sas: str = invitation.sas
+		self.mediator_id: int = invitation.mediator_id
 
 	# noinspection PyProtectedMember
 	def _clone(self) -> "Invitation":
-		return Invitation(id=self.id, status=self.status, display_name=self.display_name, timestamp=self.timestamp, sas=self.sas)
+		return Invitation(id=self.id, status=self.status, display_name=self.display_name, timestamp=self.timestamp, sas=self.sas, mediator_id=self.mediator_id)
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.datatypes.v1.invitation_pb2.Invitation) -> "Invitation":
-		return Invitation(id=native_message.id, status=Invitation.Status(native_message.status), display_name=native_message.display_name, timestamp=native_message.timestamp, sas=native_message.sas)
+		return Invitation(id=native_message.id, status=Invitation.Status(native_message.status), display_name=native_message.display_name, timestamp=native_message.timestamp, sas=native_message.sas, mediator_id=native_message.mediatorId)
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 	@staticmethod
@@ -2963,7 +2965,7 @@ class Invitation:
 	def _to_native(message: Optional["Invitation"]):
 		if message is None:
 			return None
-		return olvid.daemon.datatypes.v1.invitation_pb2.Invitation(id=message.id if message.id else None, status=message.status.value if message.status else None, display_name=message.display_name if message.display_name else None, timestamp=message.timestamp if message.timestamp else None, sas=message.sas if message.sas else None)
+		return olvid.daemon.datatypes.v1.invitation_pb2.Invitation(id=message.id if message.id else None, status=message.status.value if message.status else None, display_name=message.display_name if message.display_name else None, timestamp=message.timestamp if message.timestamp else None, sas=message.sas if message.sas else None, mediatorId=message.mediator_id if message.mediator_id else None)
 
 	def __str__(self):
 		s: str = ''
@@ -2977,18 +2979,20 @@ class Invitation:
 			s += f'timestamp: {self.timestamp}, '
 		if self.sas:
 			s += f'sas: {self.sas}, '
+		if self.mediator_id:
+			s += f'mediator_id: {self.mediator_id}, '
 		return s.removesuffix(', ')
 
 	def __eq__(self, other):
 		if not isinstance(other, Invitation):
 			return False
-		return self.id == other.id and self.status == other.status and self.display_name == other.display_name and self.timestamp == other.timestamp and self.sas == other.sas
+		return self.id == other.id and self.status == other.status and self.display_name == other.display_name and self.timestamp == other.timestamp and self.sas == other.sas and self.mediator_id == other.mediator_id
 
 	def __bool__(self):
-		return self.id != 0 or bool(self.status) or self.display_name != "" or self.timestamp != 0 or self.sas != ""
+		return self.id != 0 or bool(self.status) or self.display_name != "" or self.timestamp != 0 or self.sas != "" or self.mediator_id != 0
 
 	def __hash__(self):
-		return hash((self.id, self.status, self.display_name, self.timestamp, self.sas))
+		return hash((self.id, self.status, self.display_name, self.timestamp, self.sas, self.mediator_id))
 
 	# For tests routines
 	# noinspection DuplicatedCode,PyProtectedMember
@@ -3000,6 +3004,7 @@ class Invitation:
 		assert expected.display_name == "" or self.display_name == expected.display_name, "Invalid value: display_name: " + str(expected.display_name) + " != " + str(self.display_name)
 		assert expected.timestamp == 0 or self.timestamp == expected.timestamp, "Invalid value: timestamp: " + str(expected.timestamp) + " != " + str(self.timestamp)
 		assert expected.sas == "" or self.sas == expected.sas, "Invalid value: sas: " + str(expected.sas) + " != " + str(self.sas)
+		assert expected.mediator_id == 0 or self.mediator_id == expected.mediator_id, "Invalid value: mediator_id: " + str(expected.mediator_id) + " != " + str(self.mediator_id)
 		return True
 
 
@@ -3298,87 +3303,6 @@ class KeycloakUserFilter:
 			assert expected.details_search is None or self.details_search._test_assertion(expected.details_search)
 		except AssertionError as e:
 			raise AssertionError("details_search: " + str(e))
-		return True
-
-
-# noinspection PyProtectedMember,PyShadowingBuiltins
-class KeycloakApiCredentials:
-	def __init__(self, server_url: str = "", username: str = "", direct_auth_token: str = ""):
-		self.server_url: str = server_url
-		self.username: str = username
-		self.direct_auth_token: str = direct_auth_token
-
-	def _update_content(self, keycloak_api_credentials: KeycloakApiCredentials) -> None:
-		self.server_url: str = keycloak_api_credentials.server_url
-		self.username: str = keycloak_api_credentials.username
-		self.direct_auth_token: str = keycloak_api_credentials.direct_auth_token
-
-	# noinspection PyProtectedMember
-	def _clone(self) -> "KeycloakApiCredentials":
-		return KeycloakApiCredentials(server_url=self.server_url, username=self.username, direct_auth_token=self.direct_auth_token)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
-	@staticmethod
-	def _from_native(native_message: olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakApiCredentials) -> "KeycloakApiCredentials":
-		return KeycloakApiCredentials(server_url=native_message.server_url, username=native_message.username, direct_auth_token=native_message.direct_auth_token)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakApiCredentials]) -> list["KeycloakApiCredentials"]:
-		return [KeycloakApiCredentials._from_native(native_message) for native_message in native_message_list]
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakApiCredentials]) -> "KeycloakApiCredentials":
-		try:
-			native_message = await promise
-			return KeycloakApiCredentials._from_native(native_message)
-		except errors.AioRpcError as error:
-			raise errors.OlvidError._from_aio_rpc_error(error) from error
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native_list(messages: list["KeycloakApiCredentials"]):
-		if messages is None:
-			return []
-		return [KeycloakApiCredentials._to_native(message) for message in messages]
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native(message: Optional["KeycloakApiCredentials"]):
-		if message is None:
-			return None
-		return olvid.daemon.datatypes.v1.keycloak_pb2.KeycloakApiCredentials(server_url=message.server_url if message.server_url else None, username=message.username if message.username else None, direct_auth_token=message.direct_auth_token if message.direct_auth_token else None)
-
-	def __str__(self):
-		s: str = ''
-		if self.server_url:
-			s += f'server_url: {self.server_url}, '
-		if self.username:
-			s += f'username: {self.username}, '
-		if self.direct_auth_token:
-			s += f'direct_auth_token: {self.direct_auth_token}, '
-		return s.removesuffix(', ')
-
-	def __eq__(self, other):
-		if not isinstance(other, KeycloakApiCredentials):
-			return False
-		return self.server_url == other.server_url and self.username == other.username and self.direct_auth_token == other.direct_auth_token
-
-	def __bool__(self):
-		return self.server_url != "" or self.username != "" or self.direct_auth_token != ""
-
-	def __hash__(self):
-		return hash((self.server_url, self.username, self.direct_auth_token))
-
-	# For tests routines
-	# noinspection DuplicatedCode,PyProtectedMember
-	def _test_assertion(self, expected):
-		if not isinstance(expected, KeycloakApiCredentials):
-			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
-		assert expected.server_url == "" or self.server_url == expected.server_url, "Invalid value: server_url: " + str(expected.server_url) + " != " + str(self.server_url)
-		assert expected.username == "" or self.username == expected.username, "Invalid value: username: " + str(expected.username) + " != " + str(self.username)
-		assert expected.direct_auth_token == "" or self.direct_auth_token == expected.direct_auth_token, "Invalid value: direct_auth_token: " + str(expected.direct_auth_token) + " != " + str(self.direct_auth_token)
 		return True
 
 
@@ -4241,26 +4165,28 @@ class IdentitySettings:
 			assert expected.auto_accept_invitation is False or self.auto_accept_invitation == expected.auto_accept_invitation, "Invalid value: auto_accept_invitation: " + str(expected.auto_accept_invitation) + " != " + str(self.auto_accept_invitation)
 			return True
 	class MessageRetention:
-		def __init__(self, existence_duration: int = 0, discussion_count: int = 0, global_count: int = 0, clean_locked_discussions: bool = False):
+		def __init__(self, existence_duration: int = 0, discussion_count: int = 0, global_count: int = 0, clean_locked_discussions: bool = False, preserve_is_sharing_location_messages: bool = False):
 			self.existence_duration: int = existence_duration
 			self.discussion_count: int = discussion_count
 			self.global_count: int = global_count
 			self.clean_locked_discussions: bool = clean_locked_discussions
+			self.preserve_is_sharing_location_messages: bool = preserve_is_sharing_location_messages
 	
 		def _update_content(self, message_retention: IdentitySettings.MessageRetention) -> None:
 			self.existence_duration: int = message_retention.existence_duration
 			self.discussion_count: int = message_retention.discussion_count
 			self.global_count: int = message_retention.global_count
 			self.clean_locked_discussions: bool = message_retention.clean_locked_discussions
+			self.preserve_is_sharing_location_messages: bool = message_retention.preserve_is_sharing_location_messages
 	
 		# noinspection PyProtectedMember
 		def _clone(self) -> "IdentitySettings.MessageRetention":
-			return IdentitySettings.MessageRetention(existence_duration=self.existence_duration, discussion_count=self.discussion_count, global_count=self.global_count, clean_locked_discussions=self.clean_locked_discussions)
+			return IdentitySettings.MessageRetention(existence_duration=self.existence_duration, discussion_count=self.discussion_count, global_count=self.global_count, clean_locked_discussions=self.clean_locked_discussions, preserve_is_sharing_location_messages=self.preserve_is_sharing_location_messages)
 	
 		# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 		@staticmethod
 		def _from_native(native_message: olvid.daemon.datatypes.v1.settings_pb2.IdentitySettings.MessageRetention) -> "IdentitySettings.MessageRetention":
-			return IdentitySettings.MessageRetention(existence_duration=native_message.existence_duration, discussion_count=native_message.discussion_count, global_count=native_message.global_count, clean_locked_discussions=native_message.clean_locked_discussions)
+			return IdentitySettings.MessageRetention(existence_duration=native_message.existence_duration, discussion_count=native_message.discussion_count, global_count=native_message.global_count, clean_locked_discussions=native_message.clean_locked_discussions, preserve_is_sharing_location_messages=native_message.preserve_is_sharing_location_messages)
 	
 		# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 		@staticmethod
@@ -4288,7 +4214,7 @@ class IdentitySettings:
 		def _to_native(message: Optional["IdentitySettings.MessageRetention"]):
 			if message is None:
 				return None
-			return olvid.daemon.datatypes.v1.settings_pb2.IdentitySettings.MessageRetention(existence_duration=message.existence_duration if message.existence_duration else None, discussion_count=message.discussion_count if message.discussion_count else None, global_count=message.global_count if message.global_count else None, clean_locked_discussions=message.clean_locked_discussions if message.clean_locked_discussions else None)
+			return olvid.daemon.datatypes.v1.settings_pb2.IdentitySettings.MessageRetention(existence_duration=message.existence_duration if message.existence_duration else None, discussion_count=message.discussion_count if message.discussion_count else None, global_count=message.global_count if message.global_count else None, clean_locked_discussions=message.clean_locked_discussions if message.clean_locked_discussions else None, preserve_is_sharing_location_messages=message.preserve_is_sharing_location_messages if message.preserve_is_sharing_location_messages else None)
 	
 		def __str__(self):
 			s: str = ''
@@ -4300,18 +4226,20 @@ class IdentitySettings:
 				s += f'global_count: {self.global_count}, '
 			if self.clean_locked_discussions:
 				s += f'clean_locked_discussions: {self.clean_locked_discussions}, '
+			if self.preserve_is_sharing_location_messages:
+				s += f'preserve_is_sharing_location_messages: {self.preserve_is_sharing_location_messages}, '
 			return s.removesuffix(', ')
 	
 		def __eq__(self, other):
 			if not isinstance(other, IdentitySettings.MessageRetention):
 				return False
-			return self.existence_duration == other.existence_duration and self.discussion_count == other.discussion_count and self.global_count == other.global_count and self.clean_locked_discussions == other.clean_locked_discussions
+			return self.existence_duration == other.existence_duration and self.discussion_count == other.discussion_count and self.global_count == other.global_count and self.clean_locked_discussions == other.clean_locked_discussions and self.preserve_is_sharing_location_messages == other.preserve_is_sharing_location_messages
 	
 		def __bool__(self):
-			return self.existence_duration != 0 or self.discussion_count != 0 or self.global_count != 0 or self.clean_locked_discussions
+			return self.existence_duration != 0 or self.discussion_count != 0 or self.global_count != 0 or self.clean_locked_discussions or self.preserve_is_sharing_location_messages
 	
 		def __hash__(self):
-			return hash((self.existence_duration, self.discussion_count, self.global_count, self.clean_locked_discussions))
+			return hash((self.existence_duration, self.discussion_count, self.global_count, self.clean_locked_discussions, self.preserve_is_sharing_location_messages))
 	
 		# For tests routines
 		# noinspection DuplicatedCode,PyProtectedMember
@@ -4322,6 +4250,7 @@ class IdentitySettings:
 			assert expected.discussion_count == 0 or self.discussion_count == expected.discussion_count, "Invalid value: discussion_count: " + str(expected.discussion_count) + " != " + str(self.discussion_count)
 			assert expected.global_count == 0 or self.global_count == expected.global_count, "Invalid value: global_count: " + str(expected.global_count) + " != " + str(self.global_count)
 			assert expected.clean_locked_discussions is False or self.clean_locked_discussions == expected.clean_locked_discussions, "Invalid value: clean_locked_discussions: " + str(expected.clean_locked_discussions) + " != " + str(self.clean_locked_discussions)
+			assert expected.preserve_is_sharing_location_messages is False or self.preserve_is_sharing_location_messages == expected.preserve_is_sharing_location_messages, "Invalid value: preserve_is_sharing_location_messages: " + str(expected.preserve_is_sharing_location_messages) + " != " + str(self.preserve_is_sharing_location_messages)
 			return True
 	class Keycloak:
 		def __init__(self, auto_invite_new_members: bool = False):

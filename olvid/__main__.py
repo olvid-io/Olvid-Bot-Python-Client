@@ -36,8 +36,8 @@ async def async_main():
 				if arg == "--help":
 					raise click.exceptions.ClickException("")
 
-			async with await root_tree.make_context("olvid-cli", list(sys.argv[1:])) as ctx:
-				await root_tree.invoke(ctx)
+			ctx = await root_tree.make_context("olvid-cli", list(sys.argv[1:]))
+			await root_tree.invoke(ctx)
 		except (click.UsageError, click.ClickException) as e:
 			if e.format_message():
 				click.echo(click.style(e.format_message(), fg="red"))

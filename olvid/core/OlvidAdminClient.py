@@ -26,16 +26,14 @@ class OlvidAdminClient(OlvidClient):
 	Use the current_identity_id property to specify the identity you want to use. It will persist for any future api call.
 	"""
 	_KEY_VARIABLE_NAME: str = "OLVID_ADMIN_CLIENT_KEY"
-	# TODO v2.0.0 remove legacy method
-	_KEY_FILE_PATH = ".admin_client_key"
 
-	def __init__(self, identity_id: int, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional['OlvidClient'] = None, tls_configuration: GrpcTlsConfiguration = None):
+	def __init__(self, identity_id: int, client_key: Optional[str] = None, daemon_url: Optional[str] = None, parent_client: Optional['OlvidClient'] = None, tls_configuration: GrpcTlsConfiguration = None):
 		# admin client need to specify an identity id in all requests metadata
 		# set identity id before super() call, because notification subscriptions for overwritten handler methods will need it.
 		self._current_identity_id: int = identity_id
 
 		try:
-			super().__init__(client_key=client_key, server_target=server_target, parent_client=parent_client, tls_configuration=tls_configuration)
+			super().__init__(client_key=client_key, daemon_url=daemon_url, parent_client=parent_client, tls_configuration=tls_configuration)
 		except ValueError:
 			raise ValueError("Admin client key not found")
 

@@ -95,7 +95,7 @@ async def interactive_main():
 		if not ClientSingleton.get_current_identity_id():
 			await ClientSingleton.auto_select_identity()
 	except errors.UnavailableError:
-		print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().server_target}")
+		print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().daemon_url}")
 		return
 	except errors.AioRpcError as e:
 		print_error_message(e.details())

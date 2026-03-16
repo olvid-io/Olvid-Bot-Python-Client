@@ -138,18 +138,23 @@ async def identity_settings_message_get(fields: str):
 @click.option("-g", "--global-count", "global_count", help="Set a maximum number of messages to keep globally", type=click.INT, default=0)
 @click.option("-t", "--duration", help="Set a duration after messages are deleted (in seconds)", type=click.INT, default=0)
 @click.option("-l", "--locked", help="Delete message in locked discussions", is_flag=True)
-async def identity_settings_message_set(discussion_count: int, global_count: int, duration: int, locked: bool):
-	if not discussion_count and not global_count and not duration and not locked:
+@click.option("-p", "--preserve-location", help="Do not delete non-finished location sharing messages", is_flag=True)
+@click.option("-n", "--none", "none_opt", is_flag=True)
+async def identity_settings_message_set(discussion_count: int, global_count: int, duration: int, locked: bool, preserve_location: bool, none_opt: bool):
+	if discussion_count or global_count or duration or locked or preserve_location:
+		message_retention: datatypes.IdentitySettings.MessageRetention = datatypes.IdentitySettings.MessageRetention(
+			existence_duration=duration,
+			discussion_count=discussion_count,
+			global_count=global_count,
+			clean_locked_discussions=locked,
+			preserve_is_sharing_location_messages=preserve_location
+		)
+	elif none_opt:
+		message_retention: datatypes.IdentitySettings.MessageRetention = datatypes.IdentitySettings.MessageRetention()
+	else:
 		raise click.UsageError("Specify at least one option")
 
 	identity_settings: datatypes.IdentitySettings = await ClientSingleton.get_client().settings_identity_get()
-
-	message_retention: datatypes.IdentitySettings.MessageRetention = datatypes.IdentitySettings.MessageRetention(
-		existence_duration=duration,
-		discussion_count=discussion_count,
-		global_count=global_count,
-		clean_locked_discussions=locked
-	)
 	identity_settings.message_retention = message_retention
 
 	new_settings = await ClientSingleton.get_client().settings_identity_set(identity_settings=identity_settings)
@@ -211,4 +216,5 @@ discussion_count: {message.discussion_count}
 global_count: {message.global_count}
 existence_duration: {message.existence_duration}
 clean_locked_discussions: {message.clean_locked_discussions}
+preserve_is_sharing_location_messages: {message.preserve_is_sharing_location_messages}
 """.strip()

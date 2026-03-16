@@ -16,7 +16,7 @@ keywords = ["olvid", "daemon", "bot"]
 description = "A Python GRPC client implementation for building chatbots and programs that interact with the Olvid application."
 readme = { file = "README.md" , content-type = "text/markdown"}
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
 
@@ -26,11 +26,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "grpcio==1.76.0", "protobuf==6.33.2", "python-dotenv==1.2.1",
+    "grpcio==1.78.0", "protobuf==7.34.0", "python-dotenv==1.2.2",
     # cli
     "asyncclick==8.3.0.7"
 ]
-optional-dependencies = {"keycloak" = ["aiohttp==3.12.15"]}
 
 [project.scripts]
 olvid-cli = "olvid:__main__.main"

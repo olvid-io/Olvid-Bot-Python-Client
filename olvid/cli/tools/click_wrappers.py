@@ -14,7 +14,7 @@ class WrappedCommand(click.Command):
 		try:
 			await super(WrappedCommand, self).invoke(ctx)
 		except errors.UnavailableError:
-			print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().server_target}")
+			print_error_message(f"Cannot connect to server: {ClientSingleton.get_client().daemon_url}")
 		except errors.AioRpcError as e:
 			click.echo(click.style(f"{e.code().name}: {e.details()}", fg="red"))
 		except click.exceptions.ClickException as e:

@@ -37,9 +37,9 @@ class OlvidClient(CommandHolder):
 	- you can set OLVID_CLIENT_KEY env variable
 	- you can use client_key constructor parameter (not recommended)
 
-	By default, client connects to "localhost:50051" you can change this behavior:
-	- by setting OLVID_DAEMON_TARGET env variable
-	- by using server_target parameter
+	Client connects to "http://localhost:50051" by default, you can change this behavior:
+	- by setting OLVID_DAEMON_URL env variable
+	- by using daemon_url parameter
 
 	On creation OlvidClient will also check `.env` files and can load environment variable from there if there is
 	configuration variable were not set in environment.
@@ -84,25 +84,25 @@ class OlvidClient(CommandHolder):
 	"""
 	_KEY_VARIABLE_NAME: str = "OLVID_CLIENT_KEY"
 
-	_TARGET_VARIABLE_NAME: str = "OLVID_DAEMON_TARGET"
-	_TARGET_DEFAULT_VALUE: str = "localhost:50051"
+	_DAEMON_URL_VARIABLE_NAME: str = "OLVID_DAEMON_URL"
+	_DAEMON_URL_DEFAULT_VALUE: str = "localhost:50051"
 
 	_CHUNK_LENGTH_VARIABLE_NAME = "OLVID_CHUNK_LENGTH"
 	_CHUNK_LENGTH_DEFAULT_VALUE = "1_000_000"
 
 	# we store running clients to notify them if we receive a stop signal
-	_running_clients: list[Self] = []
+	_running_clients: list["OlvidClient"] = []
 
 	GrpcSslConfiguration: type[GrpcSslConfiguration] = GrpcSslConfiguration
 	GrpcSimpleTlsConfiguration: type[GrpcSimpleTlsConfiguration] = GrpcSimpleTlsConfiguration
 	GrpcMutualAuthTlsConfiguration: type[GrpcMutualAuthTlsConfiguration] = GrpcMutualAuthTlsConfiguration
 
-	def __init__(self, client_key: Optional[str] = None, server_target: Optional[str] = None, parent_client: Optional[Self] = None, tls_configuration: GrpcTlsConfiguration = None):
+	def __init__(self, client_key: Optional[str] = None, daemon_url: Optional[str] = None, parent_client: Optional[Self] = None, tls_configuration: GrpcTlsConfiguration = None):
 		self._stopped = False
 
 		config: dict[str, str] = {
 			**{  # default values
-				self._TARGET_VARIABLE_NAME: self._TARGET_DEFAULT_VALUE,
+				self._DAEMON_URL_VARIABLE_NAME: self._DAEMON_URL_DEFAULT_VALUE,
 				self._CHUNK_LENGTH_VARIABLE_NAME: self._CHUNK_LENGTH_DEFAULT_VALUE,
 			},
 			**dotenv_values(),  # .env file values
@@ -119,13 +119,13 @@ class OlvidClient(CommandHolder):
 		else:
 			raise ValueError("Client key not found")
 
-		# determine target (argument > parent > env > default)
-		if server_target:
-			self._server_target: str = server_target
+		# determine url (argument > parent > env > file > default)
+		if daemon_url:
+			self._daemon_url: str = daemon_url
 		elif parent_client:
-			self._server_target: str = parent_client.server_target
+			self._daemon_url: str = parent_client.daemon_url
 		else:
-			self._server_target: str = config.get(self._TARGET_VARIABLE_NAME)
+			self._daemon_url: str = config.get(self._DAEMON_URL_VARIABLE_NAME)
 
 		# determine chunk length
 		self._CHUNK_LENGTH: int = int(config.get(self._CHUNK_LENGTH_VARIABLE_NAME))
@@ -159,18 +159,18 @@ class OlvidClient(CommandHolder):
 				channel_credential: Optional[grpc.ChannelCredentials] = None
 				core_logger.debug(f"{self.__class__.__name__}: tls disabled")
 
-			# handle http:// and https:// target prefix
+			# handle http:// and https:// prefix in server url
 			# http: just remove prefix
-			if self._server_target.startswith("http://"):
-				target: str = self._server_target.removeprefix("http://")
+			if self._daemon_url.startswith("http://"):
+				target: str = self._daemon_url.removeprefix("http://")
 			# https: add ssl channel credentials
-			elif self._server_target.startswith("https://"):
-				target: str = self._server_target.removeprefix("https://")
+			elif self._daemon_url.startswith("https://"):
+				target: str = self._daemon_url.removeprefix("https://")
 				if not tls_configuration:
 					# if there is no tls configuration, we create a simple channel credentials to connect to serer using ssl
 					channel_credential = grpc.ssl_channel_credentials()
 			else:
-				target: str = self._server_target
+				target: str = self._daemon_url
 
 			if channel_credential is None:
 				self._channel: grpc.aio.Channel = grpc.aio.insecure_channel(target=target)
@@ -257,7 +257,7 @@ class OlvidClient(CommandHolder):
 			await self._channel.wait_for_state_change(state)
 			state = self._channel.get_state()
 		if state in [grpc.ChannelConnectivity.TRANSIENT_FAILURE, grpc.ChannelConnectivity.SHUTDOWN]:
-			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Failed to connect to server: {self.server_target}")
+			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Failed to connect to server: {self.daemon_url}")
 
 		await self.wait_for_listeners_end()
 		has_listeners = len(self._listeners_set) > 0
@@ -266,7 +266,7 @@ class OlvidClient(CommandHolder):
 			await asyncio.sleep(1)
 		# if there were no listeners add a logging message, else ClientListenerHolder probably already logged an error
 		if not has_listeners:
-			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Lost server connection: {self.server_target}")
+			raise errors.UnavailableError(details=f"{self.__class__.__name__}: run_forever: Lost server connection: {self.daemon_url}")
 
 	#####
 	# read only properties
@@ -276,8 +276,8 @@ class OlvidClient(CommandHolder):
 		return self._client_key
 
 	@property
-	def server_target(self) -> str:
-		return self._server_target
+	def daemon_url(self) -> str:
+		return self._daemon_url
 
 	@staticmethod
 	def __stop_signal_handler():
@@ -380,6 +380,39 @@ class OlvidClient(CommandHolder):
 	#####
 	# other method: manually implemented
 	#####
+	async def enable_auto_invitation(self, accept_all: bool = False, auto_accept_introduction: bool = False, auto_accept_group: bool = False, auto_accept_one_to_one: bool = False, auto_accept_invitation: bool = False):
+		auto_accept: datatypes.IdentitySettings.AutoAcceptInvitation
+		if accept_all:
+			auto_accept = datatypes.IdentitySettings.AutoAcceptInvitation(True, True, True, True)
+		else:
+			auto_accept = datatypes.IdentitySettings.AutoAcceptInvitation(auto_accept_introduction=auto_accept_introduction, auto_accept_group=auto_accept_group, auto_accept_invitation=auto_accept_invitation, auto_accept_one_to_one=auto_accept_one_to_one)
+		settings: datatypes.IdentitySettings = await self.settings_identity_get()
+		if settings.invitation != auto_accept:
+			settings.invitation = auto_accept
+			await self.settings_identity_set(settings)
+
+	async def enable_keycloak_auto_invite(self, auto_invite_new_members: bool):
+		keycloak_auto_invite: datatypes.IdentitySettings.Keycloak = datatypes.IdentitySettings.Keycloak(
+			auto_invite_new_members=auto_invite_new_members
+		)
+		settings: datatypes.IdentitySettings = await self.settings_identity_get()
+		if settings.keycloak != keycloak_auto_invite:
+			settings.keycloak = keycloak_auto_invite
+			await self.settings_identity_set(settings)
+
+	async def set_message_retention_policy(self, existence_duration: int = 0, discussion_count: int = 0, global_count: int = 0, clean_locked_discussions: bool = False, preserve_is_sharing_location_messages: bool = False):
+		retention_policy: datatypes.IdentitySettings.MessageRetention = datatypes.IdentitySettings.MessageRetention(
+			existence_duration=existence_duration,
+			discussion_count=discussion_count,
+			global_count=global_count,
+			clean_locked_discussions=clean_locked_discussions,
+			preserve_is_sharing_location_messages=preserve_is_sharing_location_messages
+		)
+		settings: datatypes.IdentitySettings = await self.settings_identity_get()
+		if settings.message_retention != retention_policy:
+			settings.message_retention = retention_policy
+			await self.settings_identity_set(settings)
+
 	def attachment_message_list(self, message_id: datatypes.MessageId) -> AsyncIterator[datatypes.Attachment]:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentMessageList')
 
@@ -678,11 +711,6 @@ class OlvidClient(CommandHolder):
 	async def keycloak_add_user_as_contact(self, keycloak_id: str) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: KeycloakAddUserAsContact')
 		await self._stubs.keycloakCommandStub.keycloak_add_user_as_contact(commands.KeycloakAddUserAsContactRequest(keycloak_id=keycloak_id))
-	
-	async def keycloak_get_api_credentials(self) -> datatypes.KeycloakApiCredentials:
-		command_logger.info(f'{self.__class__.__name__}: command: KeycloakGetApiCredentials')
-		response: commands.KeycloakGetApiCredentialsResponse = await self._stubs.keycloakCommandStub.keycloak_get_api_credentials(commands.KeycloakGetApiCredentialsRequest())
-		return response.credentials
 	
 	# GroupCommandService
 	def group_list(self, filter: datatypes.GroupFilter = None) -> AsyncIterator[datatypes.Group]:

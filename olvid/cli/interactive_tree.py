@@ -27,7 +27,7 @@ from .handler.contact_tree import *
 # noinspection PyUnresolvedReferences
 from .handler.group_tree import *
 # noinspection PyUnresolvedReferences
-from .handler.keycloak_tree import *
+from .handler.kc_tree import *
 # noinspection PyUnresolvedReferences
 from .handler.storage_tree import *
 # noinspection PyUnresolvedReferences

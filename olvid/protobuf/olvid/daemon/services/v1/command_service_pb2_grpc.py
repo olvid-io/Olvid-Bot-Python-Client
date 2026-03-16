@@ -1508,11 +1508,6 @@ class KeycloakCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.FromString,
                 _registered_method=True)
-        self.KeycloakGetApiCredentials = channel.unary_unary(
-                '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakGetApiCredentials',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsResponse.FromString,
-                _registered_method=True)
 
 
 class KeycloakCommandServiceServicer(object):
@@ -1543,12 +1538,6 @@ class KeycloakCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def KeycloakGetApiCredentials(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_KeycloakCommandServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1571,11 +1560,6 @@ def add_KeycloakCommandServiceServicer_to_server(servicer, server):
                     servicer.KeycloakAddUserAsContact,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.SerializeToString,
-            ),
-            'KeycloakGetApiCredentials': grpc.unary_unary_rpc_method_handler(
-                    servicer.KeycloakGetApiCredentials,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1687,33 +1671,6 @@ class KeycloakCommandService(object):
             '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakAddUserAsContact',
             olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakAddUserAsContactResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def KeycloakGetApiCredentials(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.KeycloakCommandService/KeycloakGetApiCredentials',
-            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_keycloak__commands__pb2.KeycloakGetApiCredentialsResponse.FromString,
             options,
             channel_credentials,
             insecure,
