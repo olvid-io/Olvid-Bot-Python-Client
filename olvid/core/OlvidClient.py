@@ -13,8 +13,8 @@ import grpc
 import asyncio
 import signal
 import os
+import dotenv
 from asyncio import Task
-from dotenv import dotenv_values
 
 from . import errors
 from .logger import core_logger, command_logger, notification_logger
@@ -105,7 +105,8 @@ class OlvidClient(CommandHolder):
 				self._DAEMON_URL_VARIABLE_NAME: self._DAEMON_URL_DEFAULT_VALUE,
 				self._CHUNK_LENGTH_VARIABLE_NAME: self._CHUNK_LENGTH_DEFAULT_VALUE,
 			},
-			**dotenv_values(),  # .env file values
+			# usecwd=True: fix to use program path to look for a .env file and not `olvid-bot` module installation path
+			**dotenv.dotenv_values(dotenv.find_dotenv(usecwd=True)),  # .env file values
 			**os.environ  # env values
 		}
 
