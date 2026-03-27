@@ -135,7 +135,7 @@ def contact_photo_tree():
 #####
 # contact photo save
 #####
-@contact_photo_tree.command("save", help="Save contact photos to local files.")
+@contact_photo_tree.command("save", help="Save contact photos to local files.\n\n⚠️ When CLI is used in a docker container mind to check the path exists inside the container.")
 @click.argument("contact_ids", required=False, nargs=-1, type=click.INT)
 @click.option("-a", "--all", "save_all", is_flag=True, help="Save all contact photos")
 @click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)

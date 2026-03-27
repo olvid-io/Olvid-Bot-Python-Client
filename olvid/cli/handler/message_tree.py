@@ -90,7 +90,7 @@ async def message_delete(message_ids: tuple[str], discussion_id: int, all_opt: b
 #####
 # message send
 #####
-@message_tree.command("send", help="send text message in a given discussion")
+@message_tree.command("send", help="send text message in a given discussion\n\n⚠️ When CLI is used in a docker container mind to check the attachment file exists inside the container.")
 @click.option("-c", "--contact", "use_contact", is_flag=True, help="Use passed id as a contact id")
 @click.option("-g", "--group", "use_group", is_flag=True, help="Use passed id as a group id")
 @click.option("-r", "--reply", "reply_id", type=click.STRING, default=None)
@@ -180,7 +180,7 @@ async def message_update():
 def message_location_tree():
 	pass
 
-@message_location_tree.command("send", help="send a location message")
+@message_location_tree.command("send", help="send a location message\n\n⚠️ When CLI is used in a docker container mind to check the preview file exists inside the container.")
 @click.option("-p", "--preview", "preview_file", type=click.Path(exists=True, readable=True, file_okay=True, dir_okay=False, resolve_path=True))
 @click.option("--address", type=click.STRING)
 @click.option("-a", "--altitude", type=click.FLOAT)

@@ -198,7 +198,7 @@ class GroupOwnPermissionsUpdatedListener(GenericNotificationListener):
 
 # noinspection DuplicatedCode,PyShadowingBuiltins
 class GroupMemberPermissionsUpdatedListener(GenericNotificationListener):
-	def __init__(self, handler: Callable[[datatypes.Group, datatypes.GroupMember, datatypes.GroupMemberPermissions], Optional[Coroutine[Any, Any, None]]], count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupMemberFilter = None):
+	def __init__(self, handler: Callable[[datatypes.Group, datatypes.GroupMember, datatypes.GroupMemberPermissions], Optional[Coroutine[Any, Any, None]]], count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupPermissionFilter = None):
 		super().__init__(
 			notification_type=NOTIFICATIONS.GROUP_MEMBER_PERMISSIONS_UPDATED,
 			handler=lambda n: handler(n.group, n.member, n.previous_permissions)

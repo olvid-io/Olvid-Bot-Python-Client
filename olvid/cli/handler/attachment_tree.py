@@ -61,7 +61,7 @@ async def attachment_rm(attachment_ids: tuple[str]):
 #####
 # attachment save
 #####
-@attachment_tree.command("save", help="download an attachment file and save it in your filesystem")
+@attachment_tree.command("save", help="download an attachment file and save it in your filesystem\n\n⚠️ When CLI is used in a docker container mind to check the path exists inside the container.")
 @click.argument("attachment_id", nargs=1, type=click.STRING)
 @click.option("-p", "--path", "path", help="directory to store downloaded attachment", nargs=1, type=click.STRING, required=False)
 @click.option("-f", "--filename", "filename", help="override original file name", nargs=1, type=click.STRING, required=False)

@@ -17,7 +17,8 @@ from .....olvid.daemon.command.v1 import tool_commands_pb2 as olvid_dot_daemon_d
 
 
 class ToolCommandServiceStub(object):
-    """Tools
+    """Tool
+    A set of utility entrypoint to test debug and your configuration.
     """
 
     def __init__(self, channel):
@@ -49,7 +50,8 @@ class ToolCommandServiceStub(object):
 
 
 class ToolCommandServiceServicer(object):
-    """Tools
+    """Tool
+    A set of utility entrypoint to test debug and your configuration.
     """
 
     def Ping(self, request, context):
@@ -108,7 +110,8 @@ def add_ToolCommandServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class ToolCommandService(object):
-    """Tools
+    """Tool
+    A set of utility entrypoint to test debug and your configuration.
     """
 
     @staticmethod
@@ -250,11 +253,6 @@ class IdentityCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsResponse.FromString,
                 _registered_method=True)
-        self.IdentityRemovePhoto = channel.unary_unary(
-                '/olvid.daemon.services.v1.IdentityCommandService/IdentityRemovePhoto',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.FromString,
-                _registered_method=True)
         self.IdentitySetPhoto = channel.stream_unary(
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentitySetPhoto',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoRequest.SerializeToString,
@@ -264,6 +262,11 @@ class IdentityCommandServiceStub(object):
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentityDownloadPhoto',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.FromString,
+                _registered_method=True)
+        self.IdentityRemovePhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.IdentityCommandService/IdentityRemovePhoto',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.FromString,
                 _registered_method=True)
         self.IdentityGetApiKeyStatus = channel.unary_unary(
                 '/olvid.daemon.services.v1.IdentityCommandService/IdentityGetApiKeyStatus',
@@ -310,12 +313,6 @@ class IdentityCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def IdentityRemovePhoto(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def IdentitySetPhoto(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -323,6 +320,12 @@ class IdentityCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def IdentityDownloadPhoto(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IdentityRemovePhoto(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -369,11 +372,6 @@ def add_IdentityCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityUpdateDetailsResponse.SerializeToString,
             ),
-            'IdentityRemovePhoto': grpc.unary_unary_rpc_method_handler(
-                    servicer.IdentityRemovePhoto,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.SerializeToString,
-            ),
             'IdentitySetPhoto': grpc.stream_unary_rpc_method_handler(
                     servicer.IdentitySetPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentitySetPhotoRequest.FromString,
@@ -383,6 +381,11 @@ def add_IdentityCommandServiceServicer_to_server(servicer, server):
                     servicer.IdentityDownloadPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.SerializeToString,
+            ),
+            'IdentityRemovePhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.IdentityRemovePhoto,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.SerializeToString,
             ),
             'IdentityGetApiKeyStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.IdentityGetApiKeyStatus,
@@ -520,33 +523,6 @@ class IdentityCommandService(object):
             _registered_method=True)
 
     @staticmethod
-    def IdentityRemovePhoto(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.IdentityCommandService/IdentityRemovePhoto',
-            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def IdentitySetPhoto(request_iterator,
             target,
             options=(),
@@ -590,6 +566,33 @@ class IdentityCommandService(object):
             '/olvid.daemon.services.v1.IdentityCommandService/IdentityDownloadPhoto',
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityDownloadPhotoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IdentityRemovePhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.IdentityCommandService/IdentityRemovePhoto',
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_identity__commands__pb2.IdentityRemovePhotoResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -1742,11 +1745,6 @@ class GroupCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUpdateRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUpdateResponse.FromString,
                 _registered_method=True)
-        self.GroupUnsetPhoto = channel.unary_unary(
-                '/olvid.daemon.services.v1.GroupCommandService/GroupUnsetPhoto',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.FromString,
-                _registered_method=True)
         self.GroupSetPhoto = channel.stream_unary(
                 '/olvid.daemon.services.v1.GroupCommandService/GroupSetPhoto',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoRequest.SerializeToString,
@@ -1756,6 +1754,11 @@ class GroupCommandServiceStub(object):
                 '/olvid.daemon.services.v1.GroupCommandService/GroupDownloadPhoto',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.FromString,
+                _registered_method=True)
+        self.GroupUnsetPhoto = channel.unary_unary(
+                '/olvid.daemon.services.v1.GroupCommandService/GroupUnsetPhoto',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.FromString,
                 _registered_method=True)
 
 
@@ -1823,12 +1826,6 @@ class GroupCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GroupUnsetPhoto(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def GroupSetPhoto(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -1836,6 +1833,12 @@ class GroupCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GroupDownloadPhoto(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GroupUnsetPhoto(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1894,11 +1897,6 @@ def add_GroupCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUpdateRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUpdateResponse.SerializeToString,
             ),
-            'GroupUnsetPhoto': grpc.unary_unary_rpc_method_handler(
-                    servicer.GroupUnsetPhoto,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.SerializeToString,
-            ),
             'GroupSetPhoto': grpc.stream_unary_rpc_method_handler(
                     servicer.GroupSetPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupSetPhotoRequest.FromString,
@@ -1908,6 +1906,11 @@ def add_GroupCommandServiceServicer_to_server(servicer, server):
                     servicer.GroupDownloadPhoto,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.SerializeToString,
+            ),
+            'GroupUnsetPhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.GroupUnsetPhoto,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2192,33 +2195,6 @@ class GroupCommandService(object):
             _registered_method=True)
 
     @staticmethod
-    def GroupUnsetPhoto(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.GroupCommandService/GroupUnsetPhoto',
-            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def GroupSetPhoto(request_iterator,
             target,
             options=(),
@@ -2262,6 +2238,33 @@ class GroupCommandService(object):
             '/olvid.daemon.services.v1.GroupCommandService/GroupDownloadPhoto',
             olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupDownloadPhotoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GroupUnsetPhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.GroupCommandService/GroupUnsetPhoto',
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_group__commands__pb2.GroupUnsetPhotoResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -2713,16 +2716,6 @@ class MessageCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageGetRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageGetResponse.FromString,
                 _registered_method=True)
-        self.MessageRefresh = channel.unary_unary(
-                '/olvid.daemon.services.v1.MessageCommandService/MessageRefresh',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.FromString,
-                _registered_method=True)
-        self.MessageDelete = channel.unary_unary(
-                '/olvid.daemon.services.v1.MessageCommandService/MessageDelete',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.FromString,
-                _registered_method=True)
         self.MessageSend = channel.unary_unary(
                 '/olvid.daemon.services.v1.MessageCommandService/MessageSend',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendRequest.SerializeToString,
@@ -2732,6 +2725,21 @@ class MessageCommandServiceStub(object):
                 '/olvid.daemon.services.v1.MessageCommandService/MessageSendWithAttachments',
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.FromString,
+                _registered_method=True)
+        self.MessageReact = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.FromString,
+                _registered_method=True)
+        self.MessageUpdateBody = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateBody',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.FromString,
+                _registered_method=True)
+        self.MessageDelete = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageDelete',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.FromString,
                 _registered_method=True)
         self.MessageSendLocation = channel.unary_unary(
                 '/olvid.daemon.services.v1.MessageCommandService/MessageSendLocation',
@@ -2753,15 +2761,10 @@ class MessageCommandServiceStub(object):
                 request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingRequest.SerializeToString,
                 response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingResponse.FromString,
                 _registered_method=True)
-        self.MessageReact = channel.unary_unary(
-                '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.FromString,
-                _registered_method=True)
-        self.MessageUpdateBody = channel.unary_unary(
-                '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateBody',
-                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.SerializeToString,
-                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.FromString,
+        self.MessageRefresh = channel.unary_unary(
+                '/olvid.daemon.services.v1.MessageCommandService/MessageRefresh',
+                request_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.SerializeToString,
+                response_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.FromString,
                 _registered_method=True)
 
 
@@ -2781,18 +2784,6 @@ class MessageCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def MessageRefresh(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def MessageDelete(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def MessageSend(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -2800,6 +2791,24 @@ class MessageCommandServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def MessageSendWithAttachments(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageReact(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageUpdateBody(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageDelete(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2829,13 +2838,7 @@ class MessageCommandServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def MessageReact(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def MessageUpdateBody(self, request, context):
+    def MessageRefresh(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2854,16 +2857,6 @@ def add_MessageCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageGetRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageGetResponse.SerializeToString,
             ),
-            'MessageRefresh': grpc.unary_unary_rpc_method_handler(
-                    servicer.MessageRefresh,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.SerializeToString,
-            ),
-            'MessageDelete': grpc.unary_unary_rpc_method_handler(
-                    servicer.MessageDelete,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.SerializeToString,
-            ),
             'MessageSend': grpc.unary_unary_rpc_method_handler(
                     servicer.MessageSend,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendRequest.FromString,
@@ -2873,6 +2866,21 @@ def add_MessageCommandServiceServicer_to_server(servicer, server):
                     servicer.MessageSendWithAttachments,
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.SerializeToString,
+            ),
+            'MessageReact': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageReact,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.SerializeToString,
+            ),
+            'MessageUpdateBody': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageUpdateBody,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.SerializeToString,
+            ),
+            'MessageDelete': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageDelete,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.SerializeToString,
             ),
             'MessageSendLocation': grpc.unary_unary_rpc_method_handler(
                     servicer.MessageSendLocation,
@@ -2894,15 +2902,10 @@ def add_MessageCommandServiceServicer_to_server(servicer, server):
                     request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingRequest.FromString,
                     response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageEndLocationSharingResponse.SerializeToString,
             ),
-            'MessageReact': grpc.unary_unary_rpc_method_handler(
-                    servicer.MessageReact,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.SerializeToString,
-            ),
-            'MessageUpdateBody': grpc.unary_unary_rpc_method_handler(
-                    servicer.MessageUpdateBody,
-                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.FromString,
-                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.SerializeToString,
+            'MessageRefresh': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageRefresh,
+                    request_deserializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.FromString,
+                    response_serializer=olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2971,60 +2974,6 @@ class MessageCommandService(object):
             _registered_method=True)
 
     @staticmethod
-    def MessageRefresh(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.MessageCommandService/MessageRefresh',
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def MessageDelete(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.MessageCommandService/MessageDelete',
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def MessageSend(request,
             target,
             options=(),
@@ -3068,6 +3017,87 @@ class MessageCommandService(object):
             '/olvid.daemon.services.v1.MessageCommandService/MessageSendWithAttachments',
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsRequest.SerializeToString,
             olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageSendWithAttachmentsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageReact(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageUpdateBody(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateBody',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MessageDelete(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageDelete',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageDeleteResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -3187,7 +3217,7 @@ class MessageCommandService(object):
             _registered_method=True)
 
     @staticmethod
-    def MessageReact(request,
+    def MessageRefresh(request,
             target,
             options=(),
             channel_credentials=None,
@@ -3200,36 +3230,9 @@ class MessageCommandService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/olvid.daemon.services.v1.MessageCommandService/MessageReact',
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageReactResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def MessageUpdateBody(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/olvid.daemon.services.v1.MessageCommandService/MessageUpdateBody',
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyRequest.SerializeToString,
-            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageUpdateBodyResponse.FromString,
+            '/olvid.daemon.services.v1.MessageCommandService/MessageRefresh',
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshRequest.SerializeToString,
+            olvid_dot_daemon_dot_command_dot_v1_dot_message__commands__pb2.MessageRefreshResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -3447,6 +3450,13 @@ class AttachmentCommandService(object):
 
 class StorageCommandServiceStub(object):
     """Storage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     def __init__(self, channel):
@@ -3479,6 +3489,13 @@ class StorageCommandServiceStub(object):
 
 class StorageCommandServiceServicer(object):
     """Storage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     def StorageList(self, request, context):
@@ -3538,6 +3555,13 @@ def add_StorageCommandServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class StorageCommandService(object):
     """Storage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     @staticmethod
@@ -3651,6 +3675,13 @@ class StorageCommandService(object):
 
 class DiscussionStorageCommandServiceStub(object):
     """DiscussionStorage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     def __init__(self, channel):
@@ -3683,6 +3714,13 @@ class DiscussionStorageCommandServiceStub(object):
 
 class DiscussionStorageCommandServiceServicer(object):
     """DiscussionStorage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     def DiscussionStorageList(self, request, context):
@@ -3742,6 +3780,13 @@ def add_DiscussionStorageCommandServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class DiscussionStorageCommandService(object):
     """DiscussionStorage
+    Each client key has its own independent storage space, with a simple key-value system.
+    _Storage_ can be seen as a global storage space, compared to _Discussion Storage_ that offers a space associated with a specific discussion.
+
+    Both mechanisms are backup resilient, and will be restored with their associated client key in a backup restoration process.
+
+    Mind that temporary client keys (specified in daemon environment or as command line arguments) do not have an allocated storage space.
+    You must create a client in database to use storage commands.
     """
 
     @staticmethod
@@ -3855,6 +3900,9 @@ class DiscussionStorageCommandService(object):
 
 class CallCommandServiceStub(object):
     """Call
+    Currently daemon cannot handle Olvid calls properly.
+    You can be notified on incoming calls, and you can initiate call within discussions or with any contact.
+    But we cannot manage audio or video streams, that's why a daemon will always answer any incoming call with a "busy" response.
     """
 
     def __init__(self, channel):
@@ -3877,6 +3925,9 @@ class CallCommandServiceStub(object):
 
 class CallCommandServiceServicer(object):
     """Call
+    Currently daemon cannot handle Olvid calls properly.
+    You can be notified on incoming calls, and you can initiate call within discussions or with any contact.
+    But we cannot manage audio or video streams, that's why a daemon will always answer any incoming call with a "busy" response.
     """
 
     def CallStartDiscussionCall(self, request, context):
@@ -3914,6 +3965,9 @@ def add_CallCommandServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class CallCommandService(object):
     """Call
+    Currently daemon cannot handle Olvid calls properly.
+    You can be notified on incoming calls, and you can initiate call within discussions or with any contact.
+    But we cannot manage audio or video streams, that's why a daemon will always answer any incoming call with a "busy" response.
     """
 
     @staticmethod

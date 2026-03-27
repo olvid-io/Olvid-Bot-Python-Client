@@ -16,98 +16,6 @@ from enum import Enum
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
-class AttachmentId:
-	# noinspection PyProtectedMember,PyShadowingBuiltins
-	class Type(Enum):
-		TYPE_UNSPECIFIED = 0
-		TYPE_INBOUND = 1
-		TYPE_OUTBOUND = 2
-	
-		def __str__(self):
-			return self.name
-	
-		@staticmethod
-		def _from_native_list(native_enum_list) -> list["AttachmentId.Type"]:
-			return [AttachmentId.Type(native_enum) for native_enum in native_enum_list]
-	
-		def __bool__(self):
-			return self.value != 0
-
-	def __init__(self, type: "AttachmentId.Type" = 0, id: int = 0):
-		self.type: AttachmentId.Type = type
-		self.id: int = id
-
-	def _update_content(self, attachment_id: AttachmentId) -> None:
-		self.type: AttachmentId.Type = attachment_id.type
-		self.id: int = attachment_id.id
-
-	# noinspection PyProtectedMember
-	def _clone(self) -> "AttachmentId":
-		return AttachmentId(type=self.type, id=self.id)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
-	@staticmethod
-	def _from_native(native_message: olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId) -> "AttachmentId":
-		return AttachmentId(type=AttachmentId.Type(native_message.type), id=native_message.id)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId]) -> list["AttachmentId"]:
-		return [AttachmentId._from_native(native_message) for native_message in native_message_list]
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId]) -> "AttachmentId":
-		try:
-			native_message = await promise
-			return AttachmentId._from_native(native_message)
-		except errors.AioRpcError as error:
-			raise errors.OlvidError._from_aio_rpc_error(error) from error
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native_list(messages: list["AttachmentId"]):
-		if messages is None:
-			return []
-		return [AttachmentId._to_native(message) for message in messages]
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native(message: Optional["AttachmentId"]):
-		if message is None:
-			return None
-		return olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId(type=message.type.value if message.type else None, id=message.id if message.id else None)
-
-	def __str__(self):
-		s: str = ''
-		if self.type:
-			s += f'type: {self.type}, '
-		if self.id:
-			s += f'id: {self.id}, '
-		return s.removesuffix(', ')
-
-	def __eq__(self, other):
-		if not isinstance(other, AttachmentId):
-			return False
-		return self.type == other.type and self.id == other.id
-
-	def __bool__(self):
-		return bool(self.type) or self.id != 0
-
-	def __hash__(self):
-		return hash((self.type, self.id))
-
-	# For tests routines
-	# noinspection DuplicatedCode,PyProtectedMember
-	def _test_assertion(self, expected):
-		if not isinstance(expected, AttachmentId):
-			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
-		assert expected.type == 0 or self.type == expected.type, "Invalid value: type: " + str(expected.type) + " != " + str(self.type)
-		assert expected.id == 0 or self.id == expected.id, "Invalid value: id: " + str(expected.id) + " != " + str(self.id)
-		return True
-
-
-# noinspection PyProtectedMember,PyShadowingBuiltins
 class Attachment:
 	def __init__(self, id: "AttachmentId" = None, discussion_id: int = 0, message_id: "MessageId" = None, file_name: str = "", mime_type: str = "", size: int = 0):
 		self.id: AttachmentId = id
@@ -206,6 +114,98 @@ class Attachment:
 		assert expected.file_name == "" or self.file_name == expected.file_name, "Invalid value: file_name: " + str(expected.file_name) + " != " + str(self.file_name)
 		assert expected.mime_type == "" or self.mime_type == expected.mime_type, "Invalid value: mime_type: " + str(expected.mime_type) + " != " + str(self.mime_type)
 		assert expected.size == 0 or self.size == expected.size, "Invalid value: size: " + str(expected.size) + " != " + str(self.size)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class AttachmentId:
+	# noinspection PyProtectedMember,PyShadowingBuiltins
+	class Type(Enum):
+		TYPE_UNSPECIFIED = 0
+		TYPE_INBOUND = 1
+		TYPE_OUTBOUND = 2
+	
+		def __str__(self):
+			return self.name
+	
+		@staticmethod
+		def _from_native_list(native_enum_list) -> list["AttachmentId.Type"]:
+			return [AttachmentId.Type(native_enum) for native_enum in native_enum_list]
+	
+		def __bool__(self):
+			return self.value != 0
+
+	def __init__(self, type: "AttachmentId.Type" = 0, id: int = 0):
+		self.type: AttachmentId.Type = type
+		self.id: int = id
+
+	def _update_content(self, attachment_id: AttachmentId) -> None:
+		self.type: AttachmentId.Type = attachment_id.type
+		self.id: int = attachment_id.id
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "AttachmentId":
+		return AttachmentId(type=self.type, id=self.id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId) -> "AttachmentId":
+		return AttachmentId(type=AttachmentId.Type(native_message.type), id=native_message.id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId]) -> list["AttachmentId"]:
+		return [AttachmentId._from_native(native_message) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId]) -> "AttachmentId":
+		try:
+			native_message = await promise
+			return AttachmentId._from_native(native_message)
+		except errors.AioRpcError as error:
+			raise errors.OlvidError._from_aio_rpc_error(error) from error
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["AttachmentId"]):
+		if messages is None:
+			return []
+		return [AttachmentId._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["AttachmentId"]):
+		if message is None:
+			return None
+		return olvid.daemon.datatypes.v1.attachment_pb2.AttachmentId(type=message.type.value if message.type else None, id=message.id if message.id else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.type:
+			s += f'type: {self.type}, '
+		if self.id:
+			s += f'id: {self.id}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, AttachmentId):
+			return False
+		return self.type == other.type and self.id == other.id
+
+	def __bool__(self):
+		return bool(self.type) or self.id != 0
+
+	def __hash__(self):
+		return hash((self.type, self.id))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, AttachmentId):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.type == 0 or self.type == expected.type, "Invalid value: type: " + str(expected.type) + " != " + str(self.type)
+		assert expected.id == 0 or self.id == expected.id, "Invalid value: id: " + str(expected.id) + " != " + str(self.id)
 		return True
 
 
@@ -2402,92 +2402,6 @@ class GroupPermissionFilter:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
-class IdentityDetails:
-	def __init__(self, first_name: str = "", last_name: str = "", company: str = "", position: str = ""):
-		self.first_name: str = first_name
-		self.last_name: str = last_name
-		self.company: str = company
-		self.position: str = position
-
-	def _update_content(self, identity_details: IdentityDetails) -> None:
-		self.first_name: str = identity_details.first_name
-		self.last_name: str = identity_details.last_name
-		self.company: str = identity_details.company
-		self.position: str = identity_details.position
-
-	# noinspection PyProtectedMember
-	def _clone(self) -> "IdentityDetails":
-		return IdentityDetails(first_name=self.first_name, last_name=self.last_name, company=self.company, position=self.position)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
-	@staticmethod
-	def _from_native(native_message: olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails) -> "IdentityDetails":
-		return IdentityDetails(first_name=native_message.first_name, last_name=native_message.last_name, company=native_message.company, position=native_message.position)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails]) -> list["IdentityDetails"]:
-		return [IdentityDetails._from_native(native_message) for native_message in native_message_list]
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails]) -> "IdentityDetails":
-		try:
-			native_message = await promise
-			return IdentityDetails._from_native(native_message)
-		except errors.AioRpcError as error:
-			raise errors.OlvidError._from_aio_rpc_error(error) from error
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native_list(messages: list["IdentityDetails"]):
-		if messages is None:
-			return []
-		return [IdentityDetails._to_native(message) for message in messages]
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native(message: Optional["IdentityDetails"]):
-		if message is None:
-			return None
-		return olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails(first_name=message.first_name if message.first_name else None, last_name=message.last_name if message.last_name else None, company=message.company if message.company else None, position=message.position if message.position else None)
-
-	def __str__(self):
-		s: str = ''
-		if self.first_name:
-			s += f'first_name: {self.first_name}, '
-		if self.last_name:
-			s += f'last_name: {self.last_name}, '
-		if self.company:
-			s += f'company: {self.company}, '
-		if self.position:
-			s += f'position: {self.position}, '
-		return s.removesuffix(', ')
-
-	def __eq__(self, other):
-		if not isinstance(other, IdentityDetails):
-			return False
-		return self.first_name == other.first_name and self.last_name == other.last_name and self.company == other.company and self.position == other.position
-
-	def __bool__(self):
-		return self.first_name != "" or self.last_name != "" or self.company != "" or self.position != ""
-
-	def __hash__(self):
-		return hash((self.first_name, self.last_name, self.company, self.position))
-
-	# For tests routines
-	# noinspection DuplicatedCode,PyProtectedMember
-	def _test_assertion(self, expected):
-		if not isinstance(expected, IdentityDetails):
-			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
-		assert expected.first_name == "" or self.first_name == expected.first_name, "Invalid value: first_name: " + str(expected.first_name) + " != " + str(self.first_name)
-		assert expected.last_name == "" or self.last_name == expected.last_name, "Invalid value: last_name: " + str(expected.last_name) + " != " + str(self.last_name)
-		assert expected.company == "" or self.company == expected.company, "Invalid value: company: " + str(expected.company) + " != " + str(self.company)
-		assert expected.position == "" or self.position == expected.position, "Invalid value: position: " + str(expected.position) + " != " + str(self.position)
-		return True
-
-
-# noinspection PyProtectedMember,PyShadowingBuiltins
 class Identity:
 	class ApiKey:
 		class Permission:
@@ -2640,12 +2554,10 @@ class Identity:
 			assert expected.expiration_timestamp == 0 or self.expiration_timestamp == expected.expiration_timestamp, "Invalid value: expiration_timestamp: " + str(expected.expiration_timestamp) + " != " + str(self.expiration_timestamp)
 			return True
 
-	def __init__(self, id: int = 0, display_name: str = "", details: "IdentityDetails" = None, invitation_url: str = "", keycloak_managed: bool = False, has_a_photo: bool = False, api_key: "Identity.ApiKey" = None):
+	def __init__(self, id: int = 0, display_name: str = "", details: "IdentityDetails" = None, keycloak_managed: bool = False, has_a_photo: bool = False, api_key: "Identity.ApiKey" = None):
 		self.id: int = id
 		self.display_name: str = display_name
 		self.details: IdentityDetails = details
-		# deprecated field
-		self.invitation_url: str = invitation_url
 		self.keycloak_managed: bool = keycloak_managed
 		self.has_a_photo: bool = has_a_photo
 		self.api_key: Identity.ApiKey = api_key
@@ -2654,19 +2566,18 @@ class Identity:
 		self.id: int = identity.id
 		self.display_name: str = identity.display_name
 		self.details: IdentityDetails = identity.details
-		self.invitation_url: str = identity.invitation_url
 		self.keycloak_managed: bool = identity.keycloak_managed
 		self.has_a_photo: bool = identity.has_a_photo
 		self.api_key: Identity.ApiKey = identity.api_key
 
 	# noinspection PyProtectedMember
 	def _clone(self) -> "Identity":
-		return Identity(id=self.id, display_name=self.display_name, details=self.details._clone(), invitation_url=self.invitation_url, keycloak_managed=self.keycloak_managed, has_a_photo=self.has_a_photo, api_key=self.api_key._clone())
+		return Identity(id=self.id, display_name=self.display_name, details=self.details._clone(), keycloak_managed=self.keycloak_managed, has_a_photo=self.has_a_photo, api_key=self.api_key._clone())
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.datatypes.v1.identity_pb2.Identity) -> "Identity":
-		return Identity(id=native_message.id, display_name=native_message.display_name, details=IdentityDetails._from_native(native_message.details), invitation_url=native_message.invitation_url, keycloak_managed=native_message.keycloak_managed, has_a_photo=native_message.has_a_photo, api_key=Identity.ApiKey._from_native(native_message.api_key))
+		return Identity(id=native_message.id, display_name=native_message.display_name, details=IdentityDetails._from_native(native_message.details), keycloak_managed=native_message.keycloak_managed, has_a_photo=native_message.has_a_photo, api_key=Identity.ApiKey._from_native(native_message.api_key))
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 	@staticmethod
@@ -2694,7 +2605,7 @@ class Identity:
 	def _to_native(message: Optional["Identity"]):
 		if message is None:
 			return None
-		return olvid.daemon.datatypes.v1.identity_pb2.Identity(id=message.id if message.id else None, display_name=message.display_name if message.display_name else None, details=IdentityDetails._to_native(message.details if message.details else None), invitation_url=message.invitation_url if message.invitation_url else None, keycloak_managed=message.keycloak_managed if message.keycloak_managed else None, has_a_photo=message.has_a_photo if message.has_a_photo else None, api_key=Identity.ApiKey._to_native(message.api_key if message.api_key else None))
+		return olvid.daemon.datatypes.v1.identity_pb2.Identity(id=message.id if message.id else None, display_name=message.display_name if message.display_name else None, details=IdentityDetails._to_native(message.details if message.details else None), keycloak_managed=message.keycloak_managed if message.keycloak_managed else None, has_a_photo=message.has_a_photo if message.has_a_photo else None, api_key=Identity.ApiKey._to_native(message.api_key if message.api_key else None))
 
 	def __str__(self):
 		s: str = ''
@@ -2704,8 +2615,6 @@ class Identity:
 			s += f'display_name: {self.display_name}, '
 		if self.details:
 			s += f'details: ({self.details}), '
-		if self.invitation_url:
-			s += f'invitation_url: {self.invitation_url}, '
 		if self.keycloak_managed:
 			s += f'keycloak_managed: {self.keycloak_managed}, '
 		if self.has_a_photo:
@@ -2717,13 +2626,13 @@ class Identity:
 	def __eq__(self, other):
 		if not isinstance(other, Identity):
 			return False
-		return self.id == other.id and self.display_name == other.display_name and self.details == other.details and self.invitation_url == other.invitation_url and self.keycloak_managed == other.keycloak_managed and self.has_a_photo == other.has_a_photo and self.api_key == other.api_key
+		return self.id == other.id and self.display_name == other.display_name and self.details == other.details and self.keycloak_managed == other.keycloak_managed and self.has_a_photo == other.has_a_photo and self.api_key == other.api_key
 
 	def __bool__(self):
-		return self.id != 0 or self.display_name != "" or bool(self.details) or self.invitation_url != "" or self.keycloak_managed or self.has_a_photo or bool(self.api_key)
+		return self.id != 0 or self.display_name != "" or bool(self.details) or self.keycloak_managed or self.has_a_photo or bool(self.api_key)
 
 	def __hash__(self):
-		return hash((self.id, self.display_name, self.details, self.invitation_url, self.keycloak_managed, self.has_a_photo, self.api_key))
+		return hash((self.id, self.display_name, self.details, self.keycloak_managed, self.has_a_photo, self.api_key))
 
 	# For tests routines
 	# noinspection DuplicatedCode,PyProtectedMember
@@ -2736,13 +2645,98 @@ class Identity:
 			assert expected.details is None or self.details._test_assertion(expected.details)
 		except AssertionError as e:
 			raise AssertionError("details: " + str(e))
-		assert expected.invitation_url == "" or self.invitation_url == expected.invitation_url, "Invalid value: invitation_url: " + str(expected.invitation_url) + " != " + str(self.invitation_url)
 		assert expected.keycloak_managed is False or self.keycloak_managed == expected.keycloak_managed, "Invalid value: keycloak_managed: " + str(expected.keycloak_managed) + " != " + str(self.keycloak_managed)
 		assert expected.has_a_photo is False or self.has_a_photo == expected.has_a_photo, "Invalid value: has_a_photo: " + str(expected.has_a_photo) + " != " + str(self.has_a_photo)
 		try:
 			assert expected.api_key is None or self.api_key._test_assertion(expected.api_key)
 		except AssertionError as e:
 			raise AssertionError("api_key: " + str(e))
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class IdentityDetails:
+	def __init__(self, first_name: str = "", last_name: str = "", company: str = "", position: str = ""):
+		self.first_name: str = first_name
+		self.last_name: str = last_name
+		self.company: str = company
+		self.position: str = position
+
+	def _update_content(self, identity_details: IdentityDetails) -> None:
+		self.first_name: str = identity_details.first_name
+		self.last_name: str = identity_details.last_name
+		self.company: str = identity_details.company
+		self.position: str = identity_details.position
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "IdentityDetails":
+		return IdentityDetails(first_name=self.first_name, last_name=self.last_name, company=self.company, position=self.position)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails) -> "IdentityDetails":
+		return IdentityDetails(first_name=native_message.first_name, last_name=native_message.last_name, company=native_message.company, position=native_message.position)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails]) -> list["IdentityDetails"]:
+		return [IdentityDetails._from_native(native_message) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails]) -> "IdentityDetails":
+		try:
+			native_message = await promise
+			return IdentityDetails._from_native(native_message)
+		except errors.AioRpcError as error:
+			raise errors.OlvidError._from_aio_rpc_error(error) from error
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["IdentityDetails"]):
+		if messages is None:
+			return []
+		return [IdentityDetails._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["IdentityDetails"]):
+		if message is None:
+			return None
+		return olvid.daemon.datatypes.v1.identity_pb2.IdentityDetails(first_name=message.first_name if message.first_name else None, last_name=message.last_name if message.last_name else None, company=message.company if message.company else None, position=message.position if message.position else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.first_name:
+			s += f'first_name: {self.first_name}, '
+		if self.last_name:
+			s += f'last_name: {self.last_name}, '
+		if self.company:
+			s += f'company: {self.company}, '
+		if self.position:
+			s += f'position: {self.position}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, IdentityDetails):
+			return False
+		return self.first_name == other.first_name and self.last_name == other.last_name and self.company == other.company and self.position == other.position
+
+	def __bool__(self):
+		return self.first_name != "" or self.last_name != "" or self.company != "" or self.position != ""
+
+	def __hash__(self):
+		return hash((self.first_name, self.last_name, self.company, self.position))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, IdentityDetails):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.first_name == "" or self.first_name == expected.first_name, "Invalid value: first_name: " + str(expected.first_name) + " != " + str(self.first_name)
+		assert expected.last_name == "" or self.last_name == expected.last_name, "Invalid value: last_name: " + str(expected.last_name) + " != " + str(self.last_name)
+		assert expected.company == "" or self.company == expected.company, "Invalid value: company: " + str(expected.company) + " != " + str(self.company)
+		assert expected.position == "" or self.position == expected.position, "Invalid value: position: " + str(expected.position) + " != " + str(self.position)
 		return True
 
 
@@ -2937,7 +2931,7 @@ class Invitation:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.datatypes.v1.invitation_pb2.Invitation) -> "Invitation":
-		return Invitation(id=native_message.id, status=Invitation.Status(native_message.status), display_name=native_message.display_name, timestamp=native_message.timestamp, sas=native_message.sas, mediator_id=native_message.mediatorId)
+		return Invitation(id=native_message.id, status=Invitation.Status(native_message.status), display_name=native_message.display_name, timestamp=native_message.timestamp, sas=native_message.sas, mediator_id=native_message.mediator_id)
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 	@staticmethod
@@ -2965,7 +2959,7 @@ class Invitation:
 	def _to_native(message: Optional["Invitation"]):
 		if message is None:
 			return None
-		return olvid.daemon.datatypes.v1.invitation_pb2.Invitation(id=message.id if message.id else None, status=message.status.value if message.status else None, display_name=message.display_name if message.display_name else None, timestamp=message.timestamp if message.timestamp else None, sas=message.sas if message.sas else None, mediatorId=message.mediator_id if message.mediator_id else None)
+		return olvid.daemon.datatypes.v1.invitation_pb2.Invitation(id=message.id if message.id else None, status=message.status.value if message.status else None, display_name=message.display_name if message.display_name else None, timestamp=message.timestamp if message.timestamp else None, sas=message.sas if message.sas else None, mediator_id=message.mediator_id if message.mediator_id else None)
 
 	def __str__(self):
 		s: str = ''
@@ -3307,98 +3301,6 @@ class KeycloakUserFilter:
 
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
-class MessageId:
-	# noinspection PyProtectedMember,PyShadowingBuiltins
-	class Type(Enum):
-		TYPE_UNSPECIFIED = 0
-		TYPE_INBOUND = 1
-		TYPE_OUTBOUND = 2
-	
-		def __str__(self):
-			return self.name
-	
-		@staticmethod
-		def _from_native_list(native_enum_list) -> list["MessageId.Type"]:
-			return [MessageId.Type(native_enum) for native_enum in native_enum_list]
-	
-		def __bool__(self):
-			return self.value != 0
-
-	def __init__(self, type: "MessageId.Type" = 0, id: int = 0):
-		self.type: MessageId.Type = type
-		self.id: int = id
-
-	def _update_content(self, message_id: MessageId) -> None:
-		self.type: MessageId.Type = message_id.type
-		self.id: int = message_id.id
-
-	# noinspection PyProtectedMember
-	def _clone(self) -> "MessageId":
-		return MessageId(type=self.type, id=self.id)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
-	@staticmethod
-	def _from_native(native_message: olvid.daemon.datatypes.v1.message_pb2.MessageId) -> "MessageId":
-		return MessageId(type=MessageId.Type(native_message.type), id=native_message.id)
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.message_pb2.MessageId]) -> list["MessageId"]:
-		return [MessageId._from_native(native_message) for native_message in native_message_list]
-
-	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
-	@staticmethod
-	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.message_pb2.MessageId]) -> "MessageId":
-		try:
-			native_message = await promise
-			return MessageId._from_native(native_message)
-		except errors.AioRpcError as error:
-			raise errors.OlvidError._from_aio_rpc_error(error) from error
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native_list(messages: list["MessageId"]):
-		if messages is None:
-			return []
-		return [MessageId._to_native(message) for message in messages]
-
-	# noinspection PyUnresolvedReferences,PyProtectedMember
-	@staticmethod
-	def _to_native(message: Optional["MessageId"]):
-		if message is None:
-			return None
-		return olvid.daemon.datatypes.v1.message_pb2.MessageId(type=message.type.value if message.type else None, id=message.id if message.id else None)
-
-	def __str__(self):
-		s: str = ''
-		if self.type:
-			s += f'type: {self.type}, '
-		if self.id:
-			s += f'id: {self.id}, '
-		return s.removesuffix(', ')
-
-	def __eq__(self, other):
-		if not isinstance(other, MessageId):
-			return False
-		return self.type == other.type and self.id == other.id
-
-	def __bool__(self):
-		return bool(self.type) or self.id != 0
-
-	def __hash__(self):
-		return hash((self.type, self.id))
-
-	# For tests routines
-	# noinspection DuplicatedCode,PyProtectedMember
-	def _test_assertion(self, expected):
-		if not isinstance(expected, MessageId):
-			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
-		assert expected.type == 0 or self.type == expected.type, "Invalid value: type: " + str(expected.type) + " != " + str(self.type)
-		assert expected.id == 0 or self.id == expected.id, "Invalid value: id: " + str(expected.id) + " != " + str(self.id)
-		return True
-
-
-# noinspection PyProtectedMember,PyShadowingBuiltins
 class Message:
 	def __init__(self, id: "MessageId" = None, discussion_id: int = 0, sender_id: int = 0, body: str = "", sort_index: float = 0.0, timestamp: int = 0, attachments_count: int = 0, replied_message_id: "MessageId" = None, message_location: "MessageLocation" = None, reactions: "list[MessageReaction]" = None, forwarded: bool = False, edited_body: bool = False):
 		self.id: MessageId = id
@@ -3530,6 +3432,98 @@ class Message:
 		pass  # print("Warning: test_assertion: skipped a list field reactions")
 		assert expected.forwarded is False or self.forwarded == expected.forwarded, "Invalid value: forwarded: " + str(expected.forwarded) + " != " + str(self.forwarded)
 		assert expected.edited_body is False or self.edited_body == expected.edited_body, "Invalid value: edited_body: " + str(expected.edited_body) + " != " + str(self.edited_body)
+		return True
+
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+class MessageId:
+	# noinspection PyProtectedMember,PyShadowingBuiltins
+	class Type(Enum):
+		TYPE_UNSPECIFIED = 0
+		TYPE_INBOUND = 1
+		TYPE_OUTBOUND = 2
+	
+		def __str__(self):
+			return self.name
+	
+		@staticmethod
+		def _from_native_list(native_enum_list) -> list["MessageId.Type"]:
+			return [MessageId.Type(native_enum) for native_enum in native_enum_list]
+	
+		def __bool__(self):
+			return self.value != 0
+
+	def __init__(self, type: "MessageId.Type" = 0, id: int = 0):
+		self.type: MessageId.Type = type
+		self.id: int = id
+
+	def _update_content(self, message_id: MessageId) -> None:
+		self.type: MessageId.Type = message_id.type
+		self.id: int = message_id.id
+
+	# noinspection PyProtectedMember
+	def _clone(self) -> "MessageId":
+		return MessageId(type=self.type, id=self.id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
+	@staticmethod
+	def _from_native(native_message: olvid.daemon.datatypes.v1.message_pb2.MessageId) -> "MessageId":
+		return MessageId(type=MessageId.Type(native_message.type), id=native_message.id)
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	def _from_native_list(native_message_list: list[olvid.daemon.datatypes.v1.message_pb2.MessageId]) -> list["MessageId"]:
+		return [MessageId._from_native(native_message) for native_message in native_message_list]
+
+	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
+	@staticmethod
+	async def _from_native_promise(promise: Coroutine[Any, Any, olvid.daemon.datatypes.v1.message_pb2.MessageId]) -> "MessageId":
+		try:
+			native_message = await promise
+			return MessageId._from_native(native_message)
+		except errors.AioRpcError as error:
+			raise errors.OlvidError._from_aio_rpc_error(error) from error
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native_list(messages: list["MessageId"]):
+		if messages is None:
+			return []
+		return [MessageId._to_native(message) for message in messages]
+
+	# noinspection PyUnresolvedReferences,PyProtectedMember
+	@staticmethod
+	def _to_native(message: Optional["MessageId"]):
+		if message is None:
+			return None
+		return olvid.daemon.datatypes.v1.message_pb2.MessageId(type=message.type.value if message.type else None, id=message.id if message.id else None)
+
+	def __str__(self):
+		s: str = ''
+		if self.type:
+			s += f'type: {self.type}, '
+		if self.id:
+			s += f'id: {self.id}, '
+		return s.removesuffix(', ')
+
+	def __eq__(self, other):
+		if not isinstance(other, MessageId):
+			return False
+		return self.type == other.type and self.id == other.id
+
+	def __bool__(self):
+		return bool(self.type) or self.id != 0
+
+	def __hash__(self):
+		return hash((self.type, self.id))
+
+	# For tests routines
+	# noinspection DuplicatedCode,PyProtectedMember
+	def _test_assertion(self, expected):
+		if not isinstance(expected, MessageId):
+			assert False, "Invalid type: " + str(type(expected).__name__) + " != " + str(type(self).__name__)
+		assert expected.type == 0 or self.type == expected.type, "Invalid value: type: " + str(expected.type) + " != " + str(self.type)
+		assert expected.id == 0 or self.id == expected.id, "Invalid value: id: " + str(expected.id) + " != " + str(self.id)
 		return True
 
 
@@ -3866,7 +3860,7 @@ class MessageFilter:
 		def __bool__(self):
 			return self.value != 0
 
-	def __init__(self, type: "MessageId.Type" = 0, discussion_id: int = 0, sender_contact_id: int = 0, body_search: str = "", attachment: "MessageFilter.Attachment" = 0, location: "MessageFilter.Location" = 0, min_timestamp: int = 0, max_timestamp: int = 0, has_reaction: "MessageFilter.Reaction" = 0, reactions_filter: "list[ReactionFilter]" = None, reply_to_a_message: bool = None, do_not_reply_to_a_message: bool = None, replied_message_id: "MessageId" = None):
+	def __init__(self, type: "MessageId.Type" = 0, discussion_id: int = 0, sender_contact_id: int = 0, body_search: str = "", attachment: "MessageFilter.Attachment" = 0, location: "MessageFilter.Location" = 0, min_timestamp: int = 0, max_timestamp: int = 0, has_reaction: "MessageFilter.Reaction" = 0, reaction_filters: "list[ReactionFilter]" = None, reply_to_a_message: bool = None, do_not_reply_to_a_message: bool = None, replied_message_id: "MessageId" = None):
 		self.type: MessageId.Type = type
 		self.discussion_id: int = discussion_id
 		self.sender_contact_id: int = sender_contact_id
@@ -3876,7 +3870,7 @@ class MessageFilter:
 		self.min_timestamp: int = min_timestamp
 		self.max_timestamp: int = max_timestamp
 		self.has_reaction: MessageFilter.Reaction = has_reaction
-		self.reactions_filter: list[ReactionFilter] = reactions_filter
+		self.reaction_filters: list[ReactionFilter] = reaction_filters
 		self.reply_to_a_message: bool = reply_to_a_message
 		self.do_not_reply_to_a_message: bool = do_not_reply_to_a_message
 		self.replied_message_id: MessageId = replied_message_id
@@ -3891,19 +3885,19 @@ class MessageFilter:
 		self.min_timestamp: int = message_filter.min_timestamp
 		self.max_timestamp: int = message_filter.max_timestamp
 		self.has_reaction: MessageFilter.Reaction = message_filter.has_reaction
-		self.reactions_filter: list[ReactionFilter] = message_filter.reactions_filter
+		self.reaction_filters: list[ReactionFilter] = message_filter.reaction_filters
 		self.reply_to_a_message: bool = message_filter.reply_to_a_message
 		self.do_not_reply_to_a_message: bool = message_filter.do_not_reply_to_a_message
 		self.replied_message_id: MessageId = message_filter.replied_message_id
 
 	# noinspection PyProtectedMember
 	def _clone(self) -> "MessageFilter":
-		return MessageFilter(type=self.type, discussion_id=self.discussion_id, sender_contact_id=self.sender_contact_id, body_search=self.body_search, attachment=self.attachment, location=self.location, min_timestamp=self.min_timestamp, max_timestamp=self.max_timestamp, has_reaction=self.has_reaction, reactions_filter=[e._clone() for e in self.reactions_filter], reply_to_a_message=self.reply_to_a_message, do_not_reply_to_a_message=self.do_not_reply_to_a_message, replied_message_id=self.replied_message_id._clone())
+		return MessageFilter(type=self.type, discussion_id=self.discussion_id, sender_contact_id=self.sender_contact_id, body_search=self.body_search, attachment=self.attachment, location=self.location, min_timestamp=self.min_timestamp, max_timestamp=self.max_timestamp, has_reaction=self.has_reaction, reaction_filters=[e._clone() for e in self.reaction_filters], reply_to_a_message=self.reply_to_a_message, do_not_reply_to_a_message=self.do_not_reply_to_a_message, replied_message_id=self.replied_message_id._clone())
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.datatypes.v1.message_pb2.MessageFilter) -> "MessageFilter":
-		return MessageFilter(type=MessageId.Type(native_message.type), discussion_id=native_message.discussion_id, sender_contact_id=native_message.sender_contact_id, body_search=native_message.body_search, attachment=MessageFilter.Attachment(native_message.attachment), location=MessageFilter.Location(native_message.location), min_timestamp=native_message.min_timestamp, max_timestamp=native_message.max_timestamp, has_reaction=MessageFilter.Reaction(native_message.has_reaction), reactions_filter=ReactionFilter._from_native_list(native_message.reactions_filter), reply_to_a_message=native_message.reply_to_a_message, do_not_reply_to_a_message=native_message.do_not_reply_to_a_message, replied_message_id=MessageId._from_native(native_message.replied_message_id))
+		return MessageFilter(type=MessageId.Type(native_message.type), discussion_id=native_message.discussion_id, sender_contact_id=native_message.sender_contact_id, body_search=native_message.body_search, attachment=MessageFilter.Attachment(native_message.attachment), location=MessageFilter.Location(native_message.location), min_timestamp=native_message.min_timestamp, max_timestamp=native_message.max_timestamp, has_reaction=MessageFilter.Reaction(native_message.has_reaction), reaction_filters=ReactionFilter._from_native_list(native_message.reaction_filters), reply_to_a_message=native_message.reply_to_a_message, do_not_reply_to_a_message=native_message.do_not_reply_to_a_message, replied_message_id=MessageId._from_native(native_message.replied_message_id))
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 	@staticmethod
@@ -3931,7 +3925,7 @@ class MessageFilter:
 	def _to_native(message: Optional["MessageFilter"]):
 		if message is None:
 			return None
-		return olvid.daemon.datatypes.v1.message_pb2.MessageFilter(type=message.type.value if message.type else None, discussion_id=message.discussion_id if message.discussion_id else None, sender_contact_id=message.sender_contact_id if message.sender_contact_id else None, body_search=message.body_search if message.body_search else None, attachment=message.attachment.value if message.attachment else None, location=message.location.value if message.location else None, min_timestamp=message.min_timestamp if message.min_timestamp else None, max_timestamp=message.max_timestamp if message.max_timestamp else None, has_reaction=message.has_reaction.value if message.has_reaction else None, reactions_filter=ReactionFilter._to_native_list(message.reactions_filter if message.reactions_filter else None), reply_to_a_message=message.reply_to_a_message if message.reply_to_a_message else None, do_not_reply_to_a_message=message.do_not_reply_to_a_message if message.do_not_reply_to_a_message else None, replied_message_id=MessageId._to_native(message.replied_message_id if message.replied_message_id else None))
+		return olvid.daemon.datatypes.v1.message_pb2.MessageFilter(type=message.type.value if message.type else None, discussion_id=message.discussion_id if message.discussion_id else None, sender_contact_id=message.sender_contact_id if message.sender_contact_id else None, body_search=message.body_search if message.body_search else None, attachment=message.attachment.value if message.attachment else None, location=message.location.value if message.location else None, min_timestamp=message.min_timestamp if message.min_timestamp else None, max_timestamp=message.max_timestamp if message.max_timestamp else None, has_reaction=message.has_reaction.value if message.has_reaction else None, reaction_filters=ReactionFilter._to_native_list(message.reaction_filters if message.reaction_filters else None), reply_to_a_message=message.reply_to_a_message if message.reply_to_a_message else None, do_not_reply_to_a_message=message.do_not_reply_to_a_message if message.do_not_reply_to_a_message else None, replied_message_id=MessageId._to_native(message.replied_message_id if message.replied_message_id else None))
 
 	def __str__(self):
 		s: str = ''
@@ -3953,8 +3947,8 @@ class MessageFilter:
 			s += f'max_timestamp: {self.max_timestamp}, '
 		if self.has_reaction:
 			s += f'has_reaction: {self.has_reaction}, '
-		if self.reactions_filter:
-			s += f'reactions_filter: {[str(el) for el in self.reactions_filter]}, '
+		if self.reaction_filters:
+			s += f'reaction_filters: {[str(el) for el in self.reaction_filters]}, '
 		if self.reply_to_a_message:
 			s += f'reply_to_a_message: {self.reply_to_a_message}, '
 		if self.do_not_reply_to_a_message:
@@ -3966,13 +3960,13 @@ class MessageFilter:
 	def __eq__(self, other):
 		if not isinstance(other, MessageFilter):
 			return False
-		return self.type == other.type and self.discussion_id == other.discussion_id and self.sender_contact_id == other.sender_contact_id and self.body_search == other.body_search and self.attachment == other.attachment and self.location == other.location and self.min_timestamp == other.min_timestamp and self.max_timestamp == other.max_timestamp and self.has_reaction == other.has_reaction and self.reactions_filter == other.reactions_filter and self.reply_to_a_message == other.reply_to_a_message and self.do_not_reply_to_a_message == other.do_not_reply_to_a_message and self.replied_message_id == other.replied_message_id
+		return self.type == other.type and self.discussion_id == other.discussion_id and self.sender_contact_id == other.sender_contact_id and self.body_search == other.body_search and self.attachment == other.attachment and self.location == other.location and self.min_timestamp == other.min_timestamp and self.max_timestamp == other.max_timestamp and self.has_reaction == other.has_reaction and self.reaction_filters == other.reaction_filters and self.reply_to_a_message == other.reply_to_a_message and self.do_not_reply_to_a_message == other.do_not_reply_to_a_message and self.replied_message_id == other.replied_message_id
 
 	def __bool__(self):
-		return bool(self.type) or self.discussion_id != 0 or self.sender_contact_id != 0 or self.body_search != "" or bool(self.attachment) or bool(self.location) or self.min_timestamp != 0 or self.max_timestamp != 0 or bool(self.has_reaction) or bool(self.reactions_filter) or self.reply_to_a_message is not None or self.do_not_reply_to_a_message is not None or bool(self.replied_message_id)
+		return bool(self.type) or self.discussion_id != 0 or self.sender_contact_id != 0 or self.body_search != "" or bool(self.attachment) or bool(self.location) or self.min_timestamp != 0 or self.max_timestamp != 0 or bool(self.has_reaction) or bool(self.reaction_filters) or self.reply_to_a_message is not None or self.do_not_reply_to_a_message is not None or bool(self.replied_message_id)
 
 	def __hash__(self):
-		return hash((self.type, self.discussion_id, self.sender_contact_id, self.body_search, self.attachment, self.location, self.min_timestamp, self.max_timestamp, self.has_reaction, tuple(self.reactions_filter), self.reply_to_a_message, self.do_not_reply_to_a_message, self.replied_message_id))
+		return hash((self.type, self.discussion_id, self.sender_contact_id, self.body_search, self.attachment, self.location, self.min_timestamp, self.max_timestamp, self.has_reaction, tuple(self.reaction_filters), self.reply_to_a_message, self.do_not_reply_to_a_message, self.replied_message_id))
 
 	# For tests routines
 	# noinspection DuplicatedCode,PyProtectedMember
@@ -3988,7 +3982,7 @@ class MessageFilter:
 		assert expected.min_timestamp == 0 or self.min_timestamp == expected.min_timestamp, "Invalid value: min_timestamp: " + str(expected.min_timestamp) + " != " + str(self.min_timestamp)
 		assert expected.max_timestamp == 0 or self.max_timestamp == expected.max_timestamp, "Invalid value: max_timestamp: " + str(expected.max_timestamp) + " != " + str(self.max_timestamp)
 		assert expected.has_reaction == 0 or self.has_reaction == expected.has_reaction, "Invalid value: has_reaction: " + str(expected.has_reaction) + " != " + str(self.has_reaction)
-		pass  # print("Warning: test_assertion: skipped a list field reactions_filter")
+		pass  # print("Warning: test_assertion: skipped a list field reaction_filters")
 		assert expected.reply_to_a_message is None or self.reply_to_a_message == expected.reply_to_a_message, "Invalid value: reply_to_a_message: " + str(expected.reply_to_a_message) + " != " + str(self.reply_to_a_message)
 		assert expected.do_not_reply_to_a_message is None or self.do_not_reply_to_a_message == expected.do_not_reply_to_a_message, "Invalid value: do_not_reply_to_a_message: " + str(expected.do_not_reply_to_a_message) + " != " + str(self.do_not_reply_to_a_message)
 		try:

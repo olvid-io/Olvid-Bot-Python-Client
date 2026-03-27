@@ -481,7 +481,7 @@ class OlvidClient(CommandHolder):
 			yield commands.GroupSetPhotoRequest(
 				metadata=commands.GroupSetPhotoRequestMetadata(group_id=group_id, filename=filename, file_size=len(payload)))
 			while len(buffer) > 0:
-				yield commands.MessageSendWithAttachmentsRequest(payload=buffer[0:self._CHUNK_LENGTH])
+				yield commands.GroupSetPhotoRequest(payload=buffer[0:self._CHUNK_LENGTH])
 				buffer = buffer[self._CHUNK_LENGTH:]
 		command_logger.info(f'{self.__class__.__name__}: command: GroupSetPhoto')
 		return (await self._stubs.groupCommandStub.group_set_photo(group_set_photo_iterator(payload))).group
@@ -579,16 +579,16 @@ class OlvidClient(CommandHolder):
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityUpdateDetails')
 		await self._stubs.identityCommandStub.identity_update_details(commands.IdentityUpdateDetailsRequest(new_details=new_details))
 	
-	async def identity_remove_photo(self) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: IdentityRemovePhoto')
-		await self._stubs.identityCommandStub.identity_remove_photo(commands.IdentityRemovePhotoRequest())
-	
 	# identity_set_photo: cannot generate request stream rpc code
 	
 	async def identity_download_photo(self) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityDownloadPhoto')
 		response: commands.IdentityDownloadPhotoResponse = await self._stubs.identityCommandStub.identity_download_photo(commands.IdentityDownloadPhotoRequest())
 		return response.photo
+	
+	async def identity_remove_photo(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: IdentityRemovePhoto')
+		await self._stubs.identityCommandStub.identity_remove_photo(commands.IdentityRemovePhotoRequest())
 	
 	async def identity_get_api_key_status(self) -> datatypes.Identity.ApiKey:
 		command_logger.info(f'{self.__class__.__name__}: command: IdentityGetApiKeyStatus')
@@ -768,17 +768,17 @@ class OlvidClient(CommandHolder):
 		response: commands.GroupUpdateResponse = await self._stubs.groupCommandStub.group_update(commands.GroupUpdateRequest(group=group))
 		return response.group
 	
-	async def group_unset_photo(self, group_id: int) -> datatypes.Group:
-		command_logger.info(f'{self.__class__.__name__}: command: GroupUnsetPhoto')
-		response: commands.GroupUnsetPhotoResponse = await self._stubs.groupCommandStub.group_unset_photo(commands.GroupUnsetPhotoRequest(group_id=group_id))
-		return response.group
-	
 	# group_set_photo: cannot generate request stream rpc code
 	
 	async def group_download_photo(self, group_id: int) -> bytes:
 		command_logger.info(f'{self.__class__.__name__}: command: GroupDownloadPhoto')
 		response: commands.GroupDownloadPhotoResponse = await self._stubs.groupCommandStub.group_download_photo(commands.GroupDownloadPhotoRequest(group_id=group_id))
 		return response.photo
+	
+	async def group_unset_photo(self, group_id: int) -> datatypes.Group:
+		command_logger.info(f'{self.__class__.__name__}: command: GroupUnsetPhoto')
+		response: commands.GroupUnsetPhotoResponse = await self._stubs.groupCommandStub.group_unset_photo(commands.GroupUnsetPhotoRequest(group_id=group_id))
+		return response.group
 	
 	# DiscussionCommandService
 	def discussion_list(self, filter: datatypes.DiscussionFilter = None) -> AsyncIterator[datatypes.Discussion]:
@@ -847,20 +847,24 @@ class OlvidClient(CommandHolder):
 		response: commands.MessageGetResponse = await self._stubs.messageCommandStub.message_get(commands.MessageGetRequest(message_id=message_id))
 		return response.message
 	
-	async def message_refresh(self) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: MessageRefresh')
-		await self._stubs.messageCommandStub.message_refresh(commands.MessageRefreshRequest())
-	
-	async def message_delete(self, message_id: datatypes.MessageId, delete_everywhere: bool = False) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: MessageDelete')
-		await self._stubs.messageCommandStub.message_delete(commands.MessageDeleteRequest(message_id=message_id, delete_everywhere=delete_everywhere))
-	
 	async def message_send(self, discussion_id: int, body: str, reply_id: datatypes.MessageId = None, ephemerality: datatypes.MessageEphemerality = None, disable_link_preview: bool = False) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSend')
 		response: commands.MessageSendResponse = await self._stubs.messageCommandStub.message_send(commands.MessageSendRequest(discussion_id=discussion_id, body=body, reply_id=reply_id, ephemerality=ephemerality, disable_link_preview=disable_link_preview))
 		return response.message
 	
 	# message_send_with_attachments: cannot generate request stream rpc code
+	
+	async def message_react(self, message_id: datatypes.MessageId, reaction: str = "") -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageReact')
+		await self._stubs.messageCommandStub.message_react(commands.MessageReactRequest(message_id=message_id, reaction=reaction))
+	
+	async def message_update_body(self, message_id: datatypes.MessageId, updated_body: str) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageUpdateBody')
+		await self._stubs.messageCommandStub.message_update_body(commands.MessageUpdateBodyRequest(message_id=message_id, updated_body=updated_body))
+	
+	async def message_delete(self, message_id: datatypes.MessageId, delete_everywhere: bool = False) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageDelete')
+		await self._stubs.messageCommandStub.message_delete(commands.MessageDeleteRequest(message_id=message_id, delete_everywhere=delete_everywhere))
 	
 	async def message_send_location(self, discussion_id: int, latitude: float, longitude: float, altitude: float = 0.0, precision: float = 0.0, address: str = "", preview_filename: str = "", preview_payload: bytes = b"", ephemerality: datatypes.MessageEphemerality = None) -> datatypes.Message:
 		command_logger.info(f'{self.__class__.__name__}: command: MessageSendLocation')
@@ -882,13 +886,9 @@ class OlvidClient(CommandHolder):
 		response: commands.MessageEndLocationSharingResponse = await self._stubs.messageCommandStub.message_end_location_sharing(commands.MessageEndLocationSharingRequest(message_id=message_id))
 		return response.message
 	
-	async def message_react(self, message_id: datatypes.MessageId, reaction: str = "") -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: MessageReact')
-		await self._stubs.messageCommandStub.message_react(commands.MessageReactRequest(message_id=message_id, reaction=reaction))
-	
-	async def message_update_body(self, message_id: datatypes.MessageId, updated_body: str) -> None:
-		command_logger.info(f'{self.__class__.__name__}: command: MessageUpdateBody')
-		await self._stubs.messageCommandStub.message_update_body(commands.MessageUpdateBodyRequest(message_id=message_id, updated_body=updated_body))
+	async def message_refresh(self) -> None:
+		command_logger.info(f'{self.__class__.__name__}: command: MessageRefresh')
+		await self._stubs.messageCommandStub.message_refresh(commands.MessageRefreshRequest())
 	
 	# AttachmentCommandService
 	def attachment_list(self, filter: datatypes.AttachmentFilter = None) -> AsyncIterator[datatypes.Attachment]:
@@ -905,9 +905,9 @@ class OlvidClient(CommandHolder):
 		response: commands.AttachmentGetResponse = await self._stubs.attachmentCommandStub.attachment_get(commands.AttachmentGetRequest(attachment_id=attachment_id))
 		return response.attachment
 	
-	async def attachment_delete(self, attachment_id: datatypes.AttachmentId, delete_everywhere: bool = False) -> None:
+	async def attachment_delete(self, attachment_id: datatypes.AttachmentId) -> None:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentDelete')
-		await self._stubs.attachmentCommandStub.attachment_delete(commands.AttachmentDeleteRequest(attachment_id=attachment_id, delete_everywhere=delete_everywhere))
+		await self._stubs.attachmentCommandStub.attachment_delete(commands.AttachmentDeleteRequest(attachment_id=attachment_id))
 	
 	def attachment_download(self, attachment_id: datatypes.AttachmentId) -> AsyncIterator[bytes]:
 		command_logger.info(f'{self.__class__.__name__}: command: AttachmentDownload')
@@ -1074,7 +1074,7 @@ class OlvidClient(CommandHolder):
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupOwnPermissionsUpdated')
 		return self._stubs.groupNotificationStub.group_own_permissions_updated(notifications.SubscribeToGroupOwnPermissionsUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, permissions_filter=permissions_filter, previous_permissions_filter=previous_permissions_filter))
 	
-	def _notif_group_member_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupMemberFilter = None) -> AsyncIterator[notifications.GroupMemberPermissionsUpdatedNotification]:
+	def _notif_group_member_permissions_updated(self, count: int = 0, group_ids: list[int] = (), group_filter: datatypes.GroupFilter = None, member_filter: datatypes.GroupMemberFilter = None, previous_permission_filter: datatypes.GroupPermissionFilter = None) -> AsyncIterator[notifications.GroupMemberPermissionsUpdatedNotification]:
 		notification_logger.debug(f'{self.__class__.__name__}: subscribed to: GroupMemberPermissionsUpdated')
 		return self._stubs.groupNotificationStub.group_member_permissions_updated(notifications.SubscribeToGroupMemberPermissionsUpdatedNotification(count=count, group_ids=group_ids, group_filter=group_filter, member_filter=member_filter, previous_permission_filter=previous_permission_filter))
 	

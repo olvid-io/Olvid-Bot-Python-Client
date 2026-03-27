@@ -589,6 +589,8 @@ class IdentityAdminService(object):
 
 class BackupAdminServiceStub(object):
     """Backup
+    Olvid Backups are accessible using a simple key. They contain data necessary to restore or to transfer an identity from a device (a daemon) to another.
+    Note: Backups do not contain any messages or attachments; they are only designed to re-create secure channels with your contacts, restore your discussions and your daemon configuration (client keys, settings, ...)
     """
 
     def __init__(self, channel):
@@ -636,6 +638,8 @@ class BackupAdminServiceStub(object):
 
 class BackupAdminServiceServicer(object):
     """Backup
+    Olvid Backups are accessible using a simple key. They contain data necessary to restore or to transfer an identity from a device (a daemon) to another.
+    Note: Backups do not contain any messages or attachments; they are only designed to re-create secure channels with your contacts, restore your discussions and your daemon configuration (client keys, settings, ...)
     """
 
     def BackupKeyGet(self, request, context):
@@ -728,6 +732,8 @@ def add_BackupAdminServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class BackupAdminService(object):
     """Backup
+    Olvid Backups are accessible using a simple key. They contain data necessary to restore or to transfer an identity from a device (a daemon) to another.
+    Note: Backups do not contain any messages or attachments; they are only designed to re-create secure channels with your contacts, restore your discussions and your daemon configuration (client keys, settings, ...)
     """
 
     @staticmethod

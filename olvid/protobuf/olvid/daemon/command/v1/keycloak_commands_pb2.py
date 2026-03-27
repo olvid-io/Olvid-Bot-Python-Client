@@ -22,11 +22,10 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 from .....olvid.daemon.datatypes.v1 import keycloak_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_keycloak__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/olvid/daemon/command/v1/keycloak_commands.proto\x12\x17olvid.daemon.command.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\x1a(olvid/daemon/datatypes/v1/keycloak.proto\"L\n\x1bKeycloakBindIdentityRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"\x1e\n\x1cKeycloakBindIdentityResponse\"\x1f\n\x1dKeycloakUnbindIdentityRequest\" \n\x1eKeycloakUnbindIdentityResponse\"\xbd\x01\n\x17KeycloakUserListRequest\x12J\n\x06\x66ilter\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.KeycloakUserFilterH\x00R\x06\x66ilter\x88\x01\x01\x12\x33\n\x13last_list_timestamp\x18\x02 \x01(\x04H\x01R\x11lastListTimestamp\x88\x01\x01\x42\t\n\x07_filterB\x16\n\x14_last_list_timestamp\"\x89\x01\n\x18KeycloakUserListResponse\x12=\n\x05users\x18\x01 \x03(\x0b\x32\'.olvid.daemon.datatypes.v1.KeycloakUserR\x05users\x12.\n\x13last_list_timestamp\x18\x02 \x01(\x04R\x11lastListTimestamp\"B\n\x1fKeycloakAddUserAsContactRequest\x12\x1f\n\x0bkeycloak_id\x18\x01 \x01(\tR\nkeycloakId\"\"\n KeycloakAddUserAsContactResponseB\xc4\x01\n\x1b\x63om.olvid.daemon.command.v1B\x15KeycloakCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/olvid/daemon/command/v1/keycloak_commands.proto\x12\x17olvid.daemon.command.v1\x1a(olvid/daemon/datatypes/v1/keycloak.proto\"L\n\x1bKeycloakBindIdentityRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"\x1e\n\x1cKeycloakBindIdentityResponse\"\x1f\n\x1dKeycloakUnbindIdentityRequest\" \n\x1eKeycloakUnbindIdentityResponse\"\xbd\x01\n\x17KeycloakUserListRequest\x12J\n\x06\x66ilter\x18\x01 \x01(\x0b\x32-.olvid.daemon.datatypes.v1.KeycloakUserFilterH\x00R\x06\x66ilter\x88\x01\x01\x12\x33\n\x13last_list_timestamp\x18\x02 \x01(\x04H\x01R\x11lastListTimestamp\x88\x01\x01\x42\t\n\x07_filterB\x16\n\x14_last_list_timestamp\"\x89\x01\n\x18KeycloakUserListResponse\x12=\n\x05users\x18\x01 \x03(\x0b\x32\'.olvid.daemon.datatypes.v1.KeycloakUserR\x05users\x12.\n\x13last_list_timestamp\x18\x02 \x01(\x04R\x11lastListTimestamp\"B\n\x1fKeycloakAddUserAsContactRequest\x12\x1f\n\x0bkeycloak_id\x18\x01 \x01(\tR\nkeycloakId\"\"\n KeycloakAddUserAsContactResponseB\xc4\x01\n\x1b\x63om.olvid.daemon.command.v1B\x15KeycloakCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,20 +33,20 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'olvid.daemon.command.v1.key
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\033com.olvid.daemon.command.v1B\025KeycloakCommandsProtoP\001Z\017olvid.io/daemon\242\002\003ODC\252\002\027Olvid.Daemon.Command.V1\312\002\027Olvid\\Daemon\\Command\\V1\342\002#Olvid\\Daemon\\Command\\V1\\GPBMetadata\352\002\032Olvid::Daemon::Command::V1'
-  _globals['_KEYCLOAKBINDIDENTITYREQUEST']._serialized_start=160
-  _globals['_KEYCLOAKBINDIDENTITYREQUEST']._serialized_end=236
-  _globals['_KEYCLOAKBINDIDENTITYRESPONSE']._serialized_start=238
-  _globals['_KEYCLOAKBINDIDENTITYRESPONSE']._serialized_end=268
-  _globals['_KEYCLOAKUNBINDIDENTITYREQUEST']._serialized_start=270
-  _globals['_KEYCLOAKUNBINDIDENTITYREQUEST']._serialized_end=301
-  _globals['_KEYCLOAKUNBINDIDENTITYRESPONSE']._serialized_start=303
-  _globals['_KEYCLOAKUNBINDIDENTITYRESPONSE']._serialized_end=335
-  _globals['_KEYCLOAKUSERLISTREQUEST']._serialized_start=338
-  _globals['_KEYCLOAKUSERLISTREQUEST']._serialized_end=527
-  _globals['_KEYCLOAKUSERLISTRESPONSE']._serialized_start=530
-  _globals['_KEYCLOAKUSERLISTRESPONSE']._serialized_end=667
-  _globals['_KEYCLOAKADDUSERASCONTACTREQUEST']._serialized_start=669
-  _globals['_KEYCLOAKADDUSERASCONTACTREQUEST']._serialized_end=735
-  _globals['_KEYCLOAKADDUSERASCONTACTRESPONSE']._serialized_start=737
-  _globals['_KEYCLOAKADDUSERASCONTACTRESPONSE']._serialized_end=771
+  _globals['_KEYCLOAKBINDIDENTITYREQUEST']._serialized_start=118
+  _globals['_KEYCLOAKBINDIDENTITYREQUEST']._serialized_end=194
+  _globals['_KEYCLOAKBINDIDENTITYRESPONSE']._serialized_start=196
+  _globals['_KEYCLOAKBINDIDENTITYRESPONSE']._serialized_end=226
+  _globals['_KEYCLOAKUNBINDIDENTITYREQUEST']._serialized_start=228
+  _globals['_KEYCLOAKUNBINDIDENTITYREQUEST']._serialized_end=259
+  _globals['_KEYCLOAKUNBINDIDENTITYRESPONSE']._serialized_start=261
+  _globals['_KEYCLOAKUNBINDIDENTITYRESPONSE']._serialized_end=293
+  _globals['_KEYCLOAKUSERLISTREQUEST']._serialized_start=296
+  _globals['_KEYCLOAKUSERLISTREQUEST']._serialized_end=485
+  _globals['_KEYCLOAKUSERLISTRESPONSE']._serialized_start=488
+  _globals['_KEYCLOAKUSERLISTRESPONSE']._serialized_end=625
+  _globals['_KEYCLOAKADDUSERASCONTACTREQUEST']._serialized_start=627
+  _globals['_KEYCLOAKADDUSERASCONTACTREQUEST']._serialized_end=693
+  _globals['_KEYCLOAKADDUSERASCONTACTRESPONSE']._serialized_start=695
+  _globals['_KEYCLOAKADDUSERASCONTACTRESPONSE']._serialized_end=729
 # @@protoc_insertion_point(module_scope)

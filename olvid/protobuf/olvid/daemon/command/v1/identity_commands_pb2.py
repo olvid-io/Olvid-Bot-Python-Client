@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from .....olvid.daemon.datatypes.v1 import identity_pb2 as olvid_dot_daemon_dot_datatypes_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/olvid/daemon/command/v1/identity_commands.proto\x12\x17olvid.daemon.command.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"\x14\n\x12IdentityGetRequest\"V\n\x13IdentityGetResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"#\n!IdentityGetBytesIdentifierRequest\"D\n\"IdentityGetBytesIdentifierResponse\x12\x1e\n\nidentifier\x18\x01 \x01(\x0cR\nidentifier\"\"\n IdentityGetInvitationLinkRequest\"L\n!IdentityGetInvitationLinkResponse\x12\'\n\x0finvitation_link\x18\x01 \x01(\tR\x0einvitationLink\"k\n\x1cIdentityUpdateDetailsRequest\x12K\n\x0bnew_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\nnewDetails\"\x1f\n\x1dIdentityUpdateDetailsResponse\"\x1c\n\x1aIdentityRemovePhotoRequest\"\x1d\n\x1bIdentityRemovePhotoResponse\"Z\n\x1fIdentitySetPhotoRequestMetadata\x12\x1a\n\x08\x66ilename\x18\x01 \x01(\tR\x08\x66ilename\x12\x1b\n\tfile_size\x18\x02 \x01(\x04R\x08\x66ileSize\"\x98\x01\n\x17IdentitySetPhotoRequest\x12V\n\x08metadata\x18\x01 \x01(\x0b\x32\x38.olvid.daemon.command.v1.IdentitySetPhotoRequestMetadataH\x00R\x08metadata\x12\x1a\n\x07payload\x18\x02 \x01(\x0cH\x00R\x07payloadB\t\n\x07request\"\x1a\n\x18IdentitySetPhotoResponse\"\x1e\n\x1cIdentityDownloadPhotoRequest\"5\n\x1dIdentityDownloadPhotoResponse\x12\x14\n\x05photo\x18\x01 \x01(\x0cR\x05photo\" \n\x1eIdentityGetApiKeyStatusRequest\"f\n\x1fIdentityGetApiKeyStatusResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKey\"3\n\x18IdentitySetApiKeyRequest\x12\x17\n\x07\x61pi_key\x18\x01 \x01(\tR\x06\x61piKey\"`\n\x19IdentitySetApiKeyResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKey\"T\n#IdentitySetConfigurationLinkRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"k\n$IdentitySetConfigurationLinkResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKeyB\xc4\x01\n\x1b\x63om.olvid.daemon.command.v1B\x15IdentityCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/olvid/daemon/command/v1/identity_commands.proto\x12\x17olvid.daemon.command.v1\x1a(olvid/daemon/datatypes/v1/identity.proto\"\x14\n\x12IdentityGetRequest\"V\n\x13IdentityGetResponse\x12?\n\x08identity\x18\x01 \x01(\x0b\x32#.olvid.daemon.datatypes.v1.IdentityR\x08identity\"#\n!IdentityGetBytesIdentifierRequest\"D\n\"IdentityGetBytesIdentifierResponse\x12\x1e\n\nidentifier\x18\x01 \x01(\x0cR\nidentifier\"\"\n IdentityGetInvitationLinkRequest\"L\n!IdentityGetInvitationLinkResponse\x12\'\n\x0finvitation_link\x18\x01 \x01(\tR\x0einvitationLink\"k\n\x1cIdentityUpdateDetailsRequest\x12K\n\x0bnew_details\x18\x02 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.IdentityDetailsR\nnewDetails\"\x1f\n\x1dIdentityUpdateDetailsResponse\"Z\n\x1fIdentitySetPhotoRequestMetadata\x12\x1a\n\x08\x66ilename\x18\x01 \x01(\tR\x08\x66ilename\x12\x1b\n\tfile_size\x18\x02 \x01(\x04R\x08\x66ileSize\"\x98\x01\n\x17IdentitySetPhotoRequest\x12V\n\x08metadata\x18\x01 \x01(\x0b\x32\x38.olvid.daemon.command.v1.IdentitySetPhotoRequestMetadataH\x00R\x08metadata\x12\x1a\n\x07payload\x18\x02 \x01(\x0cH\x00R\x07payloadB\t\n\x07request\"\x1a\n\x18IdentitySetPhotoResponse\"\x1e\n\x1cIdentityDownloadPhotoRequest\"5\n\x1dIdentityDownloadPhotoResponse\x12\x14\n\x05photo\x18\x01 \x01(\x0cR\x05photo\"\x1c\n\x1aIdentityRemovePhotoRequest\"\x1d\n\x1bIdentityRemovePhotoResponse\" \n\x1eIdentityGetApiKeyStatusRequest\"f\n\x1fIdentityGetApiKeyStatusResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKey\"3\n\x18IdentitySetApiKeyRequest\x12\x17\n\x07\x61pi_key\x18\x01 \x01(\tR\x06\x61piKey\"`\n\x19IdentitySetApiKeyResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKey\"T\n#IdentitySetConfigurationLinkRequest\x12-\n\x12\x63onfiguration_link\x18\x01 \x01(\tR\x11\x63onfigurationLink\"k\n$IdentitySetConfigurationLinkResponse\x12\x43\n\x07\x61pi_key\x18\x01 \x01(\x0b\x32*.olvid.daemon.datatypes.v1.Identity.ApiKeyR\x06\x61piKeyB\xc4\x01\n\x1b\x63om.olvid.daemon.command.v1B\x15IdentityCommandsProtoP\x01Z\x0folvid.io/daemon\xa2\x02\x03ODC\xaa\x02\x17Olvid.Daemon.Command.V1\xca\x02\x17Olvid\\Daemon\\Command\\V1\xe2\x02#Olvid\\Daemon\\Command\\V1\\GPBMetadata\xea\x02\x1aOlvid::Daemon::Command::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -49,20 +49,20 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_IDENTITYUPDATEDETAILSREQUEST']._serialized_end=556
   _globals['_IDENTITYUPDATEDETAILSRESPONSE']._serialized_start=558
   _globals['_IDENTITYUPDATEDETAILSRESPONSE']._serialized_end=589
-  _globals['_IDENTITYREMOVEPHOTOREQUEST']._serialized_start=591
-  _globals['_IDENTITYREMOVEPHOTOREQUEST']._serialized_end=619
-  _globals['_IDENTITYREMOVEPHOTORESPONSE']._serialized_start=621
-  _globals['_IDENTITYREMOVEPHOTORESPONSE']._serialized_end=650
-  _globals['_IDENTITYSETPHOTOREQUESTMETADATA']._serialized_start=652
-  _globals['_IDENTITYSETPHOTOREQUESTMETADATA']._serialized_end=742
-  _globals['_IDENTITYSETPHOTOREQUEST']._serialized_start=745
-  _globals['_IDENTITYSETPHOTOREQUEST']._serialized_end=897
-  _globals['_IDENTITYSETPHOTORESPONSE']._serialized_start=899
-  _globals['_IDENTITYSETPHOTORESPONSE']._serialized_end=925
-  _globals['_IDENTITYDOWNLOADPHOTOREQUEST']._serialized_start=927
-  _globals['_IDENTITYDOWNLOADPHOTOREQUEST']._serialized_end=957
-  _globals['_IDENTITYDOWNLOADPHOTORESPONSE']._serialized_start=959
-  _globals['_IDENTITYDOWNLOADPHOTORESPONSE']._serialized_end=1012
+  _globals['_IDENTITYSETPHOTOREQUESTMETADATA']._serialized_start=591
+  _globals['_IDENTITYSETPHOTOREQUESTMETADATA']._serialized_end=681
+  _globals['_IDENTITYSETPHOTOREQUEST']._serialized_start=684
+  _globals['_IDENTITYSETPHOTOREQUEST']._serialized_end=836
+  _globals['_IDENTITYSETPHOTORESPONSE']._serialized_start=838
+  _globals['_IDENTITYSETPHOTORESPONSE']._serialized_end=864
+  _globals['_IDENTITYDOWNLOADPHOTOREQUEST']._serialized_start=866
+  _globals['_IDENTITYDOWNLOADPHOTOREQUEST']._serialized_end=896
+  _globals['_IDENTITYDOWNLOADPHOTORESPONSE']._serialized_start=898
+  _globals['_IDENTITYDOWNLOADPHOTORESPONSE']._serialized_end=951
+  _globals['_IDENTITYREMOVEPHOTOREQUEST']._serialized_start=953
+  _globals['_IDENTITYREMOVEPHOTOREQUEST']._serialized_end=981
+  _globals['_IDENTITYREMOVEPHOTORESPONSE']._serialized_start=983
+  _globals['_IDENTITYREMOVEPHOTORESPONSE']._serialized_end=1012
   _globals['_IDENTITYGETAPIKEYSTATUSREQUEST']._serialized_start=1014
   _globals['_IDENTITYGETAPIKEYSTATUSREQUEST']._serialized_end=1046
   _globals['_IDENTITYGETAPIKEYSTATUSRESPONSE']._serialized_start=1048

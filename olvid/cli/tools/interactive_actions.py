@@ -55,7 +55,8 @@ def print_with_context(text: str, prompt: str = None, fg_color: str = None, bg_c
 # show invitation link and wait for an invitation to arrive to complete it interactively
 async def contact_new(identity_id: int, prompt: str = None, fg_color: str = None, bg_color: str = None) -> Optional[datatypes.Discussion]:
 	identity: datatypes.Identity = await ClientSingleton.get_client().admin_identity_admin_get(identity_id=identity_id)
-	print_with_context(f"Send an invitation to this invitation link: {identity.invitation_url}", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
+	invitation_link: str = await ClientSingleton.get_client().admin_identity_admin_get_invitation_link(identity_id=identity.id)
+	print_with_context(f"Send an invitation to this invitation link: {invitation_link}", prompt=prompt, fg_color=fg_color, bg_color=bg_color)
 
 	# create invitation received listener
 	client: OlvidAdminClient = OlvidAdminClient(identity_id=identity_id)

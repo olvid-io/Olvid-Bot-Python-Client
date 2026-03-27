@@ -297,7 +297,7 @@ def group_photo_tree():
 #####
 # group photo set
 #####
-@group_photo_tree.command("set")
+@group_photo_tree.command("set", help="Set group photo.\n\n⚠️ When CLI is used in a docker container mind to check the file exists inside the container.")
 @click.argument("group_id", required=True, type=click.INT)
 @click.argument("photo_path", required=True, type=click.STRING)
 async def group_photo_set(group_id: int, photo_path: str):
@@ -313,7 +313,7 @@ async def group_photo_set(group_id: int, photo_path: str):
 #####
 # group photo save
 #####
-@group_photo_tree.command("save", help="Save group photos to local files.")
+@group_photo_tree.command("save", help="Save group photos to local files.\n\n⚠️ When CLI is used in a docker container mind to check the path exists inside the container.")
 @click.argument("group_ids", required=False, nargs=-1, type=click.INT)
 @click.option("-a", "--all", "save_all", is_flag=True, help="Save all group photos")
 @click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)

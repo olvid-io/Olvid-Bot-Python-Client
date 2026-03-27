@@ -23,7 +23,7 @@ async def invitation_task(identity_1: datatypes.Identity, identity_2: datatypes.
 	print(f"Processing: {identity_1.id} -> {identity_2.id}")
 
 	# send invitation
-	invitation_1: datatypes.Invitation = await client_1.invitation_new(identity_2.invitation_url)
+	invitation_1: datatypes.Invitation = await client_1.invitation_new(await client_2.identity_get_invitation_link())
 
 	# wait for invitation to arrive
 	invitation_store_2: list[datatypes.Invitation] = []

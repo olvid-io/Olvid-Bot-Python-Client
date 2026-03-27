@@ -12,15 +12,7 @@ from .....olvid.daemon.notification.v1 import message_notifications_pb2 as olvid
 
 
 class InvitationNotificationServiceStub(object):
-    """must be for admin only
-    // Identity
-    service IdentityNotificationService {
-    	rpc IdentityCreated(notification.v1.SubscribeToIdentityCreatedNotification) returns (stream notification.v1.IdentityCreatedNotification) {}
-    	rpc IdentityDeleted(notification.v1.SubscribeToIdentityDeletedNotification) returns (stream notification.v1.IdentityDeletedNotification) {}
-    	rpc IdentityDetailsUpdated(notification.v1.SubscribeToIdentityDetailsUpdatedNotification) returns (stream notification.v1.IdentityDetailsUpdatedNotification) {}
-    }
-
-    Invitation
+    """Invitation
     """
 
     def __init__(self, channel):
@@ -52,15 +44,7 @@ class InvitationNotificationServiceStub(object):
 
 
 class InvitationNotificationServiceServicer(object):
-    """must be for admin only
-    // Identity
-    service IdentityNotificationService {
-    	rpc IdentityCreated(notification.v1.SubscribeToIdentityCreatedNotification) returns (stream notification.v1.IdentityCreatedNotification) {}
-    	rpc IdentityDeleted(notification.v1.SubscribeToIdentityDeletedNotification) returns (stream notification.v1.IdentityDeletedNotification) {}
-    	rpc IdentityDetailsUpdated(notification.v1.SubscribeToIdentityDetailsUpdatedNotification) returns (stream notification.v1.IdentityDetailsUpdatedNotification) {}
-    }
-
-    Invitation
+    """Invitation
     """
 
     def InvitationReceived(self, request, context):
@@ -119,15 +103,7 @@ def add_InvitationNotificationServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class InvitationNotificationService(object):
-    """must be for admin only
-    // Identity
-    service IdentityNotificationService {
-    	rpc IdentityCreated(notification.v1.SubscribeToIdentityCreatedNotification) returns (stream notification.v1.IdentityCreatedNotification) {}
-    	rpc IdentityDeleted(notification.v1.SubscribeToIdentityDeletedNotification) returns (stream notification.v1.IdentityDeletedNotification) {}
-    	rpc IdentityDetailsUpdated(notification.v1.SubscribeToIdentityDetailsUpdatedNotification) returns (stream notification.v1.IdentityDetailsUpdatedNotification) {}
-    }
-
-    Invitation
+    """Invitation
     """
 
     @staticmethod

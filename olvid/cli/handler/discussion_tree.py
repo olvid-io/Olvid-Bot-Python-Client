@@ -71,7 +71,7 @@ def discussion_photo_tree():
 #####
 # discussion photo save
 #####
-@discussion_photo_tree.command("save", help="Save discussion photos to local files.")
+@discussion_photo_tree.command("save", help="Save discussion photos to local files.\n\n⚠️ When CLI is used in a docker container mind to check the path exists inside the container.")
 @click.argument("discussion_ids", required=False, nargs=-1, type=click.INT)
 @click.option("-a", "--all", "save_all", is_flag=True, help="Save all discussion photos")
 @click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)

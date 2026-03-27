@@ -52,8 +52,6 @@ async def identity_current(identity_id: int):
 	try:
 		# check if identity exists
 		identity = await ClientSingleton.get_client().identity_get()
-		# hide invitation url and show result
-		identity.invitation_url = ""
 		print_normal_message(identity, identity.id)
 	except errors.NotFoundError as e:
 		ClientSingleton.set_current_identity_id(previous_identity_id)
@@ -160,9 +158,7 @@ async def identity_get(get_all: bool, show_invitation_link: bool, show_identity_
 			return
 		identities: list[datatypes.Identity] = [await ClientSingleton.get_client().identity_get()]
 
-	# hide deprecated invitation url field
 	for identity in identities:
-		identity.invitation_url = ""
 		if show_invitation_link:
 			original_current_identity_id = ClientSingleton.get_current_identity_id()
 			ClientSingleton.set_current_identity_id(identity.id)
@@ -276,7 +272,7 @@ def identity_photo_tree():
 #####
 # identity photo set
 #####
-@identity_photo_tree.command("set", help="set current identity photo")
+@identity_photo_tree.command("set", help="Set current identity photo.\n\n⚠️ When CLI is used in a docker container mind to check the file exists inside the container.")
 @click.argument("photo_path", required=True, type=click.STRING)
 async def identity_photo_set(photo_path):
 	try:
@@ -289,7 +285,7 @@ async def identity_photo_set(photo_path):
 #####
 # identity photo save
 #####
-@identity_photo_tree.command("save", help="Save identity photo to local files. Specify identity_ids to use or it uses current identity id by default")
+@identity_photo_tree.command("save", help="Save identity photo to local files. Specify identity_ids to use or it uses current identity id by default\n\n\n\n⚠️ When CLI is used in a docker container mind to check the path exists inside the container.")
 @click.argument("identity_ids", required=False, nargs=-1, type=click.INT)
 @click.option("-a", "--all", "save_all", is_flag=True, help="save all identity photos")
 @click.option("-p", "--path", "path", help="directory to store downloaded photo (default: ./photos)", nargs=1, type=click.STRING, required=False)

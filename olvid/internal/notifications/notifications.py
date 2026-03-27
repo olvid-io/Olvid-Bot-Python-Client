@@ -4210,19 +4210,19 @@ class GroupOwnPermissionsUpdatedNotification:
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
 class SubscribeToGroupMemberPermissionsUpdatedNotification:
-	def __init__(self, count: int = 0, group_ids: list[int] = (), group_filter: "GroupFilter" = None, member_filter: "GroupMemberFilter" = None, previous_permission_filter: "GroupMemberFilter" = None):
+	def __init__(self, count: int = 0, group_ids: list[int] = (), group_filter: "GroupFilter" = None, member_filter: "GroupMemberFilter" = None, previous_permission_filter: "GroupPermissionFilter" = None):
 		self.count: int = count
 		self.group_ids: list[int] = group_ids
 		self.group_filter: GroupFilter = group_filter
 		self.member_filter: GroupMemberFilter = member_filter
-		self.previous_permission_filter: GroupMemberFilter = previous_permission_filter
+		self.previous_permission_filter: GroupPermissionFilter = previous_permission_filter
 
 	def _update_content(self, subscribe_to_group_member_permissions_updated_notification: SubscribeToGroupMemberPermissionsUpdatedNotification) -> None:
 		self.count: int = subscribe_to_group_member_permissions_updated_notification.count
 		self.group_ids: list[int] = subscribe_to_group_member_permissions_updated_notification.group_ids
 		self.group_filter: GroupFilter = subscribe_to_group_member_permissions_updated_notification.group_filter
 		self.member_filter: GroupMemberFilter = subscribe_to_group_member_permissions_updated_notification.member_filter
-		self.previous_permission_filter: GroupMemberFilter = subscribe_to_group_member_permissions_updated_notification.previous_permission_filter
+		self.previous_permission_filter: GroupPermissionFilter = subscribe_to_group_member_permissions_updated_notification.previous_permission_filter
 
 	# noinspection PyProtectedMember
 	def _clone(self) -> "SubscribeToGroupMemberPermissionsUpdatedNotification":
@@ -4231,7 +4231,7 @@ class SubscribeToGroupMemberPermissionsUpdatedNotification:
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember
 	@staticmethod
 	def _from_native(native_message: olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification) -> "SubscribeToGroupMemberPermissionsUpdatedNotification":
-		return SubscribeToGroupMemberPermissionsUpdatedNotification(count=native_message.count, group_ids=native_message.group_ids, group_filter=GroupFilter._from_native(native_message.group_filter), member_filter=GroupMemberFilter._from_native(native_message.member_filter), previous_permission_filter=GroupMemberFilter._from_native(native_message.previous_permission_filter))
+		return SubscribeToGroupMemberPermissionsUpdatedNotification(count=native_message.count, group_ids=native_message.group_ids, group_filter=GroupFilter._from_native(native_message.group_filter), member_filter=GroupMemberFilter._from_native(native_message.member_filter), previous_permission_filter=GroupPermissionFilter._from_native(native_message.previous_permission_filter))
 
 	# noinspection PyUnresolvedReferences,PyUnusedLocal,PyProtectedMember,PyTypeHints
 	@staticmethod
@@ -4259,7 +4259,7 @@ class SubscribeToGroupMemberPermissionsUpdatedNotification:
 	def _to_native(message: Optional["SubscribeToGroupMemberPermissionsUpdatedNotification"]):
 		if message is None:
 			return None
-		return olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(count=message.count if message.count else None, group_ids=message.group_ids if message.group_ids else None, group_filter=GroupFilter._to_native(message.group_filter if message.group_filter else None), member_filter=GroupMemberFilter._to_native(message.member_filter if message.member_filter else None), previous_permission_filter=GroupMemberFilter._to_native(message.previous_permission_filter if message.previous_permission_filter else None))
+		return olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(count=message.count if message.count else None, group_ids=message.group_ids if message.group_ids else None, group_filter=GroupFilter._to_native(message.group_filter if message.group_filter else None), member_filter=GroupMemberFilter._to_native(message.member_filter if message.member_filter else None), previous_permission_filter=GroupPermissionFilter._to_native(message.previous_permission_filter if message.previous_permission_filter else None))
 
 	def __str__(self):
 		s: str = ''
@@ -8188,7 +8188,7 @@ class GroupNotificationServiceStub:
 				except errors.AioRpcError as er:
 					raise errors.OlvidError._from_aio_rpc_error(er) from er
 			overlay_object = subscribe_to_group_member_permissions_updated_notification
-			return response_iterator(self.__stub.GroupMemberPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(count=overlay_object.count, group_ids=overlay_object.group_ids, group_filter=GroupFilter._to_native(overlay_object.group_filter), member_filter=GroupMemberFilter._to_native(overlay_object.member_filter), previous_permission_filter=GroupMemberFilter._to_native(overlay_object.previous_permission_filter)), metadata=self.__get_grpc_metadata()))
+			return response_iterator(self.__stub.GroupMemberPermissionsUpdated(olvid.daemon.notification.v1.group_notifications_pb2.SubscribeToGroupMemberPermissionsUpdatedNotification(count=overlay_object.count, group_ids=overlay_object.group_ids, group_filter=GroupFilter._to_native(overlay_object.group_filter), member_filter=GroupMemberFilter._to_native(overlay_object.member_filter), previous_permission_filter=GroupPermissionFilter._to_native(overlay_object.previous_permission_filter)), metadata=self.__get_grpc_metadata()))
 		except errors.AioRpcError as e:
 			raise errors.OlvidError._from_aio_rpc_error(e) from e
 
